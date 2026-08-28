@@ -1,0 +1,1 @@
+{"graph":{"nodes":["surface","h1","future"],"edges":[["surface","h1"],["h1","future"]]},"mutation":{"op":"REMOVE_EDGE","source":"h1","target":"future"},"queries":[["surface","future"]],"surface_label":"same"}
