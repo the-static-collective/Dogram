@@ -1,0 +1,16 @@
+{
+  "schema": "dogram.specimen/v0",
+  "specimen_id": "trust-withdrawal",
+  "operator": "ablate",
+  "operator_version": 1,
+  "inputs": {
+    "graph": {
+      "nodes": ["A", "B", "P"],
+      "edges": [["A", "P"], ["B", "P"], ["A", "B"]]
+    },
+    "target": {"kind": "edge", "source": "A", "target": "B"},
+    "requested_targets": [["A", "P"], ["B", "P"]]
+  },
+  "assumptions": [],
+  "metadata": {"mathal": "TRUST-WITHDRAWAL-001"}
+}
