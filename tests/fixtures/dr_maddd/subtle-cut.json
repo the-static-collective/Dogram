@@ -1,0 +1,8 @@
+{
+  "graph": {
+    "nodes": ["asker", "world_a", "world_b", "target"],
+    "edges": [["asker", "world_a"], ["world_b", "target"]]
+  },
+  "mutation": {"op": "ADD_EDGE", "source": "world_a", "target": "world_b"},
+  "queries": [["asker", "target"]]
+}
