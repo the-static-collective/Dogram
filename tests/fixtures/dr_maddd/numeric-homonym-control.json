@@ -1,0 +1,13 @@
+{
+  "boundary_order": ["surface", "grammar", "carrier"],
+  "left": {
+    "surface": {"kind": "opaque", "value": "0.481977"},
+    "grammar": {"kind": "opaque", "value": "mass_fraction"},
+    "carrier": {"kind": "opaque", "value": "semiconductor_package"}
+  },
+  "right": {
+    "surface": {"kind": "opaque", "value": "0.481977"},
+    "grammar": {"kind": "opaque", "value": "fractional_coordinate"},
+    "carrier": {"kind": "opaque", "value": "crystal_atom"}
+  }
+}
