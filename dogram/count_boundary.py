@@ -8,7 +8,7 @@ future version explicitly promotes them through review.
 
 from __future__ import annotations
 
-from math import gcd, isqrt
+from math import isqrt
 
 FROZEN_OPERATOR_NAMES = (
     "pred",
@@ -147,6 +147,31 @@ def audit_edge(source: int, target: int, operator: str) -> dict[str, object]:
         "calculated": calculated,
         "exact": exact,
     }
+
+
+def induced_edges(values: tuple[int, ...] | list[int]) -> tuple[dict[str, object], ...]:
+    """Return every frozen exact edge whose source and target are both in values.
+
+    The input corpus defines the visible node set. This function does not add
+    intermediary values, rank edges, infer meaning, or widen the operator family.
+    """
+
+    ordered_values = tuple(values)
+    for value in ordered_values:
+        _require_positive_int(value)
+    visible = set(ordered_values)
+    edges: list[dict[str, object]] = []
+
+    for source in ordered_values:
+        for operator in FROZEN_OPERATOR_NAMES:
+            try:
+                target = apply_operator(operator, source)
+            except ValueError:
+                continue
+            if target in visible:
+                edges.append(audit_edge(source, target, operator))
+
+    return tuple(edges)
 
 
 def trace_path(seed: int, operators: tuple[str, ...] | list[str]) -> dict[str, object]:
