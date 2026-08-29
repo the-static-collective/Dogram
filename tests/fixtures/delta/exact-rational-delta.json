@@ -1,0 +1,5 @@
+{
+  "boundary_order": ["x"],
+  "left": {"x": {"kind": "rational", "numerator": 1, "denominator": 3}},
+  "right": {"x": {"kind": "integer", "value": 1}}
+}

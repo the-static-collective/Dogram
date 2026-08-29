@@ -1,0 +1,23 @@
+{
+  "schema": "dogram.specimen/v0",
+  "specimen_id": "interest-mediated-support",
+  "operator": "delta",
+  "operator_version": 1,
+  "inputs": {
+    "boundary_order": ["EVIDENCE_SET", "DOWNSTREAM_SCORE"],
+    "left": {
+      "EVIDENCE_SET": {"kind": "opaque", "value": "e1,e2"},
+      "DOWNSTREAM_SCORE": {"kind": "integer", "value": 4}
+    },
+    "right": {
+      "EVIDENCE_SET": {"kind": "opaque", "value": "e1,e2,e3"},
+      "DOWNSTREAM_SCORE": {"kind": "integer", "value": 7}
+    }
+  },
+  "assumptions": [],
+  "metadata": {
+    "mathal": "MEDIATED-SUPPORT-001",
+    "claim_boundary": "formation-only",
+    "interest_note": "Dogram computes differences only; support semantics remain external"
+  }
+}

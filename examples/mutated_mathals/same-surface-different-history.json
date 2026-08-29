@@ -1,0 +1,19 @@
+{
+  "schema": "dogram.specimen/v0",
+  "specimen_id": "same-surface-different-history",
+  "operator": "reach",
+  "operator_version": 1,
+  "inputs": {
+    "graph": {
+      "nodes": ["surface", "h1", "future"],
+      "edges": [["surface", "h1"], ["h1", "future"]]
+    },
+    "mutation": {"op": "REMOVE_EDGE", "source": "h1", "target": "future"},
+    "queries": [["surface", "future"]]
+  },
+  "assumptions": [],
+  "metadata": {
+    "mathal": "SAME-SURFACE-DIFFERENT-HISTORY-001",
+    "surface_label": "ROOM A"
+  }
+}

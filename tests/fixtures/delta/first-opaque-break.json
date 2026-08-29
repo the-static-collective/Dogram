@@ -1,0 +1,13 @@
+{
+  "boundary_order": ["LOADOUT", "PROJECTION", "DERIVATION"],
+  "left": {
+    "LOADOUT": {"kind": "opaque", "value": "ctx-a"},
+    "PROJECTION": {"kind": "opaque", "value": "proj-a"},
+    "DERIVATION": {"kind": "integer", "value": 4}
+  },
+  "right": {
+    "LOADOUT": {"kind": "opaque", "value": "ctx-a"},
+    "PROJECTION": {"kind": "opaque", "value": "proj-b"},
+    "DERIVATION": {"kind": "integer", "value": 7}
+  }
+}

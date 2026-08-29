@@ -1,0 +1,10 @@
+{
+  "axis_a": "world",
+  "axis_b": "interest",
+  "cells": {
+    "00": {"kind": "integer", "value": 0},
+    "01": {"kind": "integer", "value": 2},
+    "10": {"kind": "integer", "value": 3},
+    "11": {"kind": "integer", "value": 8}
+  }
+}
