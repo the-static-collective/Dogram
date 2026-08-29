@@ -1,0 +1,18 @@
+{
+  "schema": "dogram.specimen/v0",
+  "specimen_id": "hidden-world-policy-rectangle",
+  "operator": "rectangle",
+  "operator_version": 1,
+  "inputs": {
+    "axis_a": "hidden_world",
+    "axis_b": "policy",
+    "cells": {
+      "00": {"kind": "opaque", "value": "same-visible-result"},
+      "01": {"kind": "opaque", "value": "policy-open"},
+      "10": {"kind": "opaque", "value": "same-visible-result"},
+      "11": {"kind": "opaque", "value": "policy-closed"}
+    }
+  },
+  "assumptions": [],
+  "metadata": {"mathal": "HIDDEN-WORLD-POLICY-RECTANGLE"}
+}
