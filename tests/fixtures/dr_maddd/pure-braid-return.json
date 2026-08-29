@@ -1,0 +1,11 @@
+{
+  "boundary_order": ["endpoint_permutation", "internal_action"],
+  "left": {
+    "endpoint_permutation": {"kind": "opaque", "value": "e"},
+    "internal_action": {"kind": "opaque", "value": "I"}
+  },
+  "right": {
+    "endpoint_permutation": {"kind": "opaque", "value": "e"},
+    "internal_action": {"kind": "opaque", "value": "diag(exp(2pi*i/5),exp(6pi*i/5))"}
+  }
+}

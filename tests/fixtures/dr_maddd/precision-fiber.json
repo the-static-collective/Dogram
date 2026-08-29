@@ -1,0 +1,11 @@
+{
+  "boundary_order": ["p6", "p7"],
+  "left": {
+    "p6": {"kind": "opaque", "value": "0.481977"},
+    "p7": {"kind": "opaque", "value": "0.4819774"}
+  },
+  "right": {
+    "p6": {"kind": "opaque", "value": "0.481977"},
+    "p7": {"kind": "opaque", "value": "0.4819770"}
+  }
+}

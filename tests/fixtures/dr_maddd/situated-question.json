@@ -1,0 +1,10 @@
+{
+  "axis_a": "who",
+  "axis_b": "when",
+  "cells": {
+    "00": {"kind": "opaque", "value": "route:north"},
+    "10": {"kind": "opaque", "value": "route:north"},
+    "01": {"kind": "opaque", "value": "route:north"},
+    "11": {"kind": "opaque", "value": "route:south"}
+  }
+}
