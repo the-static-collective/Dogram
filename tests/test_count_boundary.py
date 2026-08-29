@@ -4,6 +4,7 @@ from dogram.count_boundary import (
     FROZEN_OPERATOR_NAMES,
     apply_operator,
     audit_edge,
+    induced_edges,
     trace_path,
 )
 
@@ -63,6 +64,19 @@ class CountBoundaryTests(unittest.TestCase):
         self.assertEqual(receipt["status"], "NO_MATCH")
         self.assertEqual(receipt["calculated"], 136)
         self.assertFalse(receipt["exact"])
+
+    def test_induced_edges_find_only_predeclared_relations_inside_old_mathals(self):
+        corpus = (12, 13, 17, 18, 27, 81, 82, 107, 108, 136, 137, 180, 181, 666, 1078, 1087)
+        edges = induced_edges(corpus)
+        triples = {(edge["source"], edge["operator"], edge["target"]) for edge in edges}
+
+        self.assertIn((1078, "prime_pi", 180), triples)
+        self.assertIn((1087, "prime_pi", 181), triples)
+        self.assertIn((180, "divisor_count", 18), triples)
+        self.assertIn((17, "pair_count", 136), triples)
+        self.assertIn((108, "divisor_count", 12), triples)
+        self.assertIn((666, "divisor_count", 12), triples)
+        self.assertNotIn((17, "affine_64x_minus_1", 1087), triples)
 
 
 if __name__ == "__main__":
