@@ -127,6 +127,8 @@ def _boundary_receipts(
                 "derived_value": derived_value,
                 "derived_pair": [derived_value - 1, derived_value],
                 "fiber_size": None,
+                "support_arity": 1,
+                "support_values": [source_value],
             }
         )
     receipts.append(
@@ -139,6 +141,8 @@ def _boundary_receipts(
             "derived_value": derived_value,
             "derived_pair": [derived_value, derived_value + 1],
             "fiber_size": None,
+            "support_arity": 1,
+            "support_values": [source_value],
         }
     )
     return receipts
@@ -159,6 +163,8 @@ def expand_pair(pair: tuple[int, int]) -> list[dict]:
             "derived_value": None,
             "derived_pair": [prime_count(left), prime_count(right)],
             "fiber_size": prime_count_pair_fiber_size(pair),
+            "support_arity": 2,
+            "support_values": [left, right],
         }
     )
 
