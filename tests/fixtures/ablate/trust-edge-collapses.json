@@ -1,0 +1,8 @@
+{
+  "graph": {
+    "nodes": ["A", "B", "P"],
+    "edges": [["A", "B"], ["B", "P"]]
+  },
+  "target": {"kind": "edge", "source": "A", "target": "B"},
+  "requested_targets": [["A", "P"]]
+}
