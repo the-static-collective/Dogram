@@ -1,0 +1,10 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dogram"
+version = "0.0.0"
+description = "Deterministic operations for graph, relation, and mathal pressure"
+requires-python = ">=3.12"
+dependencies = []
