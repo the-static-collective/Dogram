@@ -186,9 +186,18 @@ EXEC may:
 - compose mathal steps in explicit order;
 - emit deterministic intermediate step receipts when required;
 - terminate successfully;
-- return `REFUSE`;
-- return `INSUFFICIENT_TO_TEST`;
-- return `FUEL_EXHAUSTED`.
+- return `REFUSE` with a typed reason such as `FUEL_EXHAUSTED`;
+- return `INSUFFICIENT_TO_TEST`.
+
+The public v0 status family remains:
+
+```text
+OK
+REFUSE
+INSUFFICIENT_TO_TEST
+```
+
+Resource exhaustion does not create a fourth top-level status.
 
 EXEC may not:
 
@@ -215,18 +224,19 @@ Required first-class data families:
 ```text
 Value
 Graph
-Program
-Receipt
+ProgramData
+ReceiptData
+ExecutionData
 Proposal
 Patch
 ```
 
-A running `Program` and a serialized/reified `Program` are not the same runtime kind.
+The runtime's active executable program reference and its serialized/reified `ProgramData` are different runtime kinds.
 
 Hard non-collapse:
 
 ```text
-PROGRAM != PROGRAM-AS-DATA
+ACTIVE PROGRAM != PROGRAM-AS-DATA
 PROGRAM-AS-DATA != EXECUTABLE CAPABILITY
 RECEIPT != AUTHORITY
 REFLECTION != MUTATION
@@ -271,6 +281,7 @@ ProgramPatch
 AblationProposal
 CompositionProposal
 BranchProposal
+PeelProposal
 NoChange
 Stop
 Refuse
@@ -532,7 +543,7 @@ NO UNBOUNDED REFLECTIVE TOWER
 NO UNBOUNDED BRANCH EXPLOSION
 ```
 
-Fuel exhaustion is a normal structured runtime result:
+Fuel exhaustion is a normal structured refusal:
 
 ```text
 status: REFUSE
@@ -867,7 +878,7 @@ Level 3 and Level 4 are explicitly not required for Dogram Ω success.
 
 ## 24. Implementation sequence
 
-The implementation plan should preserve this order unless TDD exposes a smaller dependency graph.
+The architecture is intentionally larger than one safe implementation plan. It must be delivered as separate reviewed slices; no single implementation plan should attempt Phases A through I in one pass.
 
 ### Phase A — original deterministic floor
 
@@ -880,6 +891,8 @@ Build and prove:
 - existing hostile fixtures.
 
 This remains useful independent evidence and prevents the VM from becoming its own only oracle.
+
+**Plan boundary:** the existing `docs/superpowers/plans/2026-08-28-dogram-v0-implementation.md` is now authoritative only for this Phase A floor, subject to a small alignment edit after this spec is approved. It must not be read as the final Dogram runtime architecture.
 
 ### Phase B — inert program representation
 
@@ -918,6 +931,8 @@ reach
 
 Only then may the public CLI default to mathal implementations.
 
+**Slice boundary:** Phases B-D form the second implementation project: **Mathal VM + standard library**.
+
 ### Phase E — reification membrane
 
 Add canonical first-class:
@@ -951,6 +966,8 @@ Add:
 - bounded size/depth checks;
 - admitted next-program activation.
 
+**Slice boundary:** Phases E-G form the third implementation project: **Ω membrane + single-successor META**.
+
 ### Phase H — explicit branching
 
 Add bounded candidate branching only after single-successor META is proven deterministic.
@@ -970,6 +987,10 @@ SELECT-FIRST
 Do not begin with graph reachability.
 
 The first peel success is Dogram Ω's strongest graduation witness.
+
+**Slice boundary:** Phases H-I form the fourth implementation project: **bounded branching + first bootstrap peel**.
+
+The written spec must be reviewed before any of these implementation slices are planned or executed.
 
 ---
 
