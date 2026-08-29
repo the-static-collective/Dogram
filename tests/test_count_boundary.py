@@ -60,6 +60,30 @@ class CountBoundaryTests(unittest.TestCase):
             },
         )
 
+    def test_receipts_expose_actual_dependency_arity(self):
+        first = next(
+            r for r in expand_pair((1078, 1087))
+            if r["operator"] == "prime_count@1"
+        )
+        self.assertEqual(first["support_arity"], 2)
+        self.assertEqual(first["support_values"], [1078, 1087])
+
+        second = next(
+            r for r in expand_pair((180, 181))
+            if r["operator"] == "divisor_count_record@1"
+            and r["mode"] == "left_predecessor"
+        )
+        self.assertEqual(second["support_arity"], 1)
+        self.assertEqual(second["support_values"], [180])
+
+        third = next(
+            r for r in expand_pair((17, 18))
+            if r["operator"] == "pair_count@1"
+            and r["mode"] == "left_successor"
+        )
+        self.assertEqual(third["support_arity"], 1)
+        self.assertEqual(third["support_values"], [17])
+
     def test_operator_constitution_is_frozen_and_totient_is_not_a_traverser(self):
         self.assertEqual(
             FROZEN_OPERATOR_IDS,
