@@ -1,0 +1,43 @@
+{
+  "pair": ["x", "y"],
+  "probes": [
+    {
+      "name": "prime_count_like",
+      "cost": 2,
+      "delta": {
+        "boundary_order": ["projection"],
+        "left": {"projection": {"kind": "integer", "value": 2}},
+        "right": {"projection": {"kind": "integer", "value": 2}}
+      }
+    },
+    {
+      "name": "tau_like",
+      "cost": 1,
+      "delta": {
+        "boundary_order": ["projection"],
+        "left": {"projection": {"kind": "integer", "value": 2}},
+        "right": {"projection": {"kind": "integer", "value": 3}}
+      }
+    },
+    {
+      "name": "parity_like",
+      "cost": 1,
+      "delta": {
+        "boundary_order": ["projection"],
+        "left": {"projection": {"kind": "integer", "value": 1}},
+        "right": {"projection": {"kind": "integer", "value": 0}}
+      }
+    },
+    {
+      "name": "coarse_label",
+      "cost": 1,
+      "delta": {
+        "boundary_order": ["projection"],
+        "left": {"projection": {"kind": "opaque", "value": "small"}},
+        "right": {"projection": {"kind": "opaque", "value": "small"}}
+      }
+    }
+  ],
+  "expected_splitters": ["tau_like", "parity_like"],
+  "least_cost_splitters": ["tau_like", "parity_like"]
+}

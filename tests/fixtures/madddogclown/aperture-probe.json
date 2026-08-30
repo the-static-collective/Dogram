@@ -1,0 +1,24 @@
+{
+  "coarse": {
+    "boundary_order": ["carrier", "projection"],
+    "left": {
+      "carrier": {"kind": "opaque", "value": "same-underdetermined-carrier"},
+      "projection": {"kind": "opaque", "value": "decoder-A:alpha"}
+    },
+    "right": {
+      "carrier": {"kind": "opaque", "value": "same-underdetermined-carrier"},
+      "projection": {"kind": "opaque", "value": "decoder-B:beta"}
+    }
+  },
+  "refined": {
+    "boundary_order": ["carrier", "projection"],
+    "left": {
+      "carrier": {"kind": "opaque", "value": "same-underdetermined-carrier+constraint-k"},
+      "projection": {"kind": "opaque", "value": "resolved:gamma"}
+    },
+    "right": {
+      "carrier": {"kind": "opaque", "value": "same-underdetermined-carrier+constraint-k"},
+      "projection": {"kind": "opaque", "value": "resolved:gamma"}
+    }
+  }
+}

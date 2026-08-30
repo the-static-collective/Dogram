@@ -1,0 +1,26 @@
+{
+  "carrier_id": "C0",
+  "historical_projection": "unresolved",
+  "historical_replay": {
+    "boundary_order": ["carrier", "projection"],
+    "left": {
+      "carrier": {"kind": "opaque", "value": "C0"},
+      "projection": {"kind": "opaque", "value": "unresolved"}
+    },
+    "right": {
+      "carrier": {"kind": "opaque", "value": "C0"},
+      "projection": {"kind": "opaque", "value": "unresolved"}
+    }
+  },
+  "later_decoder_on_old_carrier": {
+    "boundary_order": ["carrier", "projection"],
+    "left": {
+      "carrier": {"kind": "opaque", "value": "C0"},
+      "projection": {"kind": "opaque", "value": "unresolved"}
+    },
+    "right": {
+      "carrier": {"kind": "opaque", "value": "C0"},
+      "projection": {"kind": "opaque", "value": "relation-R-visible"}
+    }
+  }
+}
