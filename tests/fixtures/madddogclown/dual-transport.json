@@ -1,0 +1,27 @@
+{
+  "external_algebra": {
+    "note": "Exact inverse traversal cancels under a stateless invertible transport. Nonzero return residue requires changed order, explicit state/history, coupling, or a non-inverse channel."
+  },
+  "exact_inverse_return": {
+    "boundary_order": ["endpoint", "internal_state"],
+    "left": {
+      "endpoint": {"kind": "opaque", "value": "home"},
+      "internal_state": {"kind": "opaque", "value": "v0"}
+    },
+    "right": {
+      "endpoint": {"kind": "opaque", "value": "home"},
+      "internal_state": {"kind": "opaque", "value": "v0"}
+    }
+  },
+  "order_swap": {
+    "boundary_order": ["endpoint", "internal_state"],
+    "left": {
+      "endpoint": {"kind": "opaque", "value": "home"},
+      "internal_state": {"kind": "opaque", "value": "v0"}
+    },
+    "right": {
+      "endpoint": {"kind": "opaque", "value": "home"},
+      "internal_state": {"kind": "opaque", "value": "v1"}
+    }
+  }
+}
