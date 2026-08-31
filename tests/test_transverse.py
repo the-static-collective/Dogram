@@ -1,3 +1,5 @@
+import json
+import pathlib
 import unittest
 
 from dogram.transverse import (
@@ -7,6 +9,14 @@ from dogram.transverse import (
     bounded_history_sheet_trace,
     sheet_coordinate,
 )
+
+
+ROOT = pathlib.Path(__file__).parents[1]
+FIXTURES = ROOT / "tests" / "fixtures" / "transverse"
+
+
+def load_fixture(name):
+    return json.loads((FIXTURES / name).read_text())
 
 
 class TransverseTests(unittest.TestCase):
@@ -62,6 +72,28 @@ class TransverseTests(unittest.TestCase):
         self.assertEqual(result.sync_sheet_size, 35)
         self.assertEqual(result.closure_lift_index, 1)
         self.assertEqual(result.closure_reach_count, 35)
+
+    def test_frozen_specimens_match_exact_history_closure_and_budget(self):
+        names = sorted(path.name for path in FIXTURES.glob("*.json"))
+        self.assertEqual(len(names), 6)
+        for name in names:
+            fixture = load_fixture(name)
+            system = fixture["system"]
+            cuts = tuple(fixture["cuts"])
+            generators = tuple(fixture["generators"])
+            self.assertLessEqual(len(cuts), fixture["cut_budget"], name)
+            analysis = analyze_transverse(system["m"], system["n"], generators)
+            self.assertEqual(analysis.to_data(), fixture["expected"]["analysis"], name)
+            self.assertEqual(
+                list(bounded_history_sheet_trace(system["m"], system["n"], cuts)),
+                fixture["expected"]["bounded_history_sheet_trace"],
+                name,
+            )
+            self.assertEqual(
+                bounded_history_reach_count(system["m"], system["n"], cuts),
+                fixture["expected"]["bounded_history_reach_count"],
+                name,
+            )
 
 
 if __name__ == "__main__":
