@@ -1,0 +1,85 @@
+{
+  "schema": "dogram.phaselift.specimen/v0",
+  "candidate_id": "candidate/bind-route",
+  "candidate_version": 1,
+  "trials": [
+    {
+      "schema": "dogram.phaselift.trial/v0",
+      "trial_id": "trial/repeat-004",
+      "receipt_id": "receipt/repeat-004",
+      "role": "REPEAT",
+      "candidate_ref": "candidate/bind-route",
+      "candidate_digest": "sha256:bind-route-v1",
+      "context_fingerprint": {"domain": "sequence", "carrier_kind": "ordered_trace", "probe_kind": "binding"},
+      "distinct_from": null,
+      "input_refs": ["input/repeat-004"],
+      "output_refs": ["output/repeat-004"],
+      "transformation_id": "transform/bind-route",
+      "transformation_version": 1,
+      "composition_witnesses": [],
+      "omega_before": ["op/bind", "op/route"],
+      "generated_operations": [],
+      "provenance_refs": ["source/repeat-004"],
+      "residuals": []
+    },
+    {
+      "schema": "dogram.phaselift.trial/v0",
+      "trial_id": "trial/transfer-004",
+      "receipt_id": "receipt/transfer-004",
+      "role": "TRANSFER",
+      "candidate_ref": "candidate/bind-route",
+      "candidate_digest": "sha256:bind-route-v1",
+      "context_fingerprint": {"domain": "graph", "carrier_kind": "directed_graph", "probe_kind": "binding"},
+      "distinct_from": {"trial_ref": "trial/repeat-004", "dimensions": ["domain", "carrier_kind"]},
+      "input_refs": ["input/transfer-004"],
+      "output_refs": ["output/transfer-004"],
+      "transformation_id": "transform/bind-route",
+      "transformation_version": 1,
+      "composition_witnesses": [],
+      "omega_before": ["op/bind", "op/route"],
+      "generated_operations": [],
+      "provenance_refs": ["source/transfer-004"],
+      "residuals": []
+    },
+    {
+      "schema": "dogram.phaselift.trial/v0",
+      "trial_id": "trial/generate-004",
+      "receipt_id": "receipt/generate-004",
+      "role": "GENERATE",
+      "candidate_ref": "candidate/bind-route",
+      "candidate_digest": "sha256:bind-route-v1",
+      "context_fingerprint": {"domain": "composition", "carrier_kind": "typed_pair", "probe_kind": "binding"},
+      "distinct_from": null,
+      "input_refs": ["artifact/bind-plan", "artifact/route-plan"],
+      "output_refs": ["artifact/bound-route"],
+      "transformation_id": "transform/bind-route",
+      "transformation_version": 1,
+      "composition_witnesses": [
+        {
+          "left_ref": "artifact/bind-plan",
+          "verb_id": "verb/compose-bind-route",
+          "right_ref": "artifact/route-plan",
+          "phase": "PLUS_CO",
+          "output_ref": "artifact/bound-route",
+          "left_capability_refs": ["op/bind"],
+          "right_capability_refs": ["op/route"],
+          "output_capability_refs": ["op/bind", "op/route", "op/bind-and-route"],
+          "surplus_capability_refs": ["op/bind-and-route"]
+        }
+      ],
+      "omega_before": ["op/bind", "op/route"],
+      "generated_operations": [
+        {
+          "operation_id": "op/bind-and-route",
+          "operation_version": 1,
+          "input_kinds": ["binding", "route"],
+          "output_kind": "bound_route",
+          "derivation_refs": ["artifact/bound-route", "receipt/generate-004"],
+          "replay_probe_ref": "probe/bind-and-route-independent"
+        }
+      ],
+      "provenance_refs": ["source/generate-004"],
+      "residuals": []
+    }
+  ]
+}
