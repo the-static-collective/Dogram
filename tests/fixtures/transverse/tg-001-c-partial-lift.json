@@ -1,0 +1,1 @@
+{"schema":"dogram.test.transverse-fixture/v0","id":"TG-001-C","system":{"m":8,"n":12},"generators":[2],"cuts":[2],"cut_budget":1,"expected":{"analysis":{"m":8,"n":12,"generators":[2],"state_capacity":96,"sync_sheet_size":24,"sheet_count":4,"closure_lift_index":2,"closure_reach_count":48,"closure_sheets":[0,2]},"bounded_history_sheet_trace":[0,2],"bounded_history_reach_count":48}}
