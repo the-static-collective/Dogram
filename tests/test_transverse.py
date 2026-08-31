@@ -3,8 +3,6 @@ import unittest
 from dogram.transverse import (
     TransverseInputError,
     analyze_transverse,
-    historical_reach_count,
-    historical_sheet_trace,
     sheet_coordinate,
 )
 
