@@ -28,11 +28,14 @@ result
 status
 reason_code
 residuals
+step_trace
 ```
+
+`step_trace` is included specifically so a real structurally admitted Ω candidate can witness `GATE ADMIT != TARGET EQUIVALENT` without inventing semantic target machinery.
 
 No semantic probe registry, ambient I/O, public operator, bootstrap intrinsic, automatic target selection, or automatic experiment selection was added.
 
-## TDD receipt — RED
+## TDD receipt — initial RED
 
 Contract-test head:
 
@@ -62,7 +65,7 @@ ModuleNotFoundError: No module named 'dogram.execution_cut'
 
 The existing Dogram tests reached green results before the new contract module import failed. Production modules had not yet been added.
 
-## TDD receipt — GREEN implementation checkpoint
+## TDD receipt — initial GREEN implementation checkpoint
 
 Implementation head:
 
@@ -97,6 +100,60 @@ reach@1
 ```
 
 and the exact pre-existing bootstrap intrinsic registry.
+
+## Review-pressure TDD — real gate/target separation
+
+A later review pass found that the hostile gate/equivalence test used the comparator directly rather than a real admitted Ω candidate. The test was tightened before expanding production behavior.
+
+RED head:
+
+```text
+29ca53890198e79272ff30e3ea8306f954c26a7e
+```
+
+GitHub Actions:
+
+```text
+run: 33354463261
+job: 99373836296
+Ran 141 tests
+FAILED (failures=1)
+```
+
+The new end-to-end test predeclared `T_step_trace = [step_trace]` and ran the existing diagnostic ablation. The Ω phase gate admitted the structurally valid candidate, but quotient comparison refused because `step_trace` had not yet been admitted as an inert target probe.
+
+Minimal GREEN head:
+
+```text
+45f208ba44ffc27a186a33fc6188a0bfcc9c1081
+```
+
+GitHub Actions:
+
+```text
+run: 33354501408
+job: 99373942290
+Ran 141 tests in 0.379s
+OK
+compile: success
+constitutional floor: OK
+Omega scope scan: OK
+```
+
+The resulting real witness is now:
+
+```text
+phase gate = ADMIT
+target = T_step_trace
+baseline step trace != candidate step trace
+target verdict = DIFFERENT_UNDER_T
+```
+
+This makes the separation executable rather than rhetorical:
+
+```text
+GATE ADMIT != TARGET EQUIVALENT
+```
 
 ## Positive specimen — `OMEGA-QUOTIENT-POSITIVE-001`
 
@@ -153,7 +210,7 @@ The focused suite freezes these boundaries:
 | different baseline/candidate input digest | `REFUSE / INPUT_CUT_MISMATCH` |
 | same trace members in different order | typed `step_trace` residual remains non-empty |
 | same result but different history | `EQUIVALENT_UNDER_T` only; no global-equivalence promotion |
-| structurally admitted candidate changes target | `ADMIT` remains compatible with `DIFFERENT_UNDER_T` |
+| real structurally admitted candidate changes predeclared `step_trace` target | Ω gate `ADMIT` + `DIFFERENT_UNDER_T` |
 | comparison across unpinned runtime bodies | `HOLD / RUNTIME_BODY_UNPINNED` |
 | undeclared semantic/ambient probe | `REFUSE / UNSUPPORTED_TARGET_PROBE` |
 | repeated identical paired experiment | canonical receipt bytes are identical |
