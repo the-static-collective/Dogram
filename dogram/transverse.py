@@ -39,6 +39,13 @@ def _validate_generators(generators: tuple[int, ...]) -> None:
         raise TransverseInputError("INVALID_GENERATOR", "every generator must be an integer")
 
 
+def _validate_cut_history(cuts: tuple[int, ...]) -> None:
+    if not isinstance(cuts, tuple):
+        raise TransverseInputError("INVALID_CUT_HISTORY", "cuts must be a tuple")
+    if any(not isinstance(r, int) or isinstance(r, bool) for r in cuts):
+        raise TransverseInputError("INVALID_CUT_HISTORY", "every cut must be an integer")
+
+
 def sheet_coordinate(m: int, n: int, a: int, b: int) -> int:
     _validate_dimensions(m, n)
     if not all(isinstance(x, int) and not isinstance(x, bool) for x in (a, b)):
@@ -64,9 +71,28 @@ def analyze_transverse(m: int, n: int, generators: tuple[int, ...]) -> Transvers
     )
 
 
+def historical_sheet_trace(m: int, n: int, cuts: tuple[int, ...]) -> tuple[int, ...]:
+    _validate_dimensions(m, n)
+    _validate_cut_history(cuts)
+    d = gcd(m, n)
+    current = 0
+    trace = [current]
+    for cut in cuts:
+        current = (current + cut) % d
+        trace.append(current)
+    return tuple(trace)
+
+
+def historical_reach_count(m: int, n: int, cuts: tuple[int, ...]) -> int:
+    trace = historical_sheet_trace(m, n, cuts)
+    return lcm(m, n) * len(set(trace))
+
+
 __all__ = [
     "TransverseAnalysis",
     "TransverseInputError",
     "analyze_transverse",
+    "historical_reach_count",
+    "historical_sheet_trace",
     "sheet_coordinate",
 ]
