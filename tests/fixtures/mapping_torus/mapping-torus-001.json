@@ -1,0 +1,18 @@
+{
+  "schema": "dogram.mapping-torus-fixture/v0",
+  "fiber_count": 72,
+  "shift_a": 5,
+  "shift_b": 7,
+  "expected": {
+    "shift_a_components": 1,
+    "shift_a_orbit_length": 72,
+    "shift_b_components": 1,
+    "shift_b_orbit_length": 72,
+    "relative_delta": 70,
+    "realignment_period": 36,
+    "twisted_mode_1_6": {
+      "numerator": 17,
+      "denominator": 12
+    }
+  }
+}
