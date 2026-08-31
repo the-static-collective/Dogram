@@ -25,6 +25,7 @@ jobs:
           import pathlib
           import tomllib
           from dogram.engine import OPERATORS
+          from dogram.registry import build_bootstrap_registry
 
           pyproject = tomllib.loads(pathlib.Path("pyproject.toml").read_text())
           assert pyproject["project"]["dependencies"] == []
@@ -34,4 +35,42 @@ jobs:
               ("ablate", 1),
               ("reach", 1),
           }
+          assert set(build_bootstrap_registry().ids()) == {
+              "core.get@1",
+              "core.same@1",
+              "core.add@1",
+              "core.sub@1",
+              "core.length@1",
+              "core.gt@1",
+              "core.select_first@1",
+              "trace.compare_ordered@1",
+              "graph.apply_mutation@1",
+              "graph.reachable_pairs@1",
+              "graph.query_paths@1",
+              "set.difference@1",
+          }
+          print("constitutional floor OK")
+          PY
+      - name: Omega scope scan
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          forbidden = ["eval(", "exec(", "importlib", "subprocess", "socket.", "requests."]
+          for path in Path("dogram").rglob("*.py"):
+              text = path.read_text()
+              for token in forbidden:
+                  assert token not in text, (path, token)
+
+          for path in [
+              Path("dogram/proposal.py"),
+              Path("dogram/gate.py"),
+              Path("dogram/omega.py"),
+              Path("dogram/reify.py"),
+          ]:
+              text = path.read_text()
+              for token in ("TODO", "TBD", "FIXME", "PLACEHOLDER"):
+                  assert token not in text, (path, token)
+
+          print("scope scan OK")
           PY

@@ -1,0 +1,18 @@
+{
+  "schema": "dogram.program/v0",
+  "program_id": "meta/remove-declared-step",
+  "program_version": 1,
+  "steps": [],
+  "result": {
+    "schema": "dogram.proposal/v0",
+    "proposal_id": {"ref": "input", "path": ["proposal_id"]},
+    "proposal_version": 1,
+    "kind": "program_patch",
+    "base_program_digest": {"ref": "input", "path": ["program_data", "program_digest"]},
+    "base_execution_digest": {"ref": "input", "path": ["execution_digest"]},
+    "payload": {
+      "op": "remove_step",
+      "step_id": {"ref": "input", "path": ["declared_target_step"]}
+    }
+  }
+}
