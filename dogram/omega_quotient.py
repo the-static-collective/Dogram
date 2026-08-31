@@ -9,7 +9,9 @@ from .program import Program
 from .registry import Registry
 
 
-_SUPPORTED_PROBES = frozenset({"result", "status", "reason_code", "residuals"})
+_SUPPORTED_PROBES = frozenset(
+    {"result", "status", "reason_code", "residuals", "step_trace"}
+)
 _DOES_NOT_ESTABLISH = [
     "global_equivalence",
     "causal_irrelevance",
