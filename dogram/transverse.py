@@ -71,7 +71,8 @@ def analyze_transverse(m: int, n: int, generators: tuple[int, ...]) -> Transvers
     )
 
 
-def historical_sheet_trace(m: int, n: int, cuts: tuple[int, ...]) -> tuple[int, ...]:
+def bounded_history_sheet_trace(m: int, n: int, cuts: tuple[int, ...]) -> tuple[int, ...]:
+    """Return sheets reached by declared cut->complete-sync-orbit cycles."""
     _validate_dimensions(m, n)
     _validate_cut_history(cuts)
     d = gcd(m, n)
@@ -83,8 +84,9 @@ def historical_sheet_trace(m: int, n: int, cuts: tuple[int, ...]) -> tuple[int, 
     return tuple(trace)
 
 
-def historical_reach_count(m: int, n: int, cuts: tuple[int, ...]) -> int:
-    trace = historical_sheet_trace(m, n, cuts)
+def bounded_history_reach_count(m: int, n: int, cuts: tuple[int, ...]) -> int:
+    """Count states covered when every recorded sheet receives a full sync orbit."""
+    trace = bounded_history_sheet_trace(m, n, cuts)
     return lcm(m, n) * len(set(trace))
 
 
@@ -92,7 +94,7 @@ __all__ = [
     "TransverseAnalysis",
     "TransverseInputError",
     "analyze_transverse",
-    "historical_reach_count",
-    "historical_sheet_trace",
+    "bounded_history_reach_count",
+    "bounded_history_sheet_trace",
     "sheet_coordinate",
 ]
