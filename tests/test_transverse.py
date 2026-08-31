@@ -95,6 +95,16 @@ class TransverseTests(unittest.TestCase):
                 name,
             )
 
+    def test_complementary_generators_span_more_than_either_alone(self):
+        left = analyze_transverse(12, 18, (2,))
+        right = analyze_transverse(12, 18, (3,))
+        together = analyze_transverse(12, 18, (2, 3))
+        self.assertEqual(left.closure_reach_count, 108)
+        self.assertEqual(right.closure_reach_count, 72)
+        self.assertEqual(together.closure_reach_count, 216)
+        self.assertLess(left.closure_reach_count, together.closure_reach_count)
+        self.assertLess(right.closure_reach_count, together.closure_reach_count)
+
 
 if __name__ == "__main__":
     unittest.main()
