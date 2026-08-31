@@ -23,6 +23,20 @@ class TransverseAnalysis:
     sheet_count: int
     closure_lift_index: int
     closure_reach_count: int
+    closure_sheets: tuple[int, ...]
+
+    def to_data(self) -> dict[str, object]:
+        return {
+            "m": self.m,
+            "n": self.n,
+            "generators": list(self.generators),
+            "state_capacity": self.state_capacity,
+            "sync_sheet_size": self.sync_sheet_size,
+            "sheet_count": self.sheet_count,
+            "closure_lift_index": self.closure_lift_index,
+            "closure_reach_count": self.closure_reach_count,
+            "closure_sheets": list(self.closure_sheets),
+        }
 
 
 def _validate_dimensions(m: int, n: int) -> None:
@@ -53,12 +67,29 @@ def sheet_coordinate(m: int, n: int, a: int, b: int) -> int:
     return (a - b) % gcd(m, n)
 
 
+def _generated_sheets(d: int, generators: tuple[int, ...]) -> tuple[int, ...]:
+    seen = {0}
+    frontier = [0]
+    normalized = tuple(r % d for r in generators)
+    while frontier:
+        current = frontier.pop()
+        for step in normalized:
+            nxt = (current + step) % d
+            if nxt not in seen:
+                seen.add(nxt)
+                frontier.append(nxt)
+    return tuple(sorted(seen))
+
+
 def analyze_transverse(m: int, n: int, generators: tuple[int, ...]) -> TransverseAnalysis:
     _validate_dimensions(m, n)
     _validate_generators(generators)
     d = gcd(m, n)
     sheet_size = lcm(m, n)
     lift = d // gcd(d, *generators)
+    sheets = _generated_sheets(d, generators)
+    if len(sheets) != lift:
+        raise AssertionError("quotient traversal disagrees with gcd lift formula")
     return TransverseAnalysis(
         m=m,
         n=n,
@@ -68,6 +99,7 @@ def analyze_transverse(m: int, n: int, generators: tuple[int, ...]) -> Transvers
         sheet_count=d,
         closure_lift_index=lift,
         closure_reach_count=sheet_size * lift,
+        closure_sheets=sheets,
     )
 
 
