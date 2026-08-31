@@ -1,7 +1,7 @@
 # Dogram Ω-CYCLE-001 — First Lawful Metaoscillation
 
 **Date:** 2026-08-30  
-**Status:** DESIGN APPROVED IN CHAT · WRITTEN SPEC AWAITING HUMAN REVIEW  
+**Status:** DESIGN APPROVED IN CHAT · WRITTEN SPEC SELF-REVIEWED · AWAITING HUMAN REVIEW  
 **Repository:** `the-static-collective/Dogram`  
 **Baseline main:** `bf8eaa6b64489a08463286f266050ae8647d4317`  
 **Parent architecture:** `docs/superpowers/specs/2026-08-28-dogram-metaoscillatory-runtime-design.md`
@@ -116,20 +116,19 @@ It may not decide:
 
 1. Canonical inert reification of the current program and one VM execution.
 2. Exact digests for reified execution artifacts.
-3. Strict typed proposal decoding for a minimal `dogram.proposal/v0` envelope.
-4. Initial proposal kinds:
-   - `NoChange`;
-   - `Stop`;
-   - `ProgramPatch` with exactly one admitted patch operation: `remove_step`.
-5. One native META mathal that emits a `remove_step` proposal from declared inputs.
-6. A deterministic host phase gate for the minimal proposal family.
-7. One-cycle orchestration with explicit phase boundaries.
-8. Frozen positive and hostile fixtures.
-9. Exact post-cycle conformance comparison.
-10. CI preservation of the current public operator floor and zero-dependency constitution.
+3. Exact runtime provenance for input addresses actually resolved/consumed.
+4. Strict typed proposal decoding for a minimal `dogram.proposal/v0` envelope.
+5. Exactly one initial proposal kind: `ProgramPatch` with exactly one admitted patch operation, `remove_step`.
+6. One native META mathal that emits a `remove_step` proposal from declared inputs.
+7. A deterministic host phase gate for that minimal proposal family.
+8. One-cycle orchestration with explicit phase boundaries.
+9. Frozen positive and hostile fixtures.
+10. Exact post-cycle conformance comparison.
+11. CI preservation of the current public operator floor and zero-dependency constitution.
 
 ### Explicitly out of scope
 
+- `NoChange` and `Stop` proposal semantics in Ω-CYCLE-001; they remain available to later parent-architecture slices when their phase behavior can be specified independently;
 - native `rectangle`, `ablate`, or `reach` lowering;
 - recursive mathal calls;
 - cyclic programs;
@@ -210,16 +209,31 @@ fuel_before
 fuel_after
 ```
 
-### 4.3 Consumed input addresses
+### 4.3 Exact consumed-input provenance
 
-The existing VM resolves explicit `ref: input` addresses before invoking each intrinsic. Ω-CYCLE-001 must preserve those addresses as reified consumption provenance.
+The existing VM resolves explicit `ref: input` addresses before invoking each intrinsic. Ω-CYCLE-001 must preserve the addresses that were actually resolved by the runtime, including executions that later refuse.
 
-Because `dogram.program/v0` is acyclic and executes steps in declared order, the initial implementation may derive actual consumed input addresses from:
+The implementation may satisfy this by extending `StepTrace`, `VMExecution`, or a dedicated deterministic provenance collector, but the rule is fixed:
 
-- step argument templates for steps that were actually reached/executed;
-- the final result template only when final result resolution occurs.
+```text
+REIFICATION MAY NOT INFER "CONSUMED" FROM EVERY SYNTACTIC INPUT REFERENCE.
+```
 
-This is an execution receipt, not a semantic statement about which inputs were causally important.
+That would overstate consumption when execution stops early.
+
+The receipt must distinguish at least:
+
+```text
+address syntactically present in program
+!=
+address actually resolved during this execution
+```
+
+For a failed address resolution, the unavailable address is not recorded as successfully consumed.
+
+For an intrinsic refusal after successful argument resolution, the successfully resolved input addresses remain part of the execution provenance even though the intrinsic returned no successful result.
+
+This is execution provenance, not causal semantics.
 
 Hard law:
 
@@ -270,23 +284,17 @@ Strict envelope:
 
 The decoder rejects unknown top-level fields and unknown payload fields.
 
-### 5.1 Initial kinds
+### 5.1 Initial proposal family
 
-The initial proposal family is:
-
-```text
-no_change
-stop
-program_patch
-```
-
-`program_patch` supports only:
+Ω-CYCLE-001 admits only:
 
 ```text
-remove_step
+program_patch/remove_step
 ```
 
-No generic mutation language is admitted in this slice.
+There is no generic mutation language in this slice.
+
+`NoChange`, `Stop`, branching, composition, and peel proposals remain parent-architecture concepts for later independently reviewed slices.
 
 ### 5.2 Proposal identity
 
@@ -296,7 +304,7 @@ No generic mutation language is admitted in this slice.
 
 ### 5.3 Exact ancestry binding
 
-Every `program_patch` proposal must bind to:
+Every proposal must bind to:
 
 ```text
 base_program_digest
@@ -378,20 +386,21 @@ If admitted, the gate also returns the newly decoded candidate `Program` plus it
 For `program_patch/remove_step`, the gate checks at least:
 
 1. exact proposal schema/version;
-2. known proposal kind;
-3. exact `base_program_digest` match;
-4. exact `base_execution_digest` match;
-5. target step exists in the current program;
-6. exactly one step is targeted;
-7. removing the step does not create a dangling step reference;
-8. removing the step does not create a dangling final-result reference;
-9. resulting program still decodes as `dogram.program/v0`;
-10. every remaining operation resolves in the already-admitted local registry;
-11. no forward/cyclic reference is introduced;
-12. resulting program remains within declared step limits;
-13. proposal contains no unknown fields or executable payload;
-14. candidate canonicalizes deterministically;
-15. candidate digest is computed before execution.
+2. exact known proposal kind `program_patch`;
+3. exact known patch operation `remove_step`;
+4. exact `base_program_digest` match;
+5. exact `base_execution_digest` match;
+6. target step exists in the current program;
+7. exactly one step is targeted;
+8. removing the step does not create a dangling step reference;
+9. removing the step does not create a dangling final-result reference;
+10. resulting program still decodes as `dogram.program/v0`;
+11. every remaining operation resolves in the already-admitted local registry;
+12. no forward/cyclic reference is introduced;
+13. resulting program remains within declared step limits;
+14. proposal contains no unknown fields or executable payload;
+15. candidate canonicalizes deterministically;
+16. candidate digest is computed before execution.
 
 ### 7.2 Gate ignorance
 
@@ -418,8 +427,10 @@ Conceptual host flow:
 ```python
 r0 = execute_program(P0, W, registry, exec_config)
 D0 = reify(P0, W, r0)
-q0 = execute_program(META_PROGRAM, meta_inputs(D0, target), registry, meta_config)
-p0 = decode_proposal(q0.result)
+meta_r = execute_program(META_PROGRAM, meta_inputs(D0, target), registry, meta_config)
+if meta_r.status != "OK":
+    refuse_cycle("META_EXECUTION_REFUSED")
+p0 = decode_proposal(meta_r.result)
 g0 = phase_gate(p0, P0, D0, registry, limits)
 if g0.status == "ADMIT":
     r1 = execute_program(g0.program, W, registry, exec_config)
@@ -557,7 +568,7 @@ REFUSE / DANGLING_RESULT_REFERENCE
 
 ### 10.6 `OMEGA-MALFORMED-PROPOSAL-001`
 
-Proposal contains unknown fields, unknown patch operations, or executable/capability-shaped payload.
+Proposal contains unknown fields, an unknown kind, an unknown patch operation, or capability-shaped payload.
 
 Expected:
 
@@ -565,21 +576,36 @@ Expected:
 REFUSE / MALFORMED_PROPOSAL
 ```
 
-### 10.7 `OMEGA-UNKNOWN-OP-POSTPATCH-001`
+### 10.7 `OMEGA-META-REFUSAL-001`
 
-A candidate program fails registry resolution under the current local constitution.
+The META mathal itself refuses or exhausts fuel.
 
 Expected:
 
 ```text
-REFUSE / UNKNOWN_OPERATION
+META VM: REFUSE
+PHASE GATE: NOT REACHED
+NEXT EXEC: NOT REACHED
 ```
 
-This can be tested with a deliberately malformed candidate/gate specimen; `remove_step` itself cannot create a new operation.
+This proves that a failed reflective phase cannot fall through into admission.
 
-### 10.8 `OMEGA-RESULT-CHANGED-001`
+### 10.8 `OMEGA-REIFICATION-CAPABILITY-LEAK-001`
 
-A structurally lawful patch is admitted but changes the declared operative result.
+A test artifact attempts to cross the membrane with a non-canonical/live capability-shaped value.
+
+Expected:
+
+```text
+REIFICATION: REFUSE / FAIL CLOSED
+META: NOT REACHED
+```
+
+No `repr()` or stringified capability escape hatch is allowed.
+
+### 10.9 `OMEGA-RESULT-CHANGED-001`
+
+A structurally lawful removal is admitted but changes the declared operative result.
 
 Expected:
 
@@ -632,14 +658,7 @@ Hard law:
 
 ## 12. Error/status discipline
 
-The existing VM status family remains:
-
-```text
-OK
-REFUSE
-```
-
-for the currently implemented `VMExecution` surface; the broader parent architecture retains `INSUFFICIENT_TO_TEST` as an architectural/public possibility where/when implemented.
+The currently implemented VM execution surface emits `OK` and `REFUSE` in the code path available at the baseline; the broader parent architecture still reserves `INSUFFICIENT_TO_TEST` as a public/architectural possibility for later implementation where appropriate.
 
 Ω-CYCLE-001 must not invent semantic success statuses.
 
@@ -672,6 +691,7 @@ P0
 W
 META program
 declared target
+proposal_id
 registry
 phase configs
 gate limits
@@ -728,12 +748,13 @@ Implementation is not complete until fresh verification demonstrates all of the 
 4. public operator floor remains exactly four operators;
 5. native `stdlib/delta` conformance remains green;
 6. reification artifacts are canonical/deterministic;
-7. the positive Ω cycle completes exactly one META round;
-8. all required hostile fixtures produce their declared refusals/differences;
-9. no proposal can bypass the phase gate;
-10. no live capability appears in any reified artifact;
-11. result-changing but structurally valid patches are admitted and reported as behaviorally different rather than gate-refused;
-12. repeated identical cycles produce identical canonical digests/receipts.
+7. actual consumed-input provenance is exact across success and refusal paths;
+8. the positive Ω cycle completes exactly one META round;
+9. all required hostile fixtures produce their declared refusals/differences;
+10. no proposal can bypass the phase gate;
+11. no live capability appears in any reified artifact;
+12. result-changing but structurally valid patches are admitted and reported as behaviorally different rather than gate-refused;
+13. repeated identical cycles produce identical canonical digests/receipts.
 
 No success claim may be based only on the positive fixture.
 
@@ -772,7 +793,7 @@ Stop, demote, or redesign Ω-CYCLE-001 if any of the following becomes necessary
 - the gate must decide semantic/evidentiary quality to admit a candidate;
 - a general rewrite language is required just to remove one declared step;
 - the first cycle requires hidden recursion or unbounded reflection;
-- reification cannot preserve exact ancestry without ambient state;
+- exact execution ancestry/consumption cannot be preserved without ambient state;
 - the implementation silently changes the existing public operator floor;
 - a structurally valid result-changing patch cannot be distinguished from a structurally invalid patch;
 - the proposed machinery is more complex than completing the same experiment as an explicit host-side two-run harness with receipts.
@@ -781,7 +802,19 @@ That final kill condition matters: metaoscillation must pay for its constitution
 
 ---
 
-## 18. Seals
+## 18. Self-review amendments
+
+The first written draft was tightened before human review in two places:
+
+1. `NoChange` and `Stop` were removed from Ω-CYCLE-001 scope because they introduce additional phase semantics without helping prove the first lawful reflective cycle.
+2. consumed-input provenance was strengthened from post-hoc syntactic inference to exact runtime-resolved address provenance, including refusal paths.
+3. an unreachable `UNKNOWN_OPERATION` post-removal control was replaced with META-refusal and reification-capability-leak controls that can actually occur inside this slice's declared grammar.
+
+No runtime/schema implementation has been performed on this branch.
+
+---
+
+## 19. Seals
 
 > **REIFY BEFORE REFLECT.**
 
