@@ -1,0 +1,27 @@
+{
+  "schema": "dogram.program/v0",
+  "program_id": "stdlib/delta",
+  "program_version": 1,
+  "steps": [
+    {
+      "id": "cmp",
+      "op": "trace.compare_ordered@1",
+      "args": [
+        {"ref": "input", "path": ["boundary_order"]},
+        {"ref": "input", "path": ["left"]},
+        {"ref": "input", "path": ["right"]}
+      ]
+    },
+    {
+      "id": "first",
+      "op": "core.select_first@1",
+      "args": [
+        {"ref": "step", "step": "cmp", "path": ["differences"]}
+      ]
+    }
+  ],
+  "result": {
+    "comparisons": {"ref": "step", "step": "cmp", "path": ["comparisons"]},
+    "first_difference": {"ref": "step", "step": "first"}
+  }
+}
