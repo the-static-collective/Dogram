@@ -160,14 +160,23 @@ class OmegaQuotientTests(unittest.TestCase):
         self.assertNotIn("GLOBALLY_EQUIVALENT", canonical_json_bytes(receipt).decode())
 
     def test_structural_admission_cannot_force_target_equivalence(self):
-        admitted_gate = {"status": "ADMIT"}
-        before = make_execution_cut(execution_data(result=7), fuel_initial=10)
-        after = make_execution_cut(execution_data(result=8, fuel_remaining=9), fuel_initial=10)
+        trace_target = TargetFamily(
+            id="T_step_trace",
+            probes=("step_trace",),
+            declared_before_comparison=True,
+        )
+        result = run_positive(
+            target=trace_target,
+            proposal_id="proposal-gate-target-separation",
+        )
 
-        comparison = compare_execution_cuts(before, after, result_target())
-        self.assertEqual(admitted_gate["status"], "ADMIT")
-        self.assertEqual(comparison.status, "OK")
-        self.assertEqual(comparison.target_verdict, "DIFFERENT_UNDER_T")
+        self.assertEqual(result.status, "OK")
+        self.assertEqual(result.receipt["omega_cycle"]["gate"]["status"], "ADMIT")
+        self.assertEqual(result.receipt["target_verdict"], "DIFFERENT_UNDER_T")
+        self.assertNotEqual(
+            result.receipt["baseline"]["execution_cut"]["step_trace"],
+            result.receipt["candidate"]["execution_cut"]["step_trace"],
+        )
 
     def test_unpinned_runtime_drift_is_held_outside_claim_boundary(self):
         before = make_execution_cut(execution_data(), fuel_initial=10)
