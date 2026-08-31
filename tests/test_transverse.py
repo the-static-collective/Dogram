@@ -38,6 +38,27 @@ def brute_reach_count(m, n, generators):
     return len(seen)
 
 
+def brute_quotient_return_period(m, n, r):
+    from math import gcd
+
+    d = gcd(m, n)
+    sheet = 0
+    for k in range(1, d + 1):
+        sheet = (sheet + r) % d
+        if sheet == 0:
+            return k
+    raise AssertionError((m, n, r, "quotient period not found"))
+
+
+def brute_exact_carrier_return_period(m, r):
+    state = 0
+    for k in range(1, m + 1):
+        state = (state + r) % m
+        if state == 0:
+            return k
+    raise AssertionError((m, r, "carrier period not found"))
+
+
 class TransverseTests(unittest.TestCase):
     def test_z6_x_z4_has_two_twelve_state_sync_sheets(self):
         result = analyze_transverse(6, 4, (1,))
@@ -122,6 +143,20 @@ class TransverseTests(unittest.TestCase):
         with self.assertRaises(TransverseInputError) as caught:
             exact_carrier_return_period(0, 1)
         self.assertEqual(caught.exception.reason_code, "INVALID_DIMENSION")
+
+    def test_return_period_formulas_match_independent_bounded_oracle(self):
+        checked = 0
+        for m in range(2, 21):
+            for n in range(2, 21):
+                for r in range(1, 21):
+                    quotient = quotient_return_period(m, n, r)
+                    exact = exact_carrier_return_period(m, r)
+                    self.assertEqual(quotient, brute_quotient_return_period(m, n, r), (m, n, r))
+                    self.assertEqual(exact, brute_exact_carrier_return_period(m, r), (m, n, r))
+                    self.assertEqual(exact % quotient, 0, (m, n, r))
+                    self.assertEqual(return_debt(m, n, r), exact // quotient, (m, n, r))
+                    checked += 1
+        self.assertEqual(checked, 7220)
 
     def test_frozen_specimens_match_exact_history_closure_and_budget(self):
         names = sorted(path.name for path in FIXTURES.glob("*.json"))
