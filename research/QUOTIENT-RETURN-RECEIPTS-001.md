@@ -57,7 +57,51 @@ No public `return@1`, `holonomy@1`, `monodromy@1`, `coherence@1`, or `lift@1` op
 
 ## Exact-head verification
 
-The seal task records the literal implementation commit SHA, observed test count, compile result, constitutional-floor result, Omega-scope result, unchanged public operator floor, unchanged bootstrap registry, and unchanged protected Ω/proposal/gate surfaces.
+Verified implementation head:
+
+```text
+446cfc4643e42fe84963252c533344a3108a642c
+```
+
+GitHub Actions run `33421835912` on that exact head recorded:
+
+```text
+158 unit tests: PASS
+compileall dogram tests: PASS
+constitutional floor: PASS
+Omega scope scan: PASS
+```
+
+The constitutional floor explicitly re-checked:
+
+```text
+project dependencies == []
+public OPERATORS == {delta@1, rectangle@1, ablate@1, reach@1}
+bootstrap registry == the predeclared twelve intrinsic ids
+```
+
+Diff against approved base `4389bd0eba9304c0d162eb88261c7fde7892e9b5` contains production changes only in:
+
+```text
+dogram/transverse.py
+dogram/productive_desync.py
+```
+
+Protected runtime/authority surfaces are absent from the diff:
+
+```text
+dogram/omega.py
+dogram/proposal.py
+dogram/gate.py
+dogram/program.py
+dogram/vm.py
+dogram/engine.py
+dogram/registry.py
+```
+
+The remaining changed paths are the six frozen fixtures, their two test surfaces, this receipt, and the factual README status note.
+
+The commit that seals this receipt is documentation-only and is re-run through the same CI before review/merge; it does not retroactively change the implementation head named above.
 
 ## Seal
 
