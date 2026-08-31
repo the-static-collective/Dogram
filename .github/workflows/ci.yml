@@ -51,3 +51,26 @@ jobs:
           }
           print("constitutional floor OK")
           PY
+      - name: Omega scope scan
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          forbidden = ["eval(", "exec(", "importlib", "subprocess", "socket.", "requests."]
+          for path in Path("dogram").rglob("*.py"):
+              text = path.read_text()
+              for token in forbidden:
+                  assert token not in text, (path, token)
+
+          for path in [
+              Path("dogram/proposal.py"),
+              Path("dogram/gate.py"),
+              Path("dogram/omega.py"),
+              Path("dogram/reify.py"),
+          ]:
+              text = path.read_text()
+              for token in ("TODO", "TBD", "FIXME", "PLACEHOLDER"):
+                  assert token not in text, (path, token)
+
+          print("scope scan OK")
+          PY
