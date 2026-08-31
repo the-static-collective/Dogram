@@ -51,4 +51,6 @@ python -m dogram.cli examples/mutated_mathals/same-surface-different-history.jso
 
 Phase A is the independent oracle floor for **Dogram Ω**, the approved metaoscillatory runtime. Later reviewed slices add an inert Mathal VM, reified execution, bounded META proposals, a phase gate, explicit branching, and bootstrap peeling. The direct Python operators remain independent conformance witnesses during that migration.
 
+The first bounded Ω cycle is implemented as an explicit `EXEC -> REIFY -> META -> PROPOSAL -> PHASE GATE -> EXEC` path. Its META surface can only construct a caller-declared `remove_step` proposal from inert execution data; structural admission remains separate from behavioral comparison, and the public four-operator calculation floor is unchanged.
+
 See `docs/superpowers/specs/2026-08-28-dogram-metaoscillatory-runtime-design.md`.
