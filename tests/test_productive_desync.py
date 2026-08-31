@@ -53,7 +53,14 @@ class ProductiveDesyncTests(unittest.TestCase):
             "cut_declared": True,
             "cut_budget": 1,
             "cuts_used": 1,
-            "returned_to_coherence": True,
+            "return_relation": ReturnRelation(
+                relation_id="bounded-coherence-return",
+                quotient_id="declared-coherence-cut",
+                anchor_before={"sheet": 0},
+                anchor_after={"sheet": 0},
+                quotient_before=0,
+                quotient_after=0,
+            ),
         }
         values.update(overrides)
         return assess_productive_desync(**values)
@@ -86,9 +93,24 @@ class ProductiveDesyncTests(unittest.TestCase):
         result = self.assess(cut_budget=1, cuts_used=2)
         self.assertEqual((result.status, result.reason_code), ("REFUSE", "CUT_BUDGET_EXCEEDED"))
 
-    def test_no_coherence_return_refuses_bounded_desync_label(self):
-        result = self.assess(returned_to_coherence=False)
+    def test_no_declared_return_refuses_bounded_desync_label(self):
+        relation = ReturnRelation(
+            relation_id="bounded-coherence-return",
+            quotient_id="declared-coherence-cut",
+            anchor_before={"sheet": 0},
+            anchor_after={"sheet": 1},
+            quotient_before=0,
+            quotient_after=1,
+        )
+        result = self.assess(return_relation=relation)
         self.assertEqual((result.status, result.reason_code), ("REFUSE", "NO_COHERENCE_RETURN"))
+
+    def test_assessment_receipt_preserves_return_scope(self):
+        result = self.assess()
+        relation = result.to_data()["return_relation"]
+        self.assertEqual(relation["relation_id"], "bounded-coherence-return")
+        self.assertEqual(relation["quotient_id"], "declared-coherence-cut")
+        self.assertTrue(relation["returned"])
 
     def test_no_reachability_gain_refuses(self):
         result = self.assess(historical_reach_count=18, closure_reach_count=18)
@@ -105,6 +127,10 @@ class ProductiveDesyncTests(unittest.TestCase):
     def test_non_dictionary_residual_refuses_input(self):
         with self.assertRaises(ValueError):
             self.assess(execution_residual=True)
+
+    def test_non_relation_return_input_refuses(self):
+        with self.assertRaises(ValueError):
+            self.assess(return_relation=True)
 
 
 if __name__ == "__main__":
