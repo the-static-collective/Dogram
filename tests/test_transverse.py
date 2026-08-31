@@ -112,6 +112,17 @@ class TransverseTests(unittest.TestCase):
         self.assertEqual(exact_carrier_return_period(6, 6), 1)
         self.assertEqual(return_debt(6, 9, 6), 1)
 
+    def test_return_period_helpers_reject_invalid_generators(self):
+        for bad in (True, 1.5, "1"):
+            with self.assertRaises(TransverseInputError) as caught:
+                quotient_return_period(6, 9, bad)
+            self.assertEqual(caught.exception.reason_code, "INVALID_GENERATOR")
+
+    def test_exact_return_period_rejects_invalid_dimension(self):
+        with self.assertRaises(TransverseInputError) as caught:
+            exact_carrier_return_period(0, 1)
+        self.assertEqual(caught.exception.reason_code, "INVALID_DIMENSION")
+
     def test_frozen_specimens_match_exact_history_closure_and_budget(self):
         names = sorted(path.name for path in FIXTURES.glob("*.json"))
         self.assertEqual(len(names), 6)
