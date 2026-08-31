@@ -1,6 +1,16 @@
+import json
+import pathlib
 import unittest
 
 from dogram.productive_desync import ReturnRelation, assess_productive_desync
+
+
+ROOT = pathlib.Path(__file__).parents[1]
+RETURN_FIXTURES = ROOT / "tests" / "fixtures" / "return_relation"
+
+
+def load_return_fixture(name):
+    return json.loads((RETURN_FIXTURES / name).read_text())
 
 
 class ReturnRelationTests(unittest.TestCase):
@@ -111,6 +121,31 @@ class ProductiveDesyncTests(unittest.TestCase):
         self.assertEqual(relation["relation_id"], "bounded-coherence-return")
         self.assertEqual(relation["quotient_id"], "declared-coherence-cut")
         self.assertTrue(relation["returned"])
+
+    def test_coarse_return_can_witness_while_fine_return_refuses_for_same_other_facts(self):
+        fixture = load_return_fixture("productive-desync-scope-control.json")
+        shared = fixture["assessment"]
+
+        def build_relation(data):
+            return ReturnRelation(
+                relation_id=data["relation_id"],
+                quotient_id=data["quotient_id"],
+                anchor_before=data["anchor_before"],
+                anchor_after=data["anchor_after"],
+                quotient_before=data["quotient_before"],
+                quotient_after=data["quotient_after"],
+            )
+
+        coarse = assess_productive_desync(**shared, return_relation=build_relation(fixture["coarse_return"]))
+        fine = assess_productive_desync(**shared, return_relation=build_relation(fixture["fine_return"]))
+        self.assertEqual(coarse.status, fixture["coarse_return"]["expected_status"])
+        self.assertEqual(
+            (fine.status, fine.reason_code),
+            (
+                fixture["fine_return"]["expected_status"],
+                fixture["fine_return"]["expected_reason_code"],
+            ),
+        )
 
     def test_no_reachability_gain_refuses(self):
         result = self.assess(historical_reach_count=18, closure_reach_count=18)

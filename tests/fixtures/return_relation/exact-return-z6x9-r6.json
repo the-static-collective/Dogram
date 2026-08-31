@@ -1,0 +1,11 @@
+{
+  "id": "RETURN-R4-EXACT-Z6X9-R6",
+  "system": {"m": 6, "n": 9, "r": 6},
+  "expected": {
+    "quotient_return_period": 1,
+    "exact_carrier_return_period": 1,
+    "return_debt": 1,
+    "first_cycle_sheet_returned": true,
+    "first_cycle_carrier_returned": true
+  }
+}

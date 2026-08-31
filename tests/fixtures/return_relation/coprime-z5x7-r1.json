@@ -1,0 +1,11 @@
+{
+  "id": "RETURN-R3-COPRIME-Z5X7-R1",
+  "system": {"m": 5, "n": 7, "r": 1},
+  "expected": {
+    "sheet_count": 1,
+    "quotient_return_period": 1,
+    "exact_carrier_return_period": 5,
+    "return_debt": 5,
+    "strict_reachability_lift": false
+  }
+}

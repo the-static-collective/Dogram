@@ -177,6 +177,33 @@ class TransverseTests(unittest.TestCase):
             ],
         )
 
+    def test_return_relation_fixtures_match_exact_transverse_math(self):
+        for name in (
+            "z6x9-r1.json",
+            "z8x12-r4.json",
+            "coprime-z5x7-r1.json",
+            "exact-return-z6x9-r6.json",
+        ):
+            fixture = load_return_fixture(name)
+            system = fixture["system"]
+            expected = fixture["expected"]
+            m, n, r = system["m"], system["n"], system["r"]
+            self.assertEqual(quotient_return_period(m, n, r), expected["quotient_return_period"], name)
+            self.assertEqual(exact_carrier_return_period(m, r), expected["exact_carrier_return_period"], name)
+            self.assertEqual(return_debt(m, n, r), expected["return_debt"], name)
+
+    def test_same_generator_closure_can_hold_returning_and_nonreturning_words(self):
+        fixture = load_return_fixture("multigenerator-word-control.json")
+        system = fixture["system"]
+        analysis = analyze_transverse(system["m"], system["n"], tuple(system["generators"]))
+        self.assertEqual(analysis.closure_reach_count, fixture["expected"]["closure_reach_count"])
+        trace_a = bounded_history_sheet_trace(system["m"], system["n"], tuple(fixture["word_a"]))
+        trace_b = bounded_history_sheet_trace(system["m"], system["n"], tuple(fixture["word_b"]))
+        self.assertEqual(list(trace_a), fixture["expected"]["word_a_sheet_trace"])
+        self.assertEqual(trace_a[-1] == trace_a[0], fixture["expected"]["word_a_returns"])
+        self.assertEqual(list(trace_b), fixture["expected"]["word_b_sheet_trace"])
+        self.assertEqual(trace_b[-1] == trace_b[0], fixture["expected"]["word_b_returns"])
+
     def test_frozen_specimens_match_exact_history_closure_and_budget(self):
         names = sorted(path.name for path in FIXTURES.glob("*.json"))
         self.assertEqual(len(names), 6)
