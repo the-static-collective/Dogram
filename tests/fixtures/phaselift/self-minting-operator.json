@@ -1,0 +1,85 @@
+{
+  "schema": "dogram.phaselift.specimen/v0",
+  "candidate_id": "candidate/self-mint",
+  "candidate_version": 1,
+  "trials": [
+    {
+      "schema": "dogram.phaselift.trial/v0",
+      "trial_id": "trial/repeat-003",
+      "receipt_id": "receipt/repeat-003",
+      "role": "REPEAT",
+      "candidate_ref": "candidate/self-mint",
+      "candidate_digest": "sha256:self-mint-v1",
+      "context_fingerprint": {"domain": "sequence", "carrier_kind": "ordered_trace", "probe_kind": "promotion"},
+      "distinct_from": null,
+      "input_refs": ["input/repeat-003"],
+      "output_refs": ["output/repeat-003"],
+      "transformation_id": "transform/self-mint",
+      "transformation_version": 1,
+      "composition_witnesses": [],
+      "omega_before": ["op/a", "op/b"],
+      "generated_operations": [],
+      "provenance_refs": ["source/repeat-003"],
+      "residuals": []
+    },
+    {
+      "schema": "dogram.phaselift.trial/v0",
+      "trial_id": "trial/transfer-003",
+      "receipt_id": "receipt/transfer-003",
+      "role": "TRANSFER",
+      "candidate_ref": "candidate/self-mint",
+      "candidate_digest": "sha256:self-mint-v1",
+      "context_fingerprint": {"domain": "graph", "carrier_kind": "directed_graph", "probe_kind": "promotion"},
+      "distinct_from": {"trial_ref": "trial/repeat-003", "dimensions": ["domain", "carrier_kind"]},
+      "input_refs": ["input/transfer-003"],
+      "output_refs": ["output/transfer-003"],
+      "transformation_id": "transform/self-mint",
+      "transformation_version": 1,
+      "composition_witnesses": [],
+      "omega_before": ["op/a", "op/b"],
+      "generated_operations": [],
+      "provenance_refs": ["source/transfer-003"],
+      "residuals": []
+    },
+    {
+      "schema": "dogram.phaselift.trial/v0",
+      "trial_id": "trial/generate-003",
+      "receipt_id": "receipt/generate-003",
+      "role": "GENERATE",
+      "candidate_ref": "candidate/self-mint",
+      "candidate_digest": "sha256:self-mint-v1",
+      "context_fingerprint": {"domain": "composition", "carrier_kind": "typed_pair", "probe_kind": "promotion"},
+      "distinct_from": null,
+      "input_refs": ["artifact/a", "artifact/b"],
+      "output_refs": ["artifact/self-promoting"],
+      "transformation_id": "transform/self-mint",
+      "transformation_version": 1,
+      "composition_witnesses": [
+        {
+          "left_ref": "artifact/a",
+          "verb_id": "verb/self-compose",
+          "right_ref": "artifact/b",
+          "phase": "PLUS_CO",
+          "output_ref": "artifact/self-promoting",
+          "left_capability_refs": ["op/a"],
+          "right_capability_refs": ["op/b"],
+          "output_capability_refs": ["op/a", "op/b", "op/promote-self"],
+          "surplus_capability_refs": ["op/promote-self"]
+        }
+      ],
+      "omega_before": ["op/a", "op/b"],
+      "generated_operations": [
+        {
+          "operation_id": "op/promote-self",
+          "operation_version": 1,
+          "input_kinds": ["artifact", "artifact"],
+          "output_kind": "promotion_claim",
+          "derivation_refs": ["artifact/self-promoting", "phaselift/receipt-under-construction"],
+          "replay_probe_ref": "probe/self-mint-independent"
+        }
+      ],
+      "provenance_refs": ["source/generate-003"],
+      "residuals": []
+    }
+  ]
+}
