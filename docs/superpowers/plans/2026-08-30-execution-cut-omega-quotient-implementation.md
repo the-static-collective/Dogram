@@ -39,9 +39,9 @@
   - `compare_execution_cuts(before: dict, after: dict, target: TargetFamily, *, same_runtime_invocation: bool = True) -> QuotientComparison`
   - `run_omega_quotient(...) -> OmegaQuotientResult`
 
-- [ ] **Step 1: Write failing tests** covering the required positive fixture plus hostile controls: target moved, input drift, trace-order erasure, result-only overreach, gate/equivalence separation, runtime-drift hold, and byte stability.
-- [ ] **Step 2: Push the tests without production modules.**
-- [ ] **Step 3: Verify GitHub Actions fails because `dogram.execution_cut` / `dogram.omega_quotient` do not exist.**
+- [x] **Step 1: Write failing tests** covering the required positive fixture plus hostile controls: target moved, input drift, trace-order erasure, result-only overreach, gate/equivalence separation, runtime-drift hold, and byte stability.
+- [x] **Step 2: Push the tests without production modules.**
+- [x] **Step 3: Verify GitHub Actions fails because `dogram.execution_cut` / `dogram.omega_quotient` do not exist.**
 
 ---
 
@@ -77,9 +77,9 @@ Fuel residual shape:
 }
 ```
 
-- [ ] **Step 1: Implement the minimal execution-cut functions required by the RED tests.**
-- [ ] **Step 2: Run focused tests; keep any quotient-orchestrator tests RED until Task 3.**
-- [ ] **Step 3: Commit only the cut/residual implementation once its focused behaviors are green.**
+- [x] **Step 1: Implement the minimal execution-cut functions required by the RED tests.**
+- [x] **Step 2: Run focused tests; keep any quotient-orchestrator tests RED until Task 3.**
+- [x] **Step 3: Commit only the cut/residual implementation once its focused behaviors are green.**
 
 ---
 
@@ -122,7 +122,7 @@ unsupported probe -> REFUSE UNSUPPORTED_TARGET_PROBE
 otherwise compare each declared probe exactly and return EQUIVALENT_UNDER_T or DIFFERENT_UNDER_T beside typed residual
 ```
 
-First supported probes are deliberately inert execution-cut fields: `result`, `status`, `reason_code`, and `residuals`. No ambient I/O or semantic probe registry is added.
+First supported probes are deliberately inert execution-cut fields: `result`, `status`, `reason_code`, `residuals`, and `step_trace`. `step_trace` exists so the real admitted diagnostic ablation can prove `GATE ADMIT != TARGET EQUIVALENT` end-to-end. No ambient I/O or semantic probe registry is added.
 
 `run_omega_quotient` must:
 
@@ -133,10 +133,10 @@ First supported probes are deliberately inert execution-cut fields: `result`, `s
 5. compare the cuts using the fixed target family;
 6. emit `dogram.omega-quotient/v0` with exact program/execution digests, both cuts, target family, verdict, typed residual, and a `does_not_establish` list including `global_equivalence`, `causal_irrelevance`, `evidence`, `support`, `truth`, `authority`, and `cross-runtime replay`.
 
-- [ ] **Step 1: Implement minimal target/comparison types and hostile-control dispositions.**
-- [ ] **Step 2: Implement `run_omega_quotient` as a wrapper around the existing single Ω cycle; do not duplicate mutation/gate logic.**
-- [ ] **Step 3: Run the focused quotient suite until GREEN.**
-- [ ] **Step 4: Run the full unit suite, compile, constitutional floor, and Ω scope scan.**
+- [x] **Step 1: Implement minimal target/comparison types and hostile-control dispositions.**
+- [x] **Step 2: Implement `run_omega_quotient` as a wrapper around the existing single Ω cycle; do not duplicate mutation/gate logic.**
+- [x] **Step 3: Run the focused quotient suite until GREEN.**
+- [x] **Step 4: Run the full unit suite, compile, constitutional floor, and Ω scope scan.**
 
 ---
 
@@ -150,7 +150,11 @@ First supported probes are deliberately inert execution-cut fields: `result`, `s
 - Research receipt records exact verified branch/head, RED witness, GREEN verification, positive fixture outcome, hostile-control outcomes, and explicit non-claims.
 - README adds only a factual sentence that the internal bounded paired-experiment seam exists; it must not claim self-optimization or semantic authority.
 
-- [ ] **Step 1: After fresh exact-head GREEN verification, record the test counts and control outcomes in the research receipt.**
-- [ ] **Step 2: Add the minimal README status note.**
-- [ ] **Step 3: Run full verification again on the documentation head.**
-- [ ] **Step 4: Open a reviewable PR against `main`; do not merge automatically.**
+- [x] **Step 1: After fresh exact-head GREEN verification, record the test counts and control outcomes in the research receipt.**
+- [x] **Step 2: Add the minimal README status note.**
+- [x] **Step 3: Run full verification again on the documentation head.**
+- [x] **Step 4: Open a reviewable PR against `main`; do not merge automatically.**
+
+## Review refinement
+
+A post-GREEN review converted the gate/equivalence hostile control from a comparator-only assertion into a real admitted Ω experiment. That refinement was itself run RED → GREEN before this plan was closed; the exact receipts are preserved in `research/OMEGA-QUOTIENT-001-RECEIPT.md`.
