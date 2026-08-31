@@ -1,0 +1,11 @@
+{
+  "boundary_order": ["endpoint", "approach_orientation"],
+  "left": {
+    "endpoint": {"kind": "opaque", "value": "singular-point"},
+    "approach_orientation": {"kind": "opaque", "value": "+e4"}
+  },
+  "right": {
+    "endpoint": {"kind": "opaque", "value": "singular-point"},
+    "approach_orientation": {"kind": "opaque", "value": "-e4"}
+  }
+}

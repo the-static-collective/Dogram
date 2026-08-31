@@ -1,0 +1,8 @@
+{
+  "graph": {
+    "nodes": ["H", "HOME", "THETA", "W_PRIME", "NEXT"],
+    "edges": [["H", "HOME"], ["HOME", "THETA"], ["THETA", "W_PRIME"], ["W_PRIME", "NEXT"]]
+  },
+  "target": {"kind": "node", "node": "HOME"},
+  "requested_targets": [["H", "W_PRIME"], ["H", "NEXT"]]
+}

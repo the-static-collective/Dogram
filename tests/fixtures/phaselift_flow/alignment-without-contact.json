@@ -1,0 +1,8 @@
+{
+  "graph": {
+    "nodes": ["A_TOUCH", "B_TOUCH", "SYNC"],
+    "edges": [["B_TOUCH", "SYNC"]]
+  },
+  "mutation": {"op": "ADD_EDGE", "source": "A_TOUCH", "target": "SYNC"},
+  "queries": [["A_TOUCH", "B_TOUCH"], ["B_TOUCH", "A_TOUCH"], ["A_TOUCH", "SYNC"]]
+}

@@ -1,0 +1,22 @@
+{
+  "lawful": {
+    "axis_a": "source_authority",
+    "axis_b": "local_authorization",
+    "cells": {
+      "00": {"kind": "integer", "value": 0},
+      "01": {"kind": "integer", "value": 1},
+      "10": {"kind": "integer", "value": 0},
+      "11": {"kind": "integer", "value": 1}
+    }
+  },
+  "hostile": {
+    "axis_a": "source_authority",
+    "axis_b": "local_authorization",
+    "cells": {
+      "00": {"kind": "integer", "value": 0},
+      "01": {"kind": "integer", "value": 1},
+      "10": {"kind": "integer", "value": 1},
+      "11": {"kind": "integer", "value": 1}
+    }
+  }
+}
