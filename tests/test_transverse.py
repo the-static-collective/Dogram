@@ -8,6 +8,9 @@ from dogram.transverse import (
     analyze_transverse,
     bounded_history_reach_count,
     bounded_history_sheet_trace,
+    exact_carrier_return_period,
+    quotient_return_period,
+    return_debt,
     sheet_coordinate,
 )
 
@@ -88,6 +91,26 @@ class TransverseTests(unittest.TestCase):
         self.assertEqual(result.sync_sheet_size, 35)
         self.assertEqual(result.closure_lift_index, 1)
         self.assertEqual(result.closure_reach_count, 35)
+
+    def test_z6_x_z9_r1_returns_to_sheet_before_carrier(self):
+        self.assertEqual(quotient_return_period(6, 9, 1), 3)
+        self.assertEqual(exact_carrier_return_period(6, 1), 6)
+        self.assertEqual(return_debt(6, 9, 1), 2)
+
+    def test_z8_x_z12_r4_is_quotient_inert_but_not_exactly_returned(self):
+        self.assertEqual(quotient_return_period(8, 12, 4), 1)
+        self.assertEqual(exact_carrier_return_period(8, 4), 2)
+        self.assertEqual(return_debt(8, 12, 4), 2)
+
+    def test_coprime_world_has_trivial_quotient_return_period(self):
+        self.assertEqual(quotient_return_period(5, 7, 1), 1)
+        self.assertEqual(exact_carrier_return_period(5, 1), 5)
+        self.assertEqual(return_debt(5, 7, 1), 5)
+
+    def test_r_divisible_by_m_is_exact_return_in_one_cycle(self):
+        self.assertEqual(quotient_return_period(6, 9, 6), 1)
+        self.assertEqual(exact_carrier_return_period(6, 6), 1)
+        self.assertEqual(return_debt(6, 9, 6), 1)
 
     def test_frozen_specimens_match_exact_history_closure_and_budget(self):
         names = sorted(path.name for path in FIXTURES.glob("*.json"))
