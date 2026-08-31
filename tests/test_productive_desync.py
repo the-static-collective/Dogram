@@ -1,6 +1,45 @@
 import unittest
 
-from dogram.productive_desync import assess_productive_desync
+from dogram.productive_desync import ReturnRelation, assess_productive_desync
+
+
+class ReturnRelationTests(unittest.TestCase):
+    def test_return_is_computed_from_declared_quotient_observations(self):
+        relation = ReturnRelation(
+            relation_id="sheet-return",
+            quotient_id="phi-mod-3",
+            anchor_before=[0, 0],
+            anchor_after=[3, 0],
+            quotient_before=0,
+            quotient_after=0,
+        )
+        self.assertTrue(relation.returned)
+        self.assertNotEqual(relation.anchor_before, relation.anchor_after)
+
+    def test_nonreturn_is_computed_without_global_inference(self):
+        relation = ReturnRelation(
+            relation_id="carrier-return",
+            quotient_id="exact-state",
+            anchor_before=[0, 0],
+            anchor_after=[3, 0],
+            quotient_before=[0, 0],
+            quotient_after=[3, 0],
+        )
+        self.assertFalse(relation.returned)
+
+    def test_empty_relation_or_quotient_id_refuses(self):
+        for field in ("relation_id", "quotient_id"):
+            values = {
+                "relation_id": "sheet-return",
+                "quotient_id": "phi-mod-3",
+                "anchor_before": [0, 0],
+                "anchor_after": [3, 0],
+                "quotient_before": 0,
+                "quotient_after": 0,
+            }
+            values[field] = ""
+            with self.assertRaises(ValueError):
+                ReturnRelation(**values)
 
 
 class ProductiveDesyncTests(unittest.TestCase):
