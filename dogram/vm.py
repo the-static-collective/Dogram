@@ -6,7 +6,7 @@ from .canonical import sha256_json
 from .intrinsics import IntrinsicRefusal
 from .program import Program
 from .registry import Registry, RegistryLookupError
-from .vm_types import StepTrace, VMConfig, VMExecution
+from .vm_types import InputAddress, StepTrace, VMConfig, VMExecution
 
 
 def _path_get(container: Any, path: list[Any]) -> Any:
@@ -21,28 +21,49 @@ def _path_get(container: Any, path: list[Any]) -> Any:
     return current
 
 
-def _resolve(value: Any, inputs: Any, step_results: dict[str, Any]) -> Any:
+def _resolve(
+    value: Any,
+    inputs: Any,
+    step_results: dict[str, Any],
+    consumed_input_addresses: list[InputAddress],
+) -> Any:
     if isinstance(value, list):
-        return [_resolve(item, inputs, step_results) for item in value]
+        return [
+            _resolve(item, inputs, step_results, consumed_input_addresses)
+            for item in value
+        ]
     if not isinstance(value, dict):
         return value
     if set(value) == {"literal"}:
         return value["literal"]
     if value.get("ref") == "input":
-        return _path_get(inputs, value.get("path", []))
+        path = value.get("path", [])
+        resolved = _path_get(inputs, path)
+        consumed_input_addresses.append(tuple(path))
+        return resolved
     if value.get("ref") == "step":
         base = step_results[value["step"]]
         return _path_get(base, value.get("path", []))
-    return {key: _resolve(item, inputs, step_results) for key, item in value.items()}
+    return {
+        key: _resolve(item, inputs, step_results, consumed_input_addresses)
+        for key, item in value.items()
+    }
 
 
-def _refuse(reason_code: str, residual: str, trace: list[StepTrace], fuel: int) -> VMExecution:
+def _refuse(
+    reason_code: str,
+    residual: str,
+    trace: list[StepTrace],
+    consumed_input_addresses: list[InputAddress],
+    fuel: int,
+) -> VMExecution:
     return VMExecution(
         status="REFUSE",
         result=None,
         reason_code=reason_code,
         residuals=(residual,),
         step_trace=tuple(trace),
+        consumed_input_addresses=tuple(consumed_input_addresses),
         fuel_remaining=fuel,
     )
 
@@ -57,26 +78,54 @@ def execute_program(
     fuel = config.max_exec_steps
     step_results: dict[str, Any] = {}
     trace: list[StepTrace] = []
+    consumed_input_addresses: list[InputAddress] = []
 
     for step in program.steps:
         if fuel <= 0:
-            return _refuse("FUEL_EXHAUSTED", "execution fuel exhausted", trace, fuel)
+            return _refuse(
+                "FUEL_EXHAUSTED",
+                "execution fuel exhausted",
+                trace,
+                consumed_input_addresses,
+                fuel,
+            )
         try:
-            args = tuple(_resolve(arg, inputs, step_results) for arg in step.args)
+            args = tuple(
+                _resolve(arg, inputs, step_results, consumed_input_addresses)
+                for arg in step.args
+            )
         except (KeyError, IndexError, TypeError) as exc:
-            return _refuse("ADDRESS_NOT_FOUND", f"operand address not found: {exc}", trace, fuel)
+            return _refuse(
+                "ADDRESS_NOT_FOUND",
+                f"operand address not found: {exc}",
+                trace,
+                consumed_input_addresses,
+                fuel,
+            )
 
         try:
             intrinsic = registry.resolve(step.op)
         except RegistryLookupError:
-            return _refuse("UNKNOWN_OPERATION", step.op, trace, fuel)
+            return _refuse(
+                "UNKNOWN_OPERATION",
+                step.op,
+                trace,
+                consumed_input_addresses,
+                fuel,
+            )
 
         fuel_before = fuel
         fuel -= 1
         try:
             result = intrinsic(args)
         except IntrinsicRefusal as exc:
-            return _refuse(exc.reason_code, exc.residual, trace, fuel)
+            return _refuse(
+                exc.reason_code,
+                exc.residual,
+                trace,
+                consumed_input_addresses,
+                fuel,
+            )
 
         step_results[step.id] = result
         trace.append(
@@ -91,9 +140,15 @@ def execute_program(
         )
 
     try:
-        result = _resolve(program.result, inputs, step_results)
+        result = _resolve(program.result, inputs, step_results, consumed_input_addresses)
     except (KeyError, IndexError, TypeError) as exc:
-        return _refuse("ADDRESS_NOT_FOUND", f"result address not found: {exc}", trace, fuel)
+        return _refuse(
+            "ADDRESS_NOT_FOUND",
+            f"result address not found: {exc}",
+            trace,
+            consumed_input_addresses,
+            fuel,
+        )
 
     return VMExecution(
         status="OK",
@@ -101,6 +156,7 @@ def execute_program(
         reason_code=None,
         residuals=(),
         step_trace=tuple(trace),
+        consumed_input_addresses=tuple(consumed_input_addresses),
         fuel_remaining=fuel,
     )
 
