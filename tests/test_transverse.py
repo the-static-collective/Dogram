@@ -1,3 +1,4 @@
+from collections import deque
 import json
 import pathlib
 import unittest
@@ -17,6 +18,21 @@ FIXTURES = ROOT / "tests" / "fixtures" / "transverse"
 
 def load_fixture(name):
     return json.loads((FIXTURES / name).read_text())
+
+
+def brute_reach_count(m, n, generators):
+    start = (0, 0)
+    queue = deque([start])
+    seen = {start}
+    moves = ((1, 1),) + tuple((r, 0) for r in generators)
+    while queue:
+        a, b = queue.popleft()
+        for da, db in moves:
+            nxt = ((a + da) % m, (b + db) % n)
+            if nxt not in seen:
+                seen.add(nxt)
+                queue.append(nxt)
+    return len(seen)
 
 
 class TransverseTests(unittest.TestCase):
@@ -104,6 +120,25 @@ class TransverseTests(unittest.TestCase):
         self.assertEqual(together.closure_reach_count, 216)
         self.assertLess(left.closure_reach_count, together.closure_reach_count)
         self.assertLess(right.closure_reach_count, together.closure_reach_count)
+
+    def test_single_generator_lift_formula_matches_405_bruteforce_cases(self):
+        checked = 0
+        for m in range(2, 11):
+            for n in range(2, 11):
+                for r in range(1, 6):
+                    analysis = analyze_transverse(m, n, (r,))
+                    self.assertEqual(
+                        analysis.closure_reach_count,
+                        brute_reach_count(m, n, (r,)),
+                        (m, n, r),
+                    )
+                    checked += 1
+        self.assertEqual(checked, 405)
+
+    def test_complementary_generators_match_bruteforce_closure(self):
+        analysis = analyze_transverse(12, 18, (2, 3))
+        self.assertEqual(analysis.closure_reach_count, 216)
+        self.assertEqual(analysis.closure_reach_count, brute_reach_count(12, 18, (2, 3)))
 
 
 if __name__ == "__main__":
