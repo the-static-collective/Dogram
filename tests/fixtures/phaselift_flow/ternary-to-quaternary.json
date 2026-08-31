@@ -1,0 +1,15 @@
+{
+  "boundary_order": ["member_count", "affine_rank", "tetra_volume", "independent_fourth"],
+  "left": {
+    "member_count": {"kind": "integer", "value": 4},
+    "affine_rank": {"kind": "integer", "value": 2},
+    "tetra_volume": {"kind": "integer", "value": 0},
+    "independent_fourth": {"kind": "opaque", "value": "false"}
+  },
+  "right": {
+    "member_count": {"kind": "integer", "value": 4},
+    "affine_rank": {"kind": "integer", "value": 3},
+    "tetra_volume": {"kind": "rational", "numerator": 1, "denominator": 6},
+    "independent_fourth": {"kind": "opaque", "value": "true"}
+  }
+}
