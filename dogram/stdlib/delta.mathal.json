@@ -11,17 +11,10 @@
         {"ref": "input", "path": ["left"]},
         {"ref": "input", "path": ["right"]}
       ]
-    },
-    {
-      "id": "first",
-      "op": "core.select_first@1",
-      "args": [
-        {"ref": "step", "step": "cmp", "path": ["differences"]}
-      ]
     }
   ],
   "result": {
     "comparisons": {"ref": "step", "step": "cmp", "path": ["comparisons"]},
-    "first_difference": {"ref": "step", "step": "first"}
+    "first_difference": {"ref": "step", "step": "cmp", "path": ["first_difference"]}
   }
 }
