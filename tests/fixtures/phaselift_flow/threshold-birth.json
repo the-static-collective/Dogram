@@ -1,0 +1,8 @@
+{
+  "graph": {
+    "nodes": ["H", "THETA", "W_PRIME", "WORK"],
+    "edges": [["H", "THETA"], ["W_PRIME", "WORK"]]
+  },
+  "mutation": {"op": "ADD_EDGE", "source": "THETA", "target": "W_PRIME"},
+  "queries": [["H", "W_PRIME"], ["H", "WORK"]]
+}

@@ -1,0 +1,8 @@
+{
+  "graph": {
+    "nodes": ["SELF", "NEXT", "RESIST"],
+    "edges": [["SELF", "NEXT"], ["SELF", "RESIST"], ["RESIST", "SELF"]]
+  },
+  "target": {"kind": "edge", "source": "SELF", "target": "RESIST"},
+  "requested_targets": [["SELF", "NEXT"], ["SELF", "RESIST"]]
+}

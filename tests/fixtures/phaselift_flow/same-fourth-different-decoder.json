@@ -1,0 +1,10 @@
+{
+  "axis_a": "fourth_present",
+  "axis_b": "decoder_exposes_fourth",
+  "cells": {
+    "00": {"kind": "integer", "value": 3},
+    "01": {"kind": "integer", "value": 3},
+    "10": {"kind": "integer", "value": 3},
+    "11": {"kind": "integer", "value": 4}
+  }
+}

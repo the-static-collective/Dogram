@@ -1,0 +1,8 @@
+{
+  "graph": {
+    "nodes": ["A_PRE", "A_TOUCH", "B_TOUCH", "B_NEXT"],
+    "edges": [["A_PRE", "A_TOUCH"], ["B_TOUCH", "B_NEXT"]]
+  },
+  "mutation": {"op": "ADD_EDGE", "source": "A_TOUCH", "target": "B_TOUCH"},
+  "queries": [["A_PRE", "B_NEXT"]]
+}
