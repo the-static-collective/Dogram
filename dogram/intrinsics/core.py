@@ -58,6 +58,8 @@ def _numeric_result(value: int | Fraction | float) -> dict[str, Any]:
     if isinstance(value, float):
         return encode_value(ScalarValue("float", value))
     if isinstance(value, Fraction):
+        if value.denominator == 1:
+            return encode_value(ScalarValue("integer", value.numerator))
         return encode_value(ScalarValue("rational", value))
     return encode_value(ScalarValue("integer", value))
 
@@ -128,7 +130,11 @@ def trace_compare_ordered(args: tuple[Any, ...]) -> dict[str, Any]:
         comparisons.append({"boundary": boundary, **comparison})
         if comparison["relation"] == "DIFFERENT":
             differences.append(boundary)
-    return {"comparisons": comparisons, "differences": differences}
+    return {
+        "comparisons": comparisons,
+        "differences": differences,
+        "first_difference": differences[0] if differences else None,
+    }
 
 
 def set_difference(args: tuple[Any, ...]) -> list[Any]:
