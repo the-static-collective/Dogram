@@ -17,10 +17,15 @@ from dogram.transverse import (
 
 ROOT = pathlib.Path(__file__).parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "transverse"
+RETURN_FIXTURES = ROOT / "tests" / "fixtures" / "return_relation"
 
 
 def load_fixture(name):
     return json.loads((FIXTURES / name).read_text())
+
+
+def load_return_fixture(name):
+    return json.loads((RETURN_FIXTURES / name).read_text())
 
 
 def brute_reach_count(m, n, generators):
@@ -157,6 +162,20 @@ class TransverseTests(unittest.TestCase):
                     self.assertEqual(return_debt(m, n, r), exact // quotient, (m, n, r))
                     checked += 1
         self.assertEqual(checked, 7220)
+
+    def test_six_return_relation_fixtures_are_frozen(self):
+        names = sorted(path.name for path in RETURN_FIXTURES.glob("*.json"))
+        self.assertEqual(
+            names,
+            [
+                "coprime-z5x7-r1.json",
+                "exact-return-z6x9-r6.json",
+                "multigenerator-word-control.json",
+                "productive-desync-scope-control.json",
+                "z6x9-r1.json",
+                "z8x12-r4.json",
+            ],
+        )
 
     def test_frozen_specimens_match_exact_history_closure_and_budget(self):
         names = sorted(path.name for path in FIXTURES.glob("*.json"))
