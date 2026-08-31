@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+InputAddress = tuple[str | int, ...]
+
 
 @dataclass(frozen=True)
 class VMConfig:
@@ -43,6 +45,7 @@ class VMExecution:
     reason_code: str | None
     residuals: tuple[str, ...]
     step_trace: tuple[StepTrace, ...]
+    consumed_input_addresses: tuple[InputAddress, ...]
     fuel_remaining: int
 
     def to_data(self) -> dict[str, Any]:
@@ -52,5 +55,6 @@ class VMExecution:
             "reason_code": self.reason_code,
             "residuals": list(self.residuals),
             "step_trace": [entry.to_data() for entry in self.step_trace],
+            "consumed_input_addresses": [list(address) for address in self.consumed_input_addresses],
             "fuel_remaining": self.fuel_remaining,
         }
