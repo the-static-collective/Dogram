@@ -67,6 +67,8 @@ jobs:
               Path("dogram/gate.py"),
               Path("dogram/omega.py"),
               Path("dogram/reify.py"),
+              Path("dogram/execution_cut.py"),
+              Path("dogram/omega_quotient.py"),
           ]:
               text = path.read_text()
               for token in ("TODO", "TBD", "FIXME", "PLACEHOLDER"):
