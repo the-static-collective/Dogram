@@ -1,0 +1,37 @@
+name: Dogram CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Compile
+        run: python -m compileall -q dogram tests
+      - name: Constitutional floor
+        run: |
+          python - <<'PY'
+          import pathlib
+          import tomllib
+          from dogram.engine import OPERATORS
+
+          pyproject = tomllib.loads(pathlib.Path("pyproject.toml").read_text())
+          assert pyproject["project"]["dependencies"] == []
+          assert set(OPERATORS) == {
+              ("delta", 1),
+              ("rectangle", 1),
+              ("ablate", 1),
+              ("reach", 1),
+          }
+          PY
