@@ -64,6 +64,24 @@ class ProgramTests(unittest.TestCase):
             decode_program(spec)
         self.assertEqual(ctx.exception.reason_code, "CYCLIC_OR_FORWARD_REFERENCE")
 
+    def test_non_json_literal_refuses_before_execution(self):
+        spec = {
+            "schema": "dogram.program/v0",
+            "program_id": "bad/host-object",
+            "program_version": 1,
+            "steps": [
+                {
+                    "id": "s1",
+                    "op": "core.same@1",
+                    "args": [{"literal": object()}, {"literal": None}],
+                }
+            ],
+            "result": {"ref": "step", "step": "s1"},
+        }
+        with self.assertRaises(ProgramDecodeError) as ctx:
+            decode_program(spec)
+        self.assertEqual(ctx.exception.reason_code, "NON_CANONICAL_DATA")
+
 
 if __name__ == "__main__":
     unittest.main()
