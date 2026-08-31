@@ -46,11 +46,16 @@ def _validate_dimensions(m: int, n: int) -> None:
         raise TransverseInputError("INVALID_DIMENSION", "n must be a positive integer")
 
 
+def _validate_generator(r: int) -> None:
+    if not isinstance(r, int) or isinstance(r, bool):
+        raise TransverseInputError("INVALID_GENERATOR", "generator must be an integer")
+
+
 def _validate_generators(generators: tuple[int, ...]) -> None:
     if not isinstance(generators, tuple) or not generators:
         raise TransverseInputError("EMPTY_GENERATOR_FAMILY", "generators must be a non-empty tuple")
-    if any(not isinstance(r, int) or isinstance(r, bool) for r in generators):
-        raise TransverseInputError("INVALID_GENERATOR", "every generator must be an integer")
+    for r in generators:
+        _validate_generator(r)
 
 
 def _validate_cut_history(cuts: tuple[int, ...]) -> None:
@@ -65,6 +70,31 @@ def sheet_coordinate(m: int, n: int, a: int, b: int) -> int:
     if not all(isinstance(x, int) and not isinstance(x, bool) for x in (a, b)):
         raise TransverseInputError("INVALID_STATE", "state coordinates must be integers")
     return (a - b) % gcd(m, n)
+
+
+def quotient_return_period(m: int, n: int, r: int) -> int:
+    """First positive bounded-cycle count returning to the original quotient sheet."""
+    _validate_dimensions(m, n)
+    _validate_generator(r)
+    d = gcd(m, n)
+    return d // gcd(d, r)
+
+
+def exact_carrier_return_period(m: int, r: int) -> int:
+    """First positive bounded-cycle count returning the first carrier coordinate."""
+    if not isinstance(m, int) or isinstance(m, bool) or m <= 0:
+        raise TransverseInputError("INVALID_DIMENSION", "m must be a positive integer")
+    _validate_generator(r)
+    return m // gcd(m, r)
+
+
+def return_debt(m: int, n: int, r: int) -> int:
+    """Number of quotient-return periods inside one exact carrier-return period."""
+    quotient_period = quotient_return_period(m, n, r)
+    exact_period = exact_carrier_return_period(m, r)
+    if exact_period % quotient_period != 0:
+        raise AssertionError("exact carrier return must refine quotient return")
+    return exact_period // quotient_period
 
 
 def _generated_sheets(d: int, generators: tuple[int, ...]) -> tuple[int, ...]:
@@ -128,5 +158,8 @@ __all__ = [
     "analyze_transverse",
     "bounded_history_reach_count",
     "bounded_history_sheet_trace",
+    "exact_carrier_return_period",
+    "quotient_return_period",
+    "return_debt",
     "sheet_coordinate",
 ]
