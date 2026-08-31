@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 from typing import Any
 
 from .canonical import sha256_json
@@ -32,6 +33,26 @@ def _ref_error(reason_code: str, residual: str) -> None:
     raise ProgramDecodeError(reason_code, residual)
 
 
+def _validate_json_data(value: Any) -> None:
+    if value is None or type(value) in (bool, int, str):
+        return
+    if type(value) is float:
+        if not isfinite(value):
+            _ref_error("NON_CANONICAL_DATA", "non-finite floats are not canonical program data")
+        return
+    if type(value) is list:
+        for item in value:
+            _validate_json_data(item)
+        return
+    if type(value) is dict:
+        if any(type(key) is not str for key in value):
+            _ref_error("NON_CANONICAL_DATA", "program data object keys must be strings")
+        for item in value.values():
+            _validate_json_data(item)
+        return
+    _ref_error("NON_CANONICAL_DATA", f"unsupported program data type: {type(value).__name__}")
+
+
 def _validate_value(value: Any, prior_steps: set[str]) -> None:
     if isinstance(value, list):
         for item in value:
@@ -39,11 +60,16 @@ def _validate_value(value: Any, prior_steps: set[str]) -> None:
         return
 
     if not isinstance(value, dict):
+        _validate_json_data(value)
         return
+
+    if any(type(key) is not str for key in value):
+        _ref_error("NON_CANONICAL_DATA", "program template keys must be strings")
 
     if "literal" in value:
         if set(value) != {"literal"}:
             _ref_error("MALFORMED_OPERAND", "literal operand must contain only literal")
+        _validate_json_data(value["literal"])
         return
 
     if "ref" in value:
