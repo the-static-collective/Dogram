@@ -1,0 +1,31 @@
+{
+  "schema": "dogram.program/v0",
+  "program_id": "fixture/omega-dangling-step",
+  "program_version": 1,
+  "steps": [
+    {
+      "id": "value",
+      "op": "core.get@1",
+      "args": [
+        {"ref": "input", "path": ["payload"]},
+        {"literal": ["value"]}
+      ]
+    },
+    {
+      "id": "diagnostic",
+      "op": "core.length@1",
+      "args": [
+        {"ref": "input", "path": ["diagnostic"]}
+      ]
+    },
+    {
+      "id": "uses-diagnostic",
+      "op": "core.same@1",
+      "args": [
+        {"ref": "step", "step": "diagnostic"},
+        {"literal": 3}
+      ]
+    }
+  ],
+  "result": {"ref": "step", "step": "value"}
+}
