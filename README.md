@@ -57,4 +57,6 @@ The bounded `EXECUTION-CUT-001 / OMEGA-QUOTIENT-001` seam can derive occurrence-
 
 Dogram also contains an internal finite research kernel for `PRODUCTIVE-DESYNC-001 / TRANSVERSE-GENERATORS-001`. It receipts synchronized quotient sheets, declared bounded cut history, and generated reachability closure while preserving `ONE CROSSING != GENERATOR CLOSURE` and `POTENTIAL REACHABILITY != ACTUAL HISTORY`. This kernel adds no public operator, truth/evidence semantics, or automatic experiment selection.
 
+The internal transverse/Productive-Desync research kernel also carries typed quotient-return receipts: exact finite sheet-return and carrier-return periods remain separate, declared generator closure remains separate from actual word/history, and Productive Desync consumes an explicitly scoped return relation. This adds no public operator or holonomy semantics.
+
 See `docs/superpowers/specs/2026-08-28-dogram-metaoscillatory-runtime-design.md`.

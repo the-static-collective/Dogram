@@ -1,0 +1,13 @@
+{
+  "id": "RETURN-R5-MULTIGENERATOR-WORD",
+  "system": {"m": 6, "n": 9, "generators": [1, 2]},
+  "word_a": [1, 2],
+  "word_b": [1, 1],
+  "expected": {
+    "closure_reach_count": 54,
+    "word_a_sheet_trace": [0, 1, 0],
+    "word_a_returns": true,
+    "word_b_sheet_trace": [0, 1, 2],
+    "word_b_returns": false
+  }
+}

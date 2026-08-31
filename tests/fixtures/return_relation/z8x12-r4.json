@@ -1,0 +1,11 @@
+{
+  "id": "RETURN-R2-Z8X12-R4",
+  "system": {"m": 8, "n": 12, "r": 4},
+  "expected": {
+    "quotient_return_period": 1,
+    "exact_carrier_return_period": 2,
+    "return_debt": 2,
+    "first_cycle_sheet_returned": true,
+    "first_cycle_carrier_returned": false
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "RETURN-R6-PRODUCTIVE-DESYNC-SCOPE",
+  "assessment": {
+    "target_preserved": true,
+    "execution_residual": {"step_trace": {"changed": true}},
+    "baseline_reach_count": 18,
+    "historical_reach_count": 36,
+    "closure_reach_count": 54,
+    "cut_declared": true,
+    "cut_budget": 1,
+    "cuts_used": 1
+  },
+  "coarse_return": {
+    "relation_id": "sheet-return",
+    "quotient_id": "phi-mod-3",
+    "anchor_before": [0, 0],
+    "anchor_after": [3, 0],
+    "quotient_before": 0,
+    "quotient_after": 0,
+    "expected_status": "WITNESS"
+  },
+  "fine_return": {
+    "relation_id": "carrier-return",
+    "quotient_id": "exact-state",
+    "anchor_before": [0, 0],
+    "anchor_after": [3, 0],
+    "quotient_before": [0, 0],
+    "quotient_after": [3, 0],
+    "expected_status": "REFUSE",
+    "expected_reason_code": "NO_COHERENCE_RETURN"
+  }
+}

@@ -5,6 +5,37 @@ from typing import Any
 
 
 @dataclass(frozen=True)
+class ReturnRelation:
+    relation_id: str
+    quotient_id: str
+    anchor_before: Any
+    anchor_after: Any
+    quotient_before: Any
+    quotient_after: Any
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.relation_id, str) or not self.relation_id:
+            raise ValueError("relation_id must be a non-empty string")
+        if not isinstance(self.quotient_id, str) or not self.quotient_id:
+            raise ValueError("quotient_id must be a non-empty string")
+
+    @property
+    def returned(self) -> bool:
+        return self.quotient_before == self.quotient_after
+
+    def to_data(self) -> dict[str, Any]:
+        return {
+            "relation_id": self.relation_id,
+            "quotient_id": self.quotient_id,
+            "anchor_before": self.anchor_before,
+            "anchor_after": self.anchor_after,
+            "quotient_before": self.quotient_before,
+            "quotient_after": self.quotient_after,
+            "returned": self.returned,
+        }
+
+
+@dataclass(frozen=True)
 class ProductiveDesyncAssessment:
     status: str
     reason_code: str | None
@@ -18,7 +49,7 @@ class ProductiveDesyncAssessment:
     cut_declared: bool
     cut_budget: int
     cuts_used: int
-    returned_to_coherence: bool
+    return_relation: ReturnRelation
 
     def to_data(self) -> dict[str, Any]:
         return {
@@ -34,7 +65,7 @@ class ProductiveDesyncAssessment:
             "cut_declared": self.cut_declared,
             "cut_budget": self.cut_budget,
             "cuts_used": self.cuts_used,
-            "returned_to_coherence": self.returned_to_coherence,
+            "return_relation": self.return_relation.to_data(),
         }
 
 
@@ -52,14 +83,16 @@ def assess_productive_desync(
     cut_declared: bool,
     cut_budget: int,
     cuts_used: int,
-    returned_to_coherence: bool,
+    return_relation: ReturnRelation,
 ) -> ProductiveDesyncAssessment:
     if not isinstance(target_preserved, bool):
         raise ValueError("target_preserved must be boolean")
     if not isinstance(execution_residual, dict):
         raise ValueError("execution_residual must be an inert dictionary")
-    if not isinstance(cut_declared, bool) or not isinstance(returned_to_coherence, bool):
-        raise ValueError("cut/coherence flags must be booleans")
+    if not isinstance(cut_declared, bool):
+        raise ValueError("cut_declared must be boolean")
+    if not isinstance(return_relation, ReturnRelation):
+        raise ValueError("return_relation must be ReturnRelation")
     for value in (baseline_reach_count, historical_reach_count, closure_reach_count, cut_budget, cuts_used):
         if not _is_count(value):
             raise ValueError("reach counts and cut counts must be non-negative integers")
@@ -73,7 +106,7 @@ def assess_productive_desync(
         status, reason_code = "REFUSE", "CUT_BUDGET_EXCEEDED"
     elif not cut_declared:
         status, reason_code = "REFUSE", "UNTYPED_CUT"
-    elif not returned_to_coherence:
+    elif not return_relation.returned:
         status, reason_code = "REFUSE", "NO_COHERENCE_RETURN"
     elif not target_preserved:
         status, reason_code = "REFUSE", "TARGET_NOT_PRESERVED"
@@ -99,8 +132,8 @@ def assess_productive_desync(
         cut_declared=cut_declared,
         cut_budget=cut_budget,
         cuts_used=cuts_used,
-        returned_to_coherence=returned_to_coherence,
+        return_relation=return_relation,
     )
 
 
-__all__ = ["ProductiveDesyncAssessment", "assess_productive_desync"]
+__all__ = ["ProductiveDesyncAssessment", "ReturnRelation", "assess_productive_desync"]

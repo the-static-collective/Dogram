@@ -8,16 +8,24 @@ from dogram.transverse import (
     analyze_transverse,
     bounded_history_reach_count,
     bounded_history_sheet_trace,
+    exact_carrier_return_period,
+    quotient_return_period,
+    return_debt,
     sheet_coordinate,
 )
 
 
 ROOT = pathlib.Path(__file__).parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "transverse"
+RETURN_FIXTURES = ROOT / "tests" / "fixtures" / "return_relation"
 
 
 def load_fixture(name):
     return json.loads((FIXTURES / name).read_text())
+
+
+def load_return_fixture(name):
+    return json.loads((RETURN_FIXTURES / name).read_text())
 
 
 def brute_reach_count(m, n, generators):
@@ -33,6 +41,27 @@ def brute_reach_count(m, n, generators):
                 seen.add(nxt)
                 queue.append(nxt)
     return len(seen)
+
+
+def brute_quotient_return_period(m, n, r):
+    from math import gcd
+
+    d = gcd(m, n)
+    sheet = 0
+    for k in range(1, d + 1):
+        sheet = (sheet + r) % d
+        if sheet == 0:
+            return k
+    raise AssertionError((m, n, r, "quotient period not found"))
+
+
+def brute_exact_carrier_return_period(m, r):
+    state = 0
+    for k in range(1, m + 1):
+        state = (state + r) % m
+        if state == 0:
+            return k
+    raise AssertionError((m, r, "carrier period not found"))
 
 
 class TransverseTests(unittest.TestCase):
@@ -88,6 +117,92 @@ class TransverseTests(unittest.TestCase):
         self.assertEqual(result.sync_sheet_size, 35)
         self.assertEqual(result.closure_lift_index, 1)
         self.assertEqual(result.closure_reach_count, 35)
+
+    def test_z6_x_z9_r1_returns_to_sheet_before_carrier(self):
+        self.assertEqual(quotient_return_period(6, 9, 1), 3)
+        self.assertEqual(exact_carrier_return_period(6, 1), 6)
+        self.assertEqual(return_debt(6, 9, 1), 2)
+
+    def test_z8_x_z12_r4_is_quotient_inert_but_not_exactly_returned(self):
+        self.assertEqual(quotient_return_period(8, 12, 4), 1)
+        self.assertEqual(exact_carrier_return_period(8, 4), 2)
+        self.assertEqual(return_debt(8, 12, 4), 2)
+
+    def test_coprime_world_has_trivial_quotient_return_period(self):
+        self.assertEqual(quotient_return_period(5, 7, 1), 1)
+        self.assertEqual(exact_carrier_return_period(5, 1), 5)
+        self.assertEqual(return_debt(5, 7, 1), 5)
+
+    def test_r_divisible_by_m_is_exact_return_in_one_cycle(self):
+        self.assertEqual(quotient_return_period(6, 9, 6), 1)
+        self.assertEqual(exact_carrier_return_period(6, 6), 1)
+        self.assertEqual(return_debt(6, 9, 6), 1)
+
+    def test_return_period_helpers_reject_invalid_generators(self):
+        for bad in (True, 1.5, "1"):
+            with self.assertRaises(TransverseInputError) as caught:
+                quotient_return_period(6, 9, bad)
+            self.assertEqual(caught.exception.reason_code, "INVALID_GENERATOR")
+
+    def test_exact_return_period_rejects_invalid_dimension(self):
+        with self.assertRaises(TransverseInputError) as caught:
+            exact_carrier_return_period(0, 1)
+        self.assertEqual(caught.exception.reason_code, "INVALID_DIMENSION")
+
+    def test_return_period_formulas_match_independent_bounded_oracle(self):
+        checked = 0
+        for m in range(2, 21):
+            for n in range(2, 21):
+                for r in range(1, 21):
+                    quotient = quotient_return_period(m, n, r)
+                    exact = exact_carrier_return_period(m, r)
+                    self.assertEqual(quotient, brute_quotient_return_period(m, n, r), (m, n, r))
+                    self.assertEqual(exact, brute_exact_carrier_return_period(m, r), (m, n, r))
+                    self.assertEqual(exact % quotient, 0, (m, n, r))
+                    self.assertEqual(return_debt(m, n, r), exact // quotient, (m, n, r))
+                    checked += 1
+        self.assertEqual(checked, 7220)
+
+    def test_six_return_relation_fixtures_are_frozen(self):
+        names = sorted(path.name for path in RETURN_FIXTURES.glob("*.json"))
+        self.assertEqual(
+            names,
+            [
+                "coprime-z5x7-r1.json",
+                "exact-return-z6x9-r6.json",
+                "multigenerator-word-control.json",
+                "productive-desync-scope-control.json",
+                "z6x9-r1.json",
+                "z8x12-r4.json",
+            ],
+        )
+
+    def test_return_relation_fixtures_match_exact_transverse_math(self):
+        for name in (
+            "z6x9-r1.json",
+            "z8x12-r4.json",
+            "coprime-z5x7-r1.json",
+            "exact-return-z6x9-r6.json",
+        ):
+            fixture = load_return_fixture(name)
+            system = fixture["system"]
+            expected = fixture["expected"]
+            m, n, r = system["m"], system["n"], system["r"]
+            self.assertEqual(quotient_return_period(m, n, r), expected["quotient_return_period"], name)
+            self.assertEqual(exact_carrier_return_period(m, r), expected["exact_carrier_return_period"], name)
+            self.assertEqual(return_debt(m, n, r), expected["return_debt"], name)
+
+    def test_same_generator_closure_can_hold_returning_and_nonreturning_words(self):
+        fixture = load_return_fixture("multigenerator-word-control.json")
+        system = fixture["system"]
+        analysis = analyze_transverse(system["m"], system["n"], tuple(system["generators"]))
+        self.assertEqual(analysis.closure_reach_count, fixture["expected"]["closure_reach_count"])
+        trace_a = bounded_history_sheet_trace(system["m"], system["n"], tuple(fixture["word_a"]))
+        trace_b = bounded_history_sheet_trace(system["m"], system["n"], tuple(fixture["word_b"]))
+        self.assertEqual(list(trace_a), fixture["expected"]["word_a_sheet_trace"])
+        self.assertEqual(trace_a[-1] == trace_a[0], fixture["expected"]["word_a_returns"])
+        self.assertEqual(list(trace_b), fixture["expected"]["word_b_sheet_trace"])
+        self.assertEqual(trace_b[-1] == trace_b[0], fixture["expected"]["word_b_returns"])
 
     def test_frozen_specimens_match_exact_history_closure_and_budget(self):
         names = sorted(path.name for path in FIXTURES.glob("*.json"))
