@@ -25,6 +25,7 @@ jobs:
           import pathlib
           import tomllib
           from dogram.engine import OPERATORS
+          from dogram.registry import build_bootstrap_registry
 
           pyproject = tomllib.loads(pathlib.Path("pyproject.toml").read_text())
           assert pyproject["project"]["dependencies"] == []
@@ -34,4 +35,19 @@ jobs:
               ("ablate", 1),
               ("reach", 1),
           }
+          assert set(build_bootstrap_registry().ids()) == {
+              "core.get@1",
+              "core.same@1",
+              "core.add@1",
+              "core.sub@1",
+              "core.length@1",
+              "core.gt@1",
+              "core.select_first@1",
+              "trace.compare_ordered@1",
+              "graph.apply_mutation@1",
+              "graph.reachable_pairs@1",
+              "graph.query_paths@1",
+              "set.difference@1",
+          }
+          print("constitutional floor OK")
           PY
