@@ -15,8 +15,7 @@ class TraceDependenceTests(unittest.TestCase):
         self.assertEqual(result.left_canonical, result.right_canonical)
 
     def test_same_frozen_endpoint_does_not_erase_declared_dependence_order(self) -> None:
-        independence = {("a", "b"), ("b", "a")}
-        result = analyze_trace_pair(("a", "c"), ("c", "a"), independence)
+        result = analyze_trace_pair(("a", "c"), ("c", "a"), set())
         self.assertFalse(result.equivalent)
         self.assertEqual(result.left_canonical, ("a", "c"))
         self.assertEqual(result.right_canonical, ("c", "a"))
