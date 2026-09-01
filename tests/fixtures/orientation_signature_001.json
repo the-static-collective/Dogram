@@ -1,0 +1,21 @@
+{
+  "square": {
+    "A": [0, 0, 1],
+    "B": [2, 0, 1],
+    "C": [2, 2, 1],
+    "D": [0, 2, 1]
+  },
+  "interior": {
+    "A": [0, 0, 1],
+    "B": [2, 0, 1],
+    "C": [2, 2, 1],
+    "D": [2, 1, 2]
+  },
+  "expected": {
+    "basis_support": ["ABC", "ABD", "ACD", "BCD"],
+    "square_determinants": [4, 4, 4, 4],
+    "square_signs": [1, 1, 1, 1],
+    "interior_determinants": [4, 2, -2, 4],
+    "interior_signs": [1, 1, -1, 1]
+  }
+}
