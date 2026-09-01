@@ -1,0 +1,32 @@
+{
+  "schema": "dogram.research.trace-dependence/v0",
+  "cases": [
+    {
+      "id": "independent-interleaving",
+      "left": ["a", "b"],
+      "right": ["b", "a"],
+      "independence": [["a", "b"], ["b", "a"]],
+      "frozen_endpoint": {"x": 1, "y": 1},
+      "expected_canonical": ["a", "b"],
+      "expected_equivalent": true
+    },
+    {
+      "id": "dependent-same-endpoint",
+      "left": ["a", "c"],
+      "right": ["c", "a"],
+      "independence": [],
+      "frozen_endpoint": {"surface": "same"},
+      "expected_left_canonical": ["a", "c"],
+      "expected_right_canonical": ["c", "a"],
+      "expected_equivalent": false
+    },
+    {
+      "id": "partial-commutation-control",
+      "left": ["c", "b", "a"],
+      "right": ["c", "a", "b"],
+      "independence": [["a", "b"], ["b", "a"], ["b", "c"], ["c", "b"]],
+      "expected_canonical": ["b", "c", "a"],
+      "expected_equivalent": true
+    }
+  ]
+}
