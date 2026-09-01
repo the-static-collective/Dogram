@@ -1,0 +1,32 @@
+{
+  "id": "HIGHER-ORDER-DEPENDENCE-001",
+  "coefficient_domain": "Q",
+  "ambient_dimension": 3,
+  "labels": ["a", "b", "c"],
+  "dependent_specimen": {
+    "vectors": {
+      "a": [1, 0, 0],
+      "b": [0, 1, 0],
+      "c": [1, 1, 0]
+    },
+    "singleton_ranks": {"a": 1, "b": 1, "c": 1},
+    "pair_ranks": {"ab": 2, "ac": 2, "bc": 2},
+    "triple_rank": 2,
+    "rank_defect": 1,
+    "circuits": [["a", "b", "c"]],
+    "exact_relation": "a + b - c = 0"
+  },
+  "free_control": {
+    "vectors": {
+      "a": [1, 0, 0],
+      "b": [0, 1, 0],
+      "c": [0, 0, 1]
+    },
+    "singleton_ranks": {"a": 1, "b": 1, "c": 1},
+    "pair_ranks": {"ab": 2, "ac": 2, "bc": 2},
+    "triple_rank": 3,
+    "rank_defect": 0,
+    "circuits": []
+  },
+  "seal": "SAME PAIRWISE INDEPENDENCE SURFACE != SAME HIGHER-ORDER DEPENDENCE"
+}
