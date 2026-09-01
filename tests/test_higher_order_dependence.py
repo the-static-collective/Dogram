@@ -1,29 +1,24 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 import unittest
 
 from dogram.matroid_circuit import VectorMatroidInputError, analyze_vector_matroid
 
 
+FIXTURE = Path(__file__).parent / "fixtures" / "higher_order_dependence_001.json"
+
+
 class HigherOrderDependenceTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.dependent = analyze_vector_matroid(
-            {
-                "a": (1, 0, 0),
-                "b": (0, 1, 0),
-                "c": (1, 1, 0),
-            }
-        )
-        self.free = analyze_vector_matroid(
-            {
-                "a": (1, 0, 0),
-                "b": (0, 1, 0),
-                "c": (0, 0, 1),
-            }
-        )
+        payload = json.loads(FIXTURE.read_text())
+        self.fixture = payload
+        self.dependent = analyze_vector_matroid(payload["dependent_specimen"]["vectors"])
+        self.free = analyze_vector_matroid(payload["free_control"]["vectors"])
 
     def test_same_pairwise_rank_surface_can_hide_triple_dependence(self) -> None:
-        labels = ("a", "b", "c")
+        labels = tuple(self.fixture["labels"])
         for label in labels:
             self.assertEqual(self.dependent.rank((label,)), 1)
             self.assertEqual(self.free.rank((label,)), 1)
