@@ -1,0 +1,22 @@
+{
+  "vamos": {
+    "groups": {"y1": [3, 4], "y2": [5, 6], "y3": [1, 2], "y4": [7, 8]},
+    "consumed_ranks": {
+      "34": 2,
+      "56": 2,
+      "3456": 3,
+      "1234": 3,
+      "3478": 3,
+      "1256": 3,
+      "5678": 3,
+      "123456": 4,
+      "345678": 4,
+      "1278": 4
+    },
+    "expected": {"left": 16, "right": 15, "slack": -1, "violates": true}
+  },
+  "uniform_u4_8_control": {
+    "rule": "r(S)=min(4,|S|)",
+    "expected": {"left": 16, "right": 20, "slack": 4, "violates": false}
+  }
+}
