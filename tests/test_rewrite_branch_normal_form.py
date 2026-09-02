@@ -34,6 +34,14 @@ class RewriteBranchNormalFormTests(unittest.TestCase):
         self.assertFalse(result.unique_normal_form)
         self.assertEqual(result.reachable_state_count, case["expected_reachable_state_count"])
 
+    def test_multiple_steps_to_same_surface_preserve_rule_position_receipts(self) -> None:
+        result = analyze_rewrite_branch("aaa", (("aa", "a"),))
+        start_steps = tuple(step for step in result.rewrite_steps if step.source == "aaa")
+        self.assertEqual(len(start_steps), 2)
+        self.assertEqual({step.target for step in start_steps}, {"aa"})
+        self.assertEqual({step.position for step in start_steps}, {0, 1})
+        self.assertEqual({step.rule_index for step in start_steps}, {0})
+
     def test_non_length_decreasing_rules_are_refused(self) -> None:
         with self.assertRaises(RewriteInputError) as caught:
             analyze_rewrite_branch("ab", (("ab", "ba"),))
