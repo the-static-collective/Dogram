@@ -13,6 +13,26 @@ class RewriteInputError(ValueError):
         return self.residual
 
 
+@dataclass(frozen=True, order=True)
+class RewriteStep:
+    source: str
+    target: str
+    rule_index: int
+    position: int
+    lhs: str
+    rhs: str
+
+    def to_data(self) -> dict[str, object]:
+        return {
+            "source": self.source,
+            "target": self.target,
+            "rule_index": self.rule_index,
+            "position": self.position,
+            "lhs": self.lhs,
+            "rhs": self.rhs,
+        }
+
+
 @dataclass(frozen=True)
 class RewriteBranchAnalysis:
     start: str
@@ -21,6 +41,7 @@ class RewriteBranchAnalysis:
     reachable_states: tuple[str, ...]
     normal_forms: tuple[str, ...]
     rewrite_edges: tuple[tuple[str, str], ...]
+    rewrite_steps: tuple[RewriteStep, ...]
 
     @property
     def reachable_state_count(self) -> int:
@@ -38,6 +59,7 @@ class RewriteBranchAnalysis:
             "reachable_states": list(self.reachable_states),
             "normal_forms": list(self.normal_forms),
             "rewrite_edges": [list(edge) for edge in self.rewrite_edges],
+            "rewrite_steps": [step.to_data() for step in self.rewrite_steps],
             "reachable_state_count": self.reachable_state_count,
             "unique_normal_form": self.unique_normal_form,
         }
@@ -69,17 +91,31 @@ def _validate(start: str, rules: tuple[tuple[str, str], ...]) -> None:
             )
 
 
-def _successors(term: str, rules: tuple[tuple[str, str], ...]) -> tuple[str, ...]:
-    successors: set[str] = set()
-    for lhs, rhs in rules:
-        start = 0
+def _steps(term: str, rules: tuple[tuple[str, str], ...]) -> tuple[RewriteStep, ...]:
+    steps: list[RewriteStep] = []
+    for rule_index, (lhs, rhs) in enumerate(rules):
+        search_from = 0
         while True:
-            index = term.find(lhs, start)
-            if index < 0:
+            position = term.find(lhs, search_from)
+            if position < 0:
                 break
-            successors.add(term[:index] + rhs + term[index + len(lhs) :])
-            start = index + 1
-    return tuple(sorted(successors))
+            target = term[:position] + rhs + term[position + len(lhs) :]
+            steps.append(
+                RewriteStep(
+                    source=term,
+                    target=target,
+                    rule_index=rule_index,
+                    position=position,
+                    lhs=lhs,
+                    rhs=rhs,
+                )
+            )
+            search_from = position + 1
+    return tuple(sorted(steps))
+
+
+def _successors(term: str, rules: tuple[tuple[str, str], ...]) -> tuple[str, ...]:
+    return tuple(sorted({step.target for step in _steps(term, rules)}))
 
 
 def analyze_rewrite_branch(
@@ -98,15 +134,17 @@ def analyze_rewrite_branch(
     queue: deque[str] = deque([start])
     seen: set[str] = {start}
     edges: set[tuple[str, str]] = set()
+    all_steps: set[RewriteStep] = set()
     normal_forms: set[str] = set()
 
     while queue:
         term = queue.popleft()
-        next_terms = _successors(term, rules)
-        if not next_terms:
+        term_steps = _steps(term, rules)
+        if not term_steps:
             normal_forms.add(term)
             continue
-        for target in next_terms:
+        all_steps.update(term_steps)
+        for target in sorted({step.target for step in term_steps}):
             edges.add((term, target))
             if target not in seen:
                 seen.add(target)
@@ -119,11 +157,13 @@ def analyze_rewrite_branch(
         reachable_states=tuple(sorted(seen)),
         normal_forms=tuple(sorted(normal_forms)),
         rewrite_edges=tuple(sorted(edges)),
+        rewrite_steps=tuple(sorted(all_steps)),
     )
 
 
 __all__ = [
     "RewriteBranchAnalysis",
     "RewriteInputError",
+    "RewriteStep",
     "analyze_rewrite_branch",
 ]
