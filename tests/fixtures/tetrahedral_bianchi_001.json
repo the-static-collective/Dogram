@@ -1,0 +1,39 @@
+{
+  "schema": "dogram.research.tetrahedral-bianchi/v0",
+  "permutation_convention": "image tuples; compose(left,right)=left o right, so right acts first",
+  "vertices": [0, 1, 2, 3],
+  "primary_noncommuting": {
+    "edges": {
+      "0,1": [2, 1, 3],
+      "0,2": [1, 2, 3],
+      "0,3": [1, 2, 3],
+      "1,2": [1, 3, 2],
+      "1,3": [1, 2, 3],
+      "2,3": [1, 2, 3]
+    },
+    "expected": {
+      "face_012_at_0": [2, 3, 1],
+      "face_023_at_0": [1, 2, 3],
+      "face_031_at_0": [2, 1, 3],
+      "face_123_at_1": [1, 3, 2],
+      "three_face_product_at_0": [3, 2, 1],
+      "transported_face_123_at_0": [3, 2, 1],
+      "transported_closure_residual": [1, 2, 3],
+      "naive_untransported_residual": [3, 1, 2]
+    }
+  },
+  "commuting_control": {
+    "edges": {
+      "0,1": [2, 1, 3],
+      "0,2": [1, 2, 3],
+      "0,3": [1, 2, 3],
+      "1,2": [2, 1, 3],
+      "1,3": [1, 2, 3],
+      "2,3": [1, 2, 3]
+    },
+    "expected": {
+      "transported_closure_residual": [1, 2, 3],
+      "naive_untransported_residual": [1, 2, 3]
+    }
+  }
+}
