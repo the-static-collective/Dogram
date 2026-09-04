@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 import unittest
 
 from dogram.strict2_action_composition import (
@@ -7,6 +9,9 @@ from dogram.strict2_action_composition import (
     horizontal_compose,
     inversion_action_z3_by_z2,
 )
+
+
+FIXTURE = Path(__file__).parent / "fixtures" / "strict2_action_composition_001.json"
 
 
 class Strict2ActionCompositionTests(unittest.TestCase):
@@ -34,6 +39,24 @@ class Strict2ActionCompositionTests(unittest.TestCase):
         self.assertEqual(receipt.odd_factorization.composite_h, 0)
         self.assertEqual(receipt.higher_composite_delta, 1)
         self.assertTrue(receipt.naive_composition_collapses_delta)
+
+    def test_frozen_fixture_replays_exact_composition_surface(self) -> None:
+        fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
+        receipt = analyze_strict2_action_composition()
+
+        self.assertEqual(fixture["higher_labels"], [1, 1])
+        self.assertEqual(
+            fixture["even_factorization"]["composite_h"],
+            receipt.even_factorization.composite_h,
+        )
+        self.assertEqual(
+            fixture["odd_factorization"]["composite_h"],
+            receipt.odd_factorization.composite_h,
+        )
+        self.assertEqual(
+            fixture["higher_composite_delta_mod_3"],
+            receipt.higher_composite_delta,
+        )
 
 
 if __name__ == "__main__":
