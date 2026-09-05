@@ -4,9 +4,9 @@
 
 **Goal:** Build an internal Dogram research kernel that pressure-tests declared mathematical bridges, preserves partial/unmapped/extra/residual structure, and survives the Five Bats without adding a public Dogram operator.
 
-**Architecture:** Keep v0 finite, exact-first, and fixture-driven. `dogram/mathband.py` owns only deterministic receipt classification over already-constituted finite probe observations; the test fixture and independent test-side mathematical oracles construct the complex-number and matrix voices so the evaluator cannot grade its own bats. Known exact bridges calibrate the receipt before partial, false-friend, or novel bridges are admitted.
+**Architecture:** Keep v0 finite, exact-first, and fixture-driven. `dogram/mathband.py` owns only deterministic receipt classification over already-constituted finite probe observations; the JSON fixture and independent test-side mathematical oracles construct the complex-number and matrix voices so the evaluator cannot generate or grade its own bats. Known exact bridges calibrate the receipt before partial, false-friend, documented cross-discipline, or novel bridges are admitted.
 
-**Tech Stack:** Python 3.12 standard library only; frozen dataclasses; `unittest`; JSON fixtures; existing Dogram canonical/operator floor.
+**Tech Stack:** Python 3.12 standard library only; frozen dataclasses; `unittest`; JSON fixtures; existing Dogram operator floor.
 
 **Spec:** `docs/superpowers/specs/2026-09-05-mathband-incubator-001-design.md`
 
@@ -18,7 +18,7 @@
 - Do not modify `dogram/engine.py` or add `mathband@1` to `OPERATORS`.
 - No CLI route, schema promotion, symbolic parser, theorem prover, CAS, network dependency, automatic bridge discovery, or semantic/evidentiary authority.
 - Probe families and decisive/load-bearing probes are frozen before evaluation.
-- `EVALUATOR != BAT ORACLE`: fixture generation and expected hostile behavior remain outside `dogram.mathband`.
+- `EVALUATOR != BAT ORACLE`: fixture generation and hostile expected behavior stay outside `dogram.mathband`.
 - No scalar `match_score`; a decisive broken probe cannot be overruled by aggregate similarity.
 - `UNMAPPED != FALSE`, `EXTRA != ERROR`, `APPROXIMATE != EXACT`, `BRIDGE != IDENTITY`, `PRESERVED UNDER P != GLOBALLY EQUIVALENT`.
 - Exact arithmetic is preferred. Numeric tolerance exists only to retain explicit residuals; it must never silently convert approximate equality into exact equality.
@@ -27,11 +27,11 @@
 
 ## File Structure
 
-- Create `dogram/mathband.py` — frozen receipt types, input validation, deterministic probe classification, assumption gate, decisive-probe handling. No discipline-specific mathematics.
-- Create `tests/fixtures/mathband_incubator_001.json` — frozen inputs for exact rotation calibration and all Five Bats; expected constitutional behavior is fixture/test data, never evaluator-generated.
-- Create `tests/test_mathband.py` — independent mathematical oracles for complex quarter-turn and matrix action; TDD coverage for exact bridge, Five Bats, residuals, refusals, deterministic output, and public-operator non-promotion.
-- Create `research/MATHBAND-INCUBATOR-001.md` — executable research receipt: question, frozen specimen, Five-Bat outcomes, documented math, inference, refusals, and HOLD boundary.
-- Do not modify `dogram/engine.py`, `dogram/cli.py`, `pyproject.toml`, or any public schema/operator registry.
+- Create `dogram/mathband.py` — frozen receipt types, validation, assumption gate, deterministic probe classification, decisive-probe handling. No discipline-specific mathematics.
+- Create `tests/fixtures/mathband_incubator_001.json` — frozen inputs for exact rotation calibration and all Five Bats.
+- Create `tests/test_mathband.py` — independent mathematical oracles plus TDD coverage for exact bridge, Five Bats, residuals, refusals, deterministic output, and non-promotion.
+- Create `research/MATHBAND-INCUBATOR-001.md` — durable research receipt with verified outcomes and HOLD boundary.
+- Do not modify `dogram/engine.py`, `dogram/cli.py`, `pyproject.toml`, or public schemas.
 
 ---
 
@@ -43,13 +43,12 @@
 - Create: `tests/fixtures/mathband_incubator_001.json`
 
 **Interfaces:**
-- Produces `ProbeObservation`, `ProbeOutcome`, `MathBandReceipt`, and `evaluate_bridge(...)` for later tasks.
-- `evaluate_bridge` consumes already-computed common-stage probe outputs; it never computes complex or matrix mathematics itself.
-- Exact probe equality is Python structural equality over frozen JSON-like values.
+- Produces `ProbeObservation`, `ProbeOutcome`, `MathBandReceipt`, `evaluate_bridge(...)`.
+- `evaluate_bridge` consumes already-computed common-stage observations; it never computes complex or matrix mathematics itself.
 
 - [ ] **Step 1: Create the frozen calibration fixture**
 
-Create `tests/fixtures/mathband_incubator_001.json` with this initial content:
+Create `tests/fixtures/mathband_incubator_001.json`:
 
 ```json
 {
@@ -68,9 +67,9 @@ Create `tests/fixtures/mathband_incubator_001.json` with this initial content:
 }
 ```
 
-- [ ] **Step 2: Write the independent oracles and the first failing test**
+- [ ] **Step 2: Write independent mathematical oracles and the first failing test**
 
-Create `tests/test_mathband.py` with fixture loading, independent test-side oracles, and this first test:
+Create `tests/test_mathband.py`:
 
 ```python
 from __future__ import annotations
@@ -90,6 +89,13 @@ def _complex_quarter_turn(pair: tuple[int, int]) -> tuple[int, int]:
     return (-b, a)
 
 
+def _complex_apply_n(pair: tuple[int, int], turns: int) -> tuple[int, int]:
+    result = pair
+    for _ in range(turns):
+        result = _complex_quarter_turn(result)
+    return result
+
+
 def _matrix_apply(
     matrix: tuple[tuple[int, int], tuple[int, int]],
     pair: tuple[int, int],
@@ -97,6 +103,22 @@ def _matrix_apply(
     (m00, m01), (m10, m11) = matrix
     a, b = pair
     return (m00 * a + m01 * b, m10 * a + m11 * b)
+
+
+def _matrix_apply_n(
+    matrix: tuple[tuple[int, int], tuple[int, int]],
+    pair: tuple[int, int],
+    turns: int,
+) -> tuple[int, int]:
+    result = pair
+    for _ in range(turns):
+        result = _matrix_apply(matrix, result)
+    return result
+
+
+def _norm_sq(pair: tuple[int, int]) -> int:
+    a, b = pair
+    return a * a + b * b
 
 
 class MathBandTests(unittest.TestCase):
@@ -131,24 +153,24 @@ class MathBandTests(unittest.TestCase):
         )
 
         self.assertEqual({outcome.status for outcome in receipt.outcomes}, {"PRESERVED"})
-        self.assertEqual(receipt.first_decisive_probe, None)
+        self.assertIsNone(receipt.first_decisive_probe)
         self.assertEqual(receipt.exactness, "exact")
         self.assertEqual(receipt.refusals, ())
 ```
 
-- [ ] **Step 3: Run the test and verify the RED state**
+The complex and matrix action helpers are the independent bat oracle. They must remain in tests, not move into `dogram.mathband`.
 
-Run:
+- [ ] **Step 3: Run the test to verify RED**
 
 ```bash
 python -m unittest tests.test_mathband.MathBandTests.test_exact_complex_matrix_calibration_preserves_all_probes -v
 ```
 
-Expected: **FAIL/ERROR** because `dogram.mathband` does not exist yet.
+Expected: **ERROR/FAIL** because `dogram.mathband` does not exist.
 
 - [ ] **Step 4: Implement the minimal exact receipt floor**
 
-Create `dogram/mathband.py` with these concrete interfaces:
+Create `dogram/mathband.py` with these exact public interfaces:
 
 ```python
 from __future__ import annotations
@@ -219,18 +241,19 @@ def evaluate_bridge(
     ...
 ```
 
-For Task 1, implement only these behaviors:
+Task-1 behavior:
 
 ```python
-# validate non-empty refs, non-empty unique probe names, known comparison values
+# validate non-empty bridge/voice refs
+# validate non-empty unique probe names
+# reject unknown comparison values
 # exact + defined + left == right -> PRESERVED
 # exact + defined + left != right + must_preserve -> BROKEN
 # exact + defined + left != right + not must_preserve -> CHANGED
 # first_decisive_probe = first input-order decisive BROKEN outcome
 # exactness = "exact"
+# until later red tests exist, ignore caller-supplied transforms/extras/lossy_steps and emit empty tuples
 ```
-
-Keep `numeric`, assumption refusal, `UNMAPPED`, extras, and approximate exactness fields structurally present but do not implement their later behavior until their red tests exist.
 
 Export only:
 
@@ -243,9 +266,7 @@ __all__ = [
 ]
 ```
 
-- [ ] **Step 5: Run the exact calibration test and verify GREEN**
-
-Run:
+- [ ] **Step 5: Run the calibration test to verify GREEN**
 
 ```bash
 python -m unittest tests.test_mathband.MathBandTests.test_exact_complex_matrix_calibration_preserves_all_probes -v
@@ -253,7 +274,7 @@ python -m unittest tests.test_mathband.MathBandTests.test_exact_complex_matrix_c
 
 Expected: **PASS**.
 
-- [ ] **Step 6: Commit the exact floor**
+- [ ] **Step 6: Commit Task 1**
 
 ```bash
 git add dogram/mathband.py tests/test_mathband.py tests/fixtures/mathband_incubator_001.json
@@ -270,19 +291,19 @@ git commit -m "Research: add MathBand exact calibration floor"
 - Modify: `dogram/mathband.py`
 
 **Interfaces:**
-- Consumes `ProbeObservation` and `evaluate_bridge(...)` from Task 1.
-- Produces stable receipt semantics under reordered/renamed probes and preserves a caller-declared representation transform separately in `declared_transforms`.
+- Consumes Task-1 interfaces.
+- Makes receipt semantics independent of familiar names/order while preserving a caller-declared representation transform separately.
 
-- [ ] **Step 1: Extend the fixture with Rename/Gauge controls**
+- [ ] **Step 1: Extend fixture controls**
 
-Add these keys under `calibration`:
+Under `calibration`, add:
 
 ```json
 "rename_prefix": "bat-renamed",
 "gauge_transform": "common_integer_scale:7"
 ```
 
-- [ ] **Step 2: Write failing Rename Bat and Gauge Bat tests**
+- [ ] **Step 2: Write failing Rename and Gauge tests**
 
 Add:
 
@@ -291,7 +312,7 @@ def _semantic_signature(receipt) -> tuple[tuple[str, object, object], ...]:
     return tuple(sorted((outcome.status, outcome.left, outcome.right) for outcome in receipt.outcomes))
 ```
 
-Then add:
+Add:
 
 ```python
 def test_rename_bat_preserves_semantics_under_reordering_and_renaming(self) -> None:
@@ -308,8 +329,6 @@ def test_rename_bat_preserves_semantics_under_reordering_and_renaming(self) -> N
             name=f"{self.calibration['rename_prefix']}:{index}",
             left=probe.left,
             right=probe.right,
-            comparison="exact",
-            must_preserve=True,
             decisive=True,
         )
         for index, probe in enumerate(reversed(self._exact_probes()))
@@ -324,7 +343,7 @@ def test_rename_bat_preserves_semantics_under_reordering_and_renaming(self) -> N
     )
 
     self.assertEqual(_semantic_signature(attacked), _semantic_signature(baseline))
-    self.assertEqual(attacked.first_decisive_probe, None)
+    self.assertIsNone(attacked.first_decisive_probe)
 
 
 def test_gauge_bat_preserves_relation_and_receipts_common_scale(self) -> None:
@@ -335,13 +354,10 @@ def test_gauge_bat_preserves_relation_and_receipts_common_scale(self) -> None:
             name=f"scaled:{a},{b}",
             left=_complex_quarter_turn((a, b)),
             right=_matrix_apply(self.matrix, (a, b)),
-            comparison="exact",
-            must_preserve=True,
             decisive=True,
         )
         for a, b in scaled_pairs
     )
-
     receipt = evaluate_bridge(
         bridge_ref=self.calibration["bridge_ref"],
         voice_a_ref=self.calibration["voice_a_ref"],
@@ -354,12 +370,9 @@ def test_gauge_bat_preserves_relation_and_receipts_common_scale(self) -> None:
 
     self.assertEqual({outcome.status for outcome in receipt.outcomes}, {"PRESERVED"})
     self.assertEqual(receipt.declared_transforms, ("common_integer_scale:7",))
-    self.assertEqual(receipt.exactness, "exact")
 ```
 
-- [ ] **Step 3: Run both bat tests and verify at least one RED state**
-
-Run:
+- [ ] **Step 3: Run to verify RED**
 
 ```bash
 python -m unittest \
@@ -367,29 +380,25 @@ python -m unittest \
   tests.test_mathband.MathBandTests.test_gauge_bat_preserves_relation_and_receipts_common_scale -v
 ```
 
-Expected before implementation completion: **FAIL** if `declared_transforms` is not yet retained or deterministic semantics are unstable.
+Expected: Gauge test **FAILS** because Task 1 intentionally discarded `declared_transforms`.
 
-- [ ] **Step 4: Implement only the missing Rename/Gauge behavior**
-
-Ensure `evaluate_bridge(...)`:
+- [ ] **Step 4: Implement only Rename/Gauge behavior**
 
 ```python
-# preserves caller-supplied declared_transforms exactly as an immutable tuple
-# never uses bridge/voice/probe names to decide mathematical equality
-# preserves input probe order in receipt while allowing semantic comparison independent of serialization order
+# retain declared_transforms exactly as an immutable tuple
+# never inspect names when deciding equality
+# preserve input probe order; do not sort inside evaluator
 ```
 
-Do not canonicalize or sort probe execution order inside the evaluator; decisive order is caller-declared and load-bearing.
-
-- [ ] **Step 5: Run Task 2 tests and Task 1 regression**
+- [ ] **Step 5: Run MathBand tests**
 
 ```bash
 python -m unittest tests.test_mathband -v
 ```
 
-Expected: **PASS** for all tests written so far.
+Expected: **PASS**.
 
-- [ ] **Step 6: Commit Rename/Gauge bats**
+- [ ] **Step 6: Commit Task 2**
 
 ```bash
 git add dogram/mathband.py tests/test_mathband.py tests/fixtures/mathband_incubator_001.json
@@ -406,12 +415,11 @@ git commit -m "Test: hit MathBand with rename and gauge bats"
 - Modify: `dogram/mathband.py`
 
 **Interfaces:**
-- Adds constitutional handling for `UNMAPPED`, `EXTRA`, and whole-bridge `REFUSE` without changing exact bridge semantics.
-- Missing required assumptions return a receipt with `exactness="refused"`; they do not raise or guess.
+- Adds `UNMAPPED`, explicit extra structure, and whole-bridge refusal for missing assumptions.
 
-- [ ] **Step 1: Extend the fixture with frozen hostile data**
+- [ ] **Step 1: Extend the fixture**
 
-Add top-level keys:
+Add:
 
 ```json
 "domain_bat": {
@@ -425,31 +433,26 @@ Add top-level keys:
 }
 ```
 
-- [ ] **Step 2: Write the failing Domain Bat test**
-
-Add:
+- [ ] **Step 2: Write failing Domain Bat test**
 
 ```python
 def test_domain_bat_keeps_outside_domain_unmapped(self) -> None:
     inside = tuple(self.fixture["domain_bat"]["inside_pair"])
-    outside = tuple(self.fixture["domain_bat"]["outside_pair"])
     probes = (
         ProbeObservation(
-            name="inside-domain",
-            left=_complex_quarter_turn(inside),
-            right=_matrix_apply(self.matrix, inside),
+            "inside-domain",
+            _complex_quarter_turn(inside),
+            _matrix_apply(self.matrix, inside),
             decisive=True,
         ),
         ProbeObservation(
-            name="outside-domain",
-            left=None,
-            right=None,
-            decisive=False,
+            "outside-domain",
+            None,
+            None,
             left_defined=False,
             right_defined=False,
         ),
     )
-
     receipt = evaluate_bridge(
         bridge_ref="restricted-quarter-turn",
         voice_a_ref=self.calibration["voice_a_ref"],
@@ -461,12 +464,9 @@ def test_domain_bat_keeps_outside_domain_unmapped(self) -> None:
 
     self.assertEqual(receipt.outcomes[0].status, "PRESERVED")
     self.assertEqual(receipt.outcomes[1].status, "UNMAPPED")
-    self.assertEqual(receipt.first_decisive_probe, None)
 ```
 
 - [ ] **Step 3: Write failing Extra-Voice and refusal tests**
-
-Add:
 
 ```python
 def test_extra_voice_bat_preserves_unmatched_structure(self) -> None:
@@ -483,7 +483,6 @@ def test_extra_voice_bat_preserves_unmatched_structure(self) -> None:
 
     self.assertEqual(receipt.extra_a, ())
     self.assertEqual(receipt.extra_b, ("independent_conjugation_operation",))
-    self.assertEqual({outcome.status for outcome in receipt.outcomes}, {"PRESERVED"})
 
 
 def test_missing_required_assumption_refuses_without_grading_probes(self) -> None:
@@ -501,7 +500,7 @@ def test_missing_required_assumption_refuses_without_grading_probes(self) -> Non
     self.assertEqual(receipt.refusals, ("missing assumption: quarter_turn_action",))
 ```
 
-- [ ] **Step 4: Run the three new tests and verify RED**
+- [ ] **Step 4: Run to verify RED**
 
 ```bash
 python -m unittest \
@@ -510,11 +509,9 @@ python -m unittest \
   tests.test_mathband.MathBandTests.test_missing_required_assumption_refuses_without_grading_probes -v
 ```
 
-Expected: **FAIL** until `UNMAPPED`, extras, and refusal are implemented.
+Expected: **FAIL** until domain/extras/refusal behavior exists.
 
-- [ ] **Step 5: Implement domain, extra, and refusal behavior**
-
-Extend `evaluate_bridge(...)` exactly as follows:
+- [ ] **Step 5: Implement assumption refusal exactly**
 
 ```python
 missing = tuple(
@@ -539,24 +536,23 @@ if missing:
     )
 ```
 
-For each probe before equality comparison:
+For any probe with either side undefined, emit:
 
 ```python
-if not probe.left_defined or not probe.right_defined:
-    outcome = ProbeOutcome(
-        name=probe.name,
-        status="UNMAPPED",
-        left=probe.left,
-        right=probe.right,
-        delta=None,
-        residual=None,
-        decisive=probe.decisive,
-    )
+ProbeOutcome(
+    name=probe.name,
+    status="UNMAPPED",
+    left=probe.left,
+    right=probe.right,
+    delta=None,
+    residual=None,
+    decisive=probe.decisive,
+)
 ```
 
-Preserve `extra_a`, `extra_b`, and `lossy_steps` verbatim in the receipt. Do not attempt to interpret or eliminate them.
+Retain `extra_a`, `extra_b`, and `lossy_steps` verbatim. Do not interpret or eliminate them.
 
-- [ ] **Step 6: Run full MathBand tests**
+- [ ] **Step 6: Run MathBand tests**
 
 ```bash
 python -m unittest tests.test_mathband -v
@@ -564,7 +560,7 @@ python -m unittest tests.test_mathband -v
 
 Expected: **PASS**.
 
-- [ ] **Step 7: Commit Domain/Extra/Refusal bats**
+- [ ] **Step 7: Commit Task 3**
 
 ```bash
 git add dogram/mathband.py tests/test_mathband.py tests/fixtures/mathband_incubator_001.json
@@ -582,9 +578,9 @@ git commit -m "Test: preserve MathBand domain and extra-voice boundaries"
 
 **Interfaces:**
 - Adds numeric residual classification and predeclared decisive failure handling.
-- A false friend may pass many non-decisive probes but still records `first_decisive_probe` when the load-bearing probe breaks.
+- A false friend may pass many non-decisive probes; one frozen decisive failure still kills the declared bridge.
 
-- [ ] **Step 1: Extend the fixture with the false friend and residual thresholds**
+- [ ] **Step 1: Extend the fixture**
 
 Add:
 
@@ -600,41 +596,27 @@ Add:
 }
 ```
 
-- [ ] **Step 2: Add a matrix composition helper in the test oracle**
+The false-friend matrix is a reflection-like action. The test oracle must compute every probe independently from the two actions; do not hard-code successful booleans merely to inflate the apparent match count.
 
-Add to `tests/test_mathband.py`:
-
-```python
-def _matrix_apply_twice(
-    matrix: tuple[tuple[int, int], tuple[int, int]],
-    pair: tuple[int, int],
-) -> tuple[int, int]:
-    return _matrix_apply(matrix, _matrix_apply(matrix, pair))
-
-
-def _norm_sq(pair: tuple[int, int]) -> int:
-    a, b = pair
-    return a * a + b * b
-```
-
-- [ ] **Step 3: Write the failing False-Friend Bat test**
-
-Add:
+- [ ] **Step 2: Write the failing False-Friend Bat test**
 
 ```python
 def test_false_friend_bat_cannot_outvote_decisive_failure(self) -> None:
     pair = tuple(self.fixture["false_friend_bat"]["probe_pair"])
     false_matrix = tuple(tuple(row) for row in self.fixture["false_friend_bat"]["matrix"])
-    complex_once = _complex_quarter_turn(pair)
-    complex_twice = _complex_quarter_turn(complex_once)
-    false_once = _matrix_apply(false_matrix, pair)
-    false_twice = _matrix_apply_twice(false_matrix, pair)
+
+    complex_once = _complex_apply_n(pair, 1)
+    false_once = _matrix_apply_n(false_matrix, pair, 1)
+    complex_twice = _complex_apply_n(pair, 2)
+    false_twice = _matrix_apply_n(false_matrix, pair, 2)
+    complex_four = _complex_apply_n(pair, 4)
+    false_four = _matrix_apply_n(false_matrix, pair, 4)
 
     probes = (
-        ProbeObservation("norm-input", _norm_sq(pair), _norm_sq(pair), decisive=False),
-        ProbeObservation("norm-output", _norm_sq(complex_once), _norm_sq(false_once), decisive=False),
-        ProbeObservation("origin-fixed", (0, 0), _matrix_apply(false_matrix, (0, 0)), decisive=False),
-        ProbeObservation("four-step-return-available", True, True, decisive=False),
+        ProbeObservation("norm-input", _norm_sq(pair), _norm_sq(pair)),
+        ProbeObservation("norm-output", _norm_sq(complex_once), _norm_sq(false_once)),
+        ProbeObservation("origin-fixed", _complex_apply_n((0, 0), 1), _matrix_apply_n(false_matrix, (0, 0), 1)),
+        ProbeObservation("four-step-return", complex_four, false_four),
         ProbeObservation(
             "two-turn-output",
             complex_twice,
@@ -655,14 +637,12 @@ def test_false_friend_bat_cannot_outvote_decisive_failure(self) -> None:
 
     self.assertEqual(sum(o.status == "PRESERVED" for o in receipt.outcomes), 4)
     self.assertEqual(receipt.outcomes[-1].status, "BROKEN")
-    self.assertEqual(receipt.first_decisive_probe, "two-turn-output")
+    self.assertEqual(receipt.first_decisive_probe, self.fixture["false_friend_bat"]["decisive_probe"])
 ```
 
-This fixture deliberately gives the false bridge four superficially successful probes and one load-bearing failure. No aggregate similarity score exists to rescue it.
+This fixture gives a naïve 4/5 surface similarity while the predeclared load-bearing probe fails.
 
-- [ ] **Step 4: Write failing residual tests**
-
-Add:
+- [ ] **Step 3: Write failing residual tests**
 
 ```python
 def test_numeric_disagreement_within_tolerance_is_residual_not_exact(self) -> None:
@@ -674,12 +654,11 @@ def test_numeric_disagreement_within_tolerance_is_residual_not_exact(self) -> No
         required_assumptions=(),
         provided_assumptions=(),
         probes=(ProbeObservation(
-            name="approximate-probe",
-            left=left,
-            right=right,
+            "approximate-probe",
+            left,
+            right,
             comparison="numeric",
             tolerance=tolerance,
-            must_preserve=True,
             decisive=True,
         ),),
     )
@@ -687,7 +666,7 @@ def test_numeric_disagreement_within_tolerance_is_residual_not_exact(self) -> No
     self.assertEqual(receipt.outcomes[0].status, "RESIDUAL")
     self.assertAlmostEqual(receipt.outcomes[0].residual, abs(left - right))
     self.assertEqual(receipt.exactness, "approximate")
-    self.assertEqual(receipt.first_decisive_probe, None)
+    self.assertIsNone(receipt.first_decisive_probe)
 
 
 def test_numeric_disagreement_outside_tolerance_breaks_decisive_probe(self) -> None:
@@ -699,12 +678,11 @@ def test_numeric_disagreement_outside_tolerance_breaks_decisive_probe(self) -> N
         required_assumptions=(),
         provided_assumptions=(),
         probes=(ProbeObservation(
-            name="approximate-probe",
-            left=left,
-            right=right,
+            "approximate-probe",
+            left,
+            right,
             comparison="numeric",
             tolerance=tolerance,
-            must_preserve=True,
             decisive=True,
         ),),
     )
@@ -714,7 +692,7 @@ def test_numeric_disagreement_outside_tolerance_breaks_decisive_probe(self) -> N
     self.assertEqual(receipt.first_decisive_probe, "approximate-probe")
 ```
 
-- [ ] **Step 5: Run False-Friend and residual tests and verify RED**
+- [ ] **Step 4: Run to verify RED**
 
 ```bash
 python -m unittest \
@@ -723,11 +701,11 @@ python -m unittest \
   tests.test_mathband.MathBandTests.test_numeric_disagreement_outside_tolerance_breaks_decisive_probe -v
 ```
 
-Expected: **FAIL** until numeric comparison and decisive failure are fully implemented.
+Expected: residual tests **FAIL** until numeric classification is implemented. False-friend behavior must also fail if decisive handling is incomplete.
 
-- [ ] **Step 6: Implement numeric residual classification**
+- [ ] **Step 5: Implement numeric residual classification**
 
-Add a private validator:
+Add:
 
 ```python
 def _finite_number(value: object) -> bool:
@@ -760,21 +738,27 @@ else:
     status = "CHANGED"
 ```
 
-Set receipt `exactness`:
+After all outcomes:
 
 ```python
-"approximate" if any(outcome.status == "RESIDUAL" for outcome in outcomes) or lossy_steps else "exact"
+first_decisive_probe = next(
+    (
+        outcome.name
+        for outcome in outcomes
+        if outcome.decisive and outcome.status == "BROKEN"
+    ),
+    None,
+)
+exactness = (
+    "approximate"
+    if any(outcome.status == "RESIDUAL" for outcome in outcomes) or lossy_steps
+    else "exact"
+)
 ```
 
-Set `first_decisive_probe` to the first input-order outcome satisfying:
+The evaluator only consumes the predeclared `decisive` field. It never searches outputs for a convenient discriminator.
 
-```python
-outcome.decisive and outcome.status == "BROKEN"
-```
-
-Never select a decisive probe after inspecting results; the evaluator only consumes the predeclared `decisive` field.
-
-- [ ] **Step 7: Run all MathBand tests**
+- [ ] **Step 6: Run MathBand tests**
 
 ```bash
 python -m unittest tests.test_mathband -v
@@ -782,7 +766,7 @@ python -m unittest tests.test_mathband -v
 
 Expected: **PASS**.
 
-- [ ] **Step 8: Commit False-Friend and residual behavior**
+- [ ] **Step 7: Commit Task 4**
 
 ```bash
 git add dogram/mathband.py tests/test_mathband.py tests/fixtures/mathband_incubator_001.json
@@ -799,12 +783,12 @@ git commit -m "Test: kill MathBand false friends with decisive probes"
 - Read-only regression target: `dogram/engine.py`
 
 **Interfaces:**
-- Produces the durable research receipt for the incubator.
-- Adds a regression proving MathBand remains outside the public `OPERATORS` registry.
+- Produces the durable research receipt.
+- Proves MathBand remains outside the public `OPERATORS` registry.
 
-- [ ] **Step 1: Write the failing public-operator regression test**
+- [ ] **Step 1: Add public-operator regression**
 
-Add this import and test:
+Add:
 
 ```python
 from dogram.engine import OPERATORS
@@ -824,14 +808,12 @@ Run:
 python -m unittest tests.test_mathband.MathBandTests.test_mathband_does_not_enter_public_operator_floor -v
 ```
 
-Expected: **PASS immediately** if no previous task accidentally promoted MathBand. If it fails, remove the promotion rather than changing this expected set.
+Expected: **PASS immediately**. If it fails, remove the accidental promotion; do not weaken the assertion.
 
-- [ ] **Step 2: Add deterministic validation tests before documenting success**
-
-Add:
+- [ ] **Step 2: Add validation/determinism regression tests**
 
 ```python
-def test_duplicate_probe_names_refuse_malformed_input_by_exception(self) -> None:
+def test_duplicate_probe_names_raise_deterministic_input_error(self) -> None:
     probe = ProbeObservation("duplicate", 1, 1)
     with self.assertRaisesRegex(ValueError, "probe names must be unique"):
         evaluate_bridge(
@@ -844,7 +826,7 @@ def test_duplicate_probe_names_refuse_malformed_input_by_exception(self) -> None
         )
 
 
-def test_receipt_order_is_deterministic_and_follows_predeclared_probe_order(self) -> None:
+def test_receipt_order_follows_predeclared_probe_order(self) -> None:
     probes = (
         ProbeObservation("first", 1, 1),
         ProbeObservation("second", 2, 2),
@@ -858,7 +840,10 @@ def test_receipt_order_is_deterministic_and_follows_predeclared_probe_order(self
         provided_assumptions=(),
         probes=probes,
     )
-    self.assertEqual(tuple(outcome.name for outcome in receipt.outcomes), ("first", "second", "third"))
+    self.assertEqual(
+        tuple(outcome.name for outcome in receipt.outcomes),
+        ("first", "second", "third"),
+    )
 ```
 
 Run:
@@ -867,11 +852,11 @@ Run:
 python -m unittest tests.test_mathband -v
 ```
 
-Expected: **PASS** after adding any missing validation in `dogram/mathband.py`.
+Expected: **PASS**. Task 1 already required unique-name validation; this test makes that constitutional assumption explicit.
 
 - [ ] **Step 3: Write `research/MATHBAND-INCUBATOR-001.md`**
 
-Use this exact section structure:
+Use exactly these sections:
 
 ```markdown
 # MATHBAND-INCUBATOR-001
@@ -895,7 +880,7 @@ Status: experimental research kernel. No public operator.
 ## Next gate
 ```
 
-The receipt must state these earned results only if verified by tests:
+Only if verified by tests, record:
 
 ```text
 BRIDGE != IDENTITY.
@@ -907,7 +892,7 @@ DECISIVE FAILURE CANNOT BE OUTVOTED BY SURFACE SIMILARITY.
 EVALUATOR != BAT ORACLE.
 ```
 
-`## HOLD` must explicitly retain:
+`## HOLD` must retain:
 
 ```text
 no automatic bridge discovery
@@ -919,11 +904,9 @@ no literature-priority claim
 no semantic or historical equivalence claim
 ```
 
-`## Next gate` should name Level 1 (known partial bridge) as the next research specimen. Do not jump directly to Terry or a novel cross-disciplinary candidate.
+`## Next gate` names **Level 1: one known partial bridge**. Do not jump directly to Terry or a novel cross-disciplinary candidate.
 
-- [ ] **Step 4: Run the complete verification floor**
-
-Run all of the following:
+- [ ] **Step 4: Run complete verification**
 
 ```bash
 python -m unittest tests.test_mathband -v
@@ -939,11 +922,7 @@ full Dogram unit suite PASS
 compileall PASS
 ```
 
-Do not claim success from the MathBand test file alone.
-
-- [ ] **Step 5: Inspect the diff for forbidden promotion**
-
-Run:
+- [ ] **Step 5: Inspect diff for forbidden promotion**
 
 ```bash
 git diff --check
@@ -961,16 +940,14 @@ pyproject.toml -> no diff
 status -> only intended MathBand/research files
 ```
 
-- [ ] **Step 6: Commit the research receipt and constitutional regression**
+- [ ] **Step 6: Commit research receipt**
 
 ```bash
 git add dogram/mathband.py tests/test_mathband.py tests/fixtures/mathband_incubator_001.json research/MATHBAND-INCUBATOR-001.md
 git commit -m "Research: receipt MathBand incubator bats"
 ```
 
-- [ ] **Step 7: Freshly verify the committed head**
-
-Run:
+- [ ] **Step 7: Freshly verify committed head**
 
 ```bash
 git status --short
@@ -988,4 +965,4 @@ full unit suite PASS
 compileall PASS
 ```
 
-Only after this fresh committed-head verification should the branch be offered for review/PR.
+Only after this committed-head verification should the implementation branch be offered for review/PR.
