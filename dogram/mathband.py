@@ -41,6 +41,7 @@ class MathBandReceipt:
     voice_b_ref: str
     declared_assumptions: tuple[str, ...]
     declared_transforms: tuple[str, ...]
+    declared_probe_family: tuple[str, ...]
     outcomes: tuple[ProbeOutcome, ...]
     extra_a: tuple[str, ...]
     extra_b: tuple[str, ...]
@@ -99,6 +100,7 @@ def evaluate_bridge(
         names.append(probe.name)
     if len(set(names)) != len(names):
         raise ValueError("probe names must be unique")
+    declared_probe_family = tuple(names)
 
     provided = set(provided_assumptions)
     missing = tuple(
@@ -111,6 +113,7 @@ def evaluate_bridge(
             voice_b_ref=voice_b_ref,
             declared_assumptions=provided_assumptions,
             declared_transforms=declared_transforms,
+            declared_probe_family=declared_probe_family,
             outcomes=(),
             extra_a=extra_a,
             extra_b=extra_b,
@@ -195,6 +198,7 @@ def evaluate_bridge(
         voice_b_ref=voice_b_ref,
         declared_assumptions=provided_assumptions,
         declared_transforms=declared_transforms,
+        declared_probe_family=declared_probe_family,
         outcomes=tuple(outcomes),
         extra_a=extra_a,
         extra_b=extra_b,
