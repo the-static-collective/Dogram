@@ -12,5 +12,14 @@
     "scale_factor": 7,
     "rename_prefix": "bat-renamed",
     "gauge_transform": "common_integer_scale:7"
+  },
+  "domain_bat": {
+    "declared_domain": "nonzero_pairs",
+    "inside_pair": [3, 4],
+    "outside_pair": [0, 0]
+  },
+  "extra_voice_bat": {
+    "voice_a_extra": [],
+    "voice_b_extra": ["independent_conjugation_operation"]
   }
 }
