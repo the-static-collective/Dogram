@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from fractions import Fraction
 from math import isfinite
 from typing import Literal
 
@@ -8,6 +9,7 @@ from typing import Literal
 ProbeStatus = Literal["PRESERVED", "CHANGED", "BROKEN", "UNMAPPED", "RESIDUAL"]
 ComparisonKind = Literal["exact", "numeric"]
 Exactness = Literal["exact", "approximate", "refused"]
+NumericValue = int | float
 
 
 @dataclass(frozen=True)
@@ -16,7 +18,7 @@ class ProbeObservation:
     left: object | None
     right: object | None
     comparison: ComparisonKind = "exact"
-    tolerance: float = 0.0
+    tolerance: NumericValue = 0.0
     must_preserve: bool = True
     decisive: bool = False
     left_defined: bool = True
@@ -30,13 +32,13 @@ class ProbeOutcome:
     left: object | None
     right: object | None
     comparison: ComparisonKind
-    tolerance: float
+    tolerance: NumericValue
     must_preserve: bool
     decisive: bool
     left_defined: bool
     right_defined: bool
     delta: tuple[object | None, object | None] | None
-    residual: float | None
+    residual: Fraction | None
 
 
 @dataclass(frozen=True)
@@ -61,11 +63,19 @@ def _nonempty_text(value: object) -> bool:
 
 
 def _finite_number(value: object) -> bool:
-    return (
-        isinstance(value, (int, float))
-        and not isinstance(value, bool)
-        and isfinite(float(value))
-    )
+    if isinstance(value, bool):
+        return False
+    if isinstance(value, int):
+        return True
+    if isinstance(value, float):
+        return isfinite(value)
+    return False
+
+
+def _as_fraction(value: NumericValue) -> Fraction:
+    if isinstance(value, int):
+        return Fraction(value, 1)
+    return Fraction.from_float(value)
 
 
 def _validate_probe(probe: ProbeObservation) -> None:
@@ -73,7 +83,7 @@ def _validate_probe(probe: ProbeObservation) -> None:
         raise ValueError("probe names must be non-empty strings")
     if probe.comparison not in ("exact", "numeric"):
         raise ValueError("unsupported comparison kind")
-    if not _finite_number(probe.tolerance) or float(probe.tolerance) < 0.0:
+    if not _finite_number(probe.tolerance) or _as_fraction(probe.tolerance) < 0:
         raise ValueError("probe tolerance must be finite and non-negative")
 
 
@@ -82,7 +92,7 @@ def _outcome(
     *,
     status: ProbeStatus,
     delta: tuple[object | None, object | None] | None,
-    residual: float | None,
+    residual: Fraction | None,
 ) -> ProbeOutcome:
     return ProbeOutcome(
         name=probe.name,
@@ -90,7 +100,7 @@ def _outcome(
         left=probe.left,
         right=probe.right,
         comparison=probe.comparison,
-        tolerance=float(probe.tolerance),
+        tolerance=probe.tolerance,
         must_preserve=probe.must_preserve,
         decisive=probe.decisive,
         left_defined=probe.left_defined,
@@ -165,17 +175,20 @@ def evaluate_bridge(
             )
             continue
 
-        residual: float | None = None
+        residual: Fraction | None = None
         if probe.comparison == "numeric":
             if not _finite_number(probe.left) or not _finite_number(probe.right):
                 raise ValueError(
                     "numeric probes require finite numbers and nonnegative tolerance"
                 )
-            residual = abs(float(probe.left) - float(probe.right))
-            if residual == 0.0:
+            left_value = _as_fraction(probe.left)
+            right_value = _as_fraction(probe.right)
+            tolerance = _as_fraction(probe.tolerance)
+            residual = abs(left_value - right_value)
+            if residual == 0:
                 status: ProbeStatus = "PRESERVED"
                 delta = None
-            elif residual <= probe.tolerance:
+            elif residual <= tolerance:
                 status = "RESIDUAL"
                 delta = (probe.left, probe.right)
             elif probe.must_preserve:
