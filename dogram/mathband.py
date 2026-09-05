@@ -29,9 +29,14 @@ class ProbeOutcome:
     status: ProbeStatus
     left: object | None
     right: object | None
+    comparison: ComparisonKind
+    tolerance: float
+    must_preserve: bool
+    decisive: bool
+    left_defined: bool
+    right_defined: bool
     delta: tuple[object | None, object | None] | None
     residual: float | None
-    decisive: bool
 
 
 @dataclass(frozen=True)
@@ -70,6 +75,29 @@ def _validate_probe(probe: ProbeObservation) -> None:
         raise ValueError("unsupported comparison kind")
     if not _finite_number(probe.tolerance) or float(probe.tolerance) < 0.0:
         raise ValueError("probe tolerance must be finite and non-negative")
+
+
+def _outcome(
+    probe: ProbeObservation,
+    *,
+    status: ProbeStatus,
+    delta: tuple[object | None, object | None] | None,
+    residual: float | None,
+) -> ProbeOutcome:
+    return ProbeOutcome(
+        name=probe.name,
+        status=status,
+        left=probe.left,
+        right=probe.right,
+        comparison=probe.comparison,
+        tolerance=float(probe.tolerance),
+        must_preserve=probe.must_preserve,
+        decisive=probe.decisive,
+        left_defined=probe.left_defined,
+        right_defined=probe.right_defined,
+        delta=delta,
+        residual=residual,
+    )
 
 
 def evaluate_bridge(
@@ -128,14 +156,11 @@ def evaluate_bridge(
     for probe in probes:
         if not probe.left_defined or not probe.right_defined:
             outcomes.append(
-                ProbeOutcome(
-                    name=probe.name,
+                _outcome(
+                    probe,
                     status="UNMAPPED",
-                    left=probe.left,
-                    right=probe.right,
                     delta=None,
                     residual=None,
-                    decisive=probe.decisive,
                 )
             )
             continue
@@ -167,14 +192,11 @@ def evaluate_bridge(
             delta = (probe.left, probe.right)
 
         outcomes.append(
-            ProbeOutcome(
-                name=probe.name,
+            _outcome(
+                probe,
                 status=status,
-                left=probe.left,
-                right=probe.right,
                 delta=delta,
                 residual=residual,
-                decisive=probe.decisive,
             )
         )
 
