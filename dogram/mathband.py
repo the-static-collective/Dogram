@@ -94,10 +94,44 @@ def evaluate_bridge(
     if len(set(names)) != len(names):
         raise ValueError("probe names must be unique")
 
+    provided = set(provided_assumptions)
+    missing = tuple(
+        assumption for assumption in required_assumptions if assumption not in provided
+    )
+    if missing:
+        return MathBandReceipt(
+            bridge_ref=bridge_ref,
+            voice_a_ref=voice_a_ref,
+            voice_b_ref=voice_b_ref,
+            declared_assumptions=provided_assumptions,
+            declared_transforms=declared_transforms,
+            outcomes=(),
+            extra_a=extra_a,
+            extra_b=extra_b,
+            lossy_steps=lossy_steps,
+            exactness="refused",
+            first_decisive_probe=None,
+            refusals=tuple(f"missing assumption: {item}" for item in missing),
+        )
+
     outcomes: list[ProbeOutcome] = []
     first_decisive_probe: str | None = None
 
     for probe in probes:
+        if not probe.left_defined or not probe.right_defined:
+            outcomes.append(
+                ProbeOutcome(
+                    name=probe.name,
+                    status="UNMAPPED",
+                    left=probe.left,
+                    right=probe.right,
+                    delta=None,
+                    residual=None,
+                    decisive=probe.decisive,
+                )
+            )
+            continue
+
         if probe.comparison != "exact":
             raise ValueError("numeric comparison is not implemented in the exact floor")
 
