@@ -14,6 +14,7 @@ MathBand consumes already-constituted finite probe observations from two intact 
 
 ```text
 BRIDGE != IDENTITY.
+COMMON STAGE != COMMON WORLD.
 PRESERVED UNDER P != GLOBALLY EQUIVALENT.
 UNMAPPED != FALSE.
 EXTRA != ERROR.
@@ -22,7 +23,7 @@ DECISIVE FAILURE CANNOT BE OUTVOTED BY SURFACE SIMILARITY.
 EVALUATOR != BAT ORACLE.
 ```
 
-Probe order, assumptions, representation transforms, and decisive/load-bearing probes are declared before evaluation. The evaluator does not choose a discriminator after seeing the outputs and does not compute the discipline-specific mathematics used by the hostile test oracle. A refusal preserves the names and order of the declared probe family even though no probe outcomes are graded.
+Probe order, assumptions, representation transforms, common-stage identity when supplied, and decisive/load-bearing probes are declared before evaluation. The evaluator does not choose a discriminator after seeing the outputs and does not compute the discipline-specific mathematics used by the hostile test oracle. A refusal preserves the names and order of the declared probe family even though no probe outcomes are graded.
 
 ## Calibration bridge
 
@@ -164,6 +165,37 @@ WITHIN TOLERANCE != EXACT.
 BEST OR CLOSE ENOUGH != ZERO RESIDUAL.
 ```
 
+## Review hardening
+
+External review found that the first numeric implementation converted both numeric operands through `float()` before subtraction. That representation change could erase a real distinction before MathBand classified it.
+
+Frozen regression:
+
+```text
+left      = 2**53
+right     = 2**53 + 1
+tolerance = 0
+```
+
+The pre-fix implementation observed both coerced floats as equal and could emit `PRESERVED` with zero residual. The hardened implementation converts supported Python `int` and finite `float` values to exact `Fraction` representations before subtraction. The frozen regression now retains residual `1` and returns `BROKEN`.
+
+A second regression uses integers near `10**1000`; they remain valid finite Python integers and no longer pass through `float()` validation, avoiding `OverflowError` while retaining their exact difference.
+
+Earned receipt:
+
+```text
+DISTINCT INPUTS MUST NOT COLLAPSE BEFORE COMPARISON.
+REPRESENTATION COERCION IS PART OF THE DELTA.
+APPROXIMATE -> EXACT IS A CONSTITUTIONAL FAILURE.
+```
+
+Review also identified that the conceptual receipt named a common stage but the first implementation did not retain its identity. `MathBandReceipt` now carries optional `common_stage_ref`. When a common stage is explicitly declared it survives unchanged in both success and refusal receipts; when omitted, the receipt retains `None` rather than inventing provenance.
+
+```text
+COMMON STAGE != COMMON WORLD.
+MISSING STAGE PROVENANCE != LICENSE TO FABRICATE IT.
+```
+
 ## Documented mathematics
 
 For real integers `a,b`, multiplication of `a+bi` by `i` corresponds under the declared coordinate identification to the linear map `(a,b) -> (-b,a)` represented by `[[0,-1],[1,0]]`.
@@ -184,13 +216,16 @@ For this finite incubator:
 - missing assumptions can make a bridge unevaluable without making either theory false;
 - refusal can preserve what was declared without pretending it was evaluated;
 - a predeclared decisive probe can reject a superficially strong false friend;
-- nonzero numeric residue can survive a tolerated comparison rather than being rounded into exact equality.
+- nonzero numeric residue can survive a tolerated comparison rather than being rounded into exact equality;
+- numeric representation changes must not erase a distinction before comparison;
+- an explicitly declared common-stage identity can survive as provenance without being promoted into a common-world claim.
 
 These are properties of the declared finite comparison contract. They do not establish that arbitrary mathematical disciplines can be automatically bridged.
 
 ## Explicit refusals
 
 - `BRIDGE != IDENTITY`;
+- `COMMON STAGE != COMMON WORLD`;
 - `PRESERVED UNDER P != GLOBALLY EQUIVALENT`;
 - `UNMAPPED != FALSE`;
 - `EXTRA != ERROR`;
