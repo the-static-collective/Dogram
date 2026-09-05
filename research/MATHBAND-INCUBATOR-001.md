@@ -22,7 +22,7 @@ DECISIVE FAILURE CANNOT BE OUTVOTED BY SURFACE SIMILARITY.
 EVALUATOR != BAT ORACLE.
 ```
 
-Probe order, assumptions, representation transforms, and decisive/load-bearing probes are declared before evaluation. The evaluator does not choose a discriminator after seeing the outputs and does not compute the discipline-specific mathematics used by the hostile test oracle.
+Probe order, assumptions, representation transforms, and decisive/load-bearing probes are declared before evaluation. The evaluator does not choose a discriminator after seeing the outputs and does not compute the discipline-specific mathematics used by the hostile test oracle. A refusal preserves the names and order of the declared probe family even though no probe outcomes are graded.
 
 ## Calibration bridge
 
@@ -98,7 +98,7 @@ Verified outcome: the exact shared probes remain preserved and the additional st
 
 A separate control removes one required assumption from the bridge declaration.
 
-Verified outcome: the whole bridge is `refused` before probe grading with an explicit missing-assumption receipt.
+Verified outcome: the whole bridge is `refused` before probe grading with an explicit missing-assumption receipt. The predeclared probe family remains receipted even though its outcomes are not evaluated.
 
 ### BAT-5 False Friend
 
@@ -182,6 +182,7 @@ For this finite incubator:
 - bridge validity can be local to a domain;
 - unmatched structure can coexist with preserved shared probes;
 - missing assumptions can make a bridge unevaluable without making either theory false;
+- refusal can preserve what was declared without pretending it was evaluated;
 - a predeclared decisive probe can reject a superficially strong false friend;
 - nonzero numeric residue can survive a tolerated comparison rather than being rounded into exact equality.
 
