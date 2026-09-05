@@ -148,6 +148,64 @@ class MathBandTests(unittest.TestCase):
         self.assertEqual(receipt.declared_transforms, ("common_integer_scale:7",))
         self.assertEqual(receipt.exactness, "exact")
 
+    def test_domain_bat_keeps_outside_domain_unmapped(self) -> None:
+        inside = tuple(self.fixture["domain_bat"]["inside_pair"])
+        probes = (
+            ProbeObservation(
+                "inside-domain",
+                _complex_quarter_turn(inside),
+                _matrix_apply(self.matrix, inside),
+                decisive=True,
+            ),
+            ProbeObservation(
+                "outside-domain",
+                None,
+                None,
+                left_defined=False,
+                right_defined=False,
+            ),
+        )
+        receipt = evaluate_bridge(
+            bridge_ref="restricted-quarter-turn",
+            voice_a_ref=self.calibration["voice_a_ref"],
+            voice_b_ref=self.calibration["voice_b_ref"],
+            required_assumptions=("domain=nonzero_pairs",),
+            provided_assumptions=("domain=nonzero_pairs",),
+            probes=probes,
+        )
+
+        self.assertEqual(receipt.outcomes[0].status, "PRESERVED")
+        self.assertEqual(receipt.outcomes[1].status, "UNMAPPED")
+
+    def test_extra_voice_bat_preserves_unmatched_structure(self) -> None:
+        receipt = evaluate_bridge(
+            bridge_ref=self.calibration["bridge_ref"],
+            voice_a_ref=self.calibration["voice_a_ref"],
+            voice_b_ref=self.calibration["voice_b_ref"],
+            required_assumptions=tuple(self.calibration["required_assumptions"]),
+            provided_assumptions=tuple(self.calibration["required_assumptions"]),
+            probes=self._exact_probes(),
+            extra_a=tuple(self.fixture["extra_voice_bat"]["voice_a_extra"]),
+            extra_b=tuple(self.fixture["extra_voice_bat"]["voice_b_extra"]),
+        )
+
+        self.assertEqual(receipt.extra_a, ())
+        self.assertEqual(receipt.extra_b, ("independent_conjugation_operation",))
+
+    def test_missing_required_assumption_refuses_without_grading_probes(self) -> None:
+        receipt = evaluate_bridge(
+            bridge_ref=self.calibration["bridge_ref"],
+            voice_a_ref=self.calibration["voice_a_ref"],
+            voice_b_ref=self.calibration["voice_b_ref"],
+            required_assumptions=("complex_pair_identification", "quarter_turn_action"),
+            provided_assumptions=("complex_pair_identification",),
+            probes=self._exact_probes(),
+        )
+
+        self.assertEqual(receipt.exactness, "refused")
+        self.assertEqual(receipt.outcomes, ())
+        self.assertEqual(receipt.refusals, ("missing assumption: quarter_turn_action",))
+
 
 if __name__ == "__main__":
     unittest.main()
