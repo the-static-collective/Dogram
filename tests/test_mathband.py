@@ -74,16 +74,18 @@ class MathBandTests(unittest.TestCase):
         )
 
     def test_exact_complex_matrix_calibration_preserves_all_probes(self) -> None:
+        probes = self._exact_probes()
         receipt = evaluate_bridge(
             bridge_ref=self.calibration["bridge_ref"],
             voice_a_ref=self.calibration["voice_a_ref"],
             voice_b_ref=self.calibration["voice_b_ref"],
             required_assumptions=tuple(self.calibration["required_assumptions"]),
             provided_assumptions=tuple(self.calibration["required_assumptions"]),
-            probes=self._exact_probes(),
+            probes=probes,
         )
 
         self.assertEqual({outcome.status for outcome in receipt.outcomes}, {"PRESERVED"})
+        self.assertEqual(receipt.declared_probe_family, tuple(p.name for p in probes))
         self.assertEqual(receipt.first_decisive_probe, None)
         self.assertEqual(receipt.exactness, "exact")
         self.assertEqual(receipt.refusals, ())
@@ -194,17 +196,19 @@ class MathBandTests(unittest.TestCase):
         self.assertEqual(receipt.extra_b, ("independent_conjugation_operation",))
 
     def test_missing_required_assumption_refuses_without_grading_probes(self) -> None:
+        probes = self._exact_probes()
         receipt = evaluate_bridge(
             bridge_ref=self.calibration["bridge_ref"],
             voice_a_ref=self.calibration["voice_a_ref"],
             voice_b_ref=self.calibration["voice_b_ref"],
             required_assumptions=("complex_pair_identification", "quarter_turn_action"),
             provided_assumptions=("complex_pair_identification",),
-            probes=self._exact_probes(),
+            probes=probes,
         )
 
         self.assertEqual(receipt.exactness, "refused")
         self.assertEqual(receipt.outcomes, ())
+        self.assertEqual(receipt.declared_probe_family, tuple(p.name for p in probes))
         self.assertEqual(receipt.refusals, ("missing assumption: quarter_turn_action",))
 
     def test_false_friend_bat_cannot_outvote_decisive_failure(self) -> None:
@@ -334,6 +338,7 @@ class MathBandTests(unittest.TestCase):
             provided_assumptions=(),
             probes=probes,
         )
+        self.assertEqual(receipt.declared_probe_family, ("first", "second", "third"))
         self.assertEqual(
             tuple(outcome.name for outcome in receipt.outcomes),
             ("first", "second", "third"),
