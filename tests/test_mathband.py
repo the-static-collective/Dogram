@@ -4,6 +4,7 @@ import json
 import unittest
 from pathlib import Path
 
+from dogram.engine import OPERATORS
 from dogram.mathband import ProbeObservation, evaluate_bridge
 
 
@@ -299,6 +300,44 @@ class MathBandTests(unittest.TestCase):
         self.assertEqual(receipt.outcomes[0].status, "BROKEN")
         self.assertGreater(receipt.outcomes[0].residual, tolerance)
         self.assertEqual(receipt.first_decisive_probe, "approximate-probe")
+
+    def test_mathband_does_not_enter_public_operator_floor(self) -> None:
+        self.assertEqual(
+            set(OPERATORS),
+            {("delta", 1), ("rectangle", 1), ("ablate", 1), ("reach", 1)},
+        )
+        self.assertNotIn(("mathband", 1), OPERATORS)
+
+    def test_duplicate_probe_names_raise_deterministic_input_error(self) -> None:
+        probe = ProbeObservation("duplicate", 1, 1)
+        with self.assertRaisesRegex(ValueError, "probe names must be unique"):
+            evaluate_bridge(
+                bridge_ref="duplicate-control",
+                voice_a_ref="a",
+                voice_b_ref="b",
+                required_assumptions=(),
+                provided_assumptions=(),
+                probes=(probe, probe),
+            )
+
+    def test_receipt_order_follows_predeclared_probe_order(self) -> None:
+        probes = (
+            ProbeObservation("first", 1, 1),
+            ProbeObservation("second", 2, 2),
+            ProbeObservation("third", 3, 3),
+        )
+        receipt = evaluate_bridge(
+            bridge_ref="ordering-control",
+            voice_a_ref="a",
+            voice_b_ref="b",
+            required_assumptions=(),
+            provided_assumptions=(),
+            probes=probes,
+        )
+        self.assertEqual(
+            tuple(outcome.name for outcome in receipt.outcomes),
+            ("first", "second", "third"),
+        )
 
 
 if __name__ == "__main__":
