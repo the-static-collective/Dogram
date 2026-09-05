@@ -9,6 +9,8 @@
     ],
     "pairs": [[1, 2], [-3, 4], [0, 5], [7, 0]],
     "rotation_matrix": [[0, -1], [1, 0]],
-    "scale_factor": 7
+    "scale_factor": 7,
+    "rename_prefix": "bat-renamed",
+    "gauge_transform": "common_integer_scale:7"
   }
 }
