@@ -1,0 +1,30 @@
+{
+  "control": {
+    "edge_scales": [1, 1],
+    "global_section_basis": [1, 1, 1],
+    "laplacian": [
+      [1, -1, 0],
+      [-1, 2, -1],
+      [0, -1, 1]
+    ],
+    "characteristic_polynomial": [1, -4, 3, 0],
+    "trace": 4,
+    "nonzero_eigenvalue_product": 3,
+    "probe": [1, 0, 0],
+    "probe_energy": 1
+  },
+  "hostile": {
+    "edge_scales": [2, 1],
+    "global_section_basis": [1, 1, 1],
+    "laplacian": [
+      [4, -4, 0],
+      [-4, 5, -1],
+      [0, -1, 1]
+    ],
+    "characteristic_polynomial": [1, -10, 12, 0],
+    "trace": 10,
+    "nonzero_eigenvalue_product": 12,
+    "probe": [1, 0, 0],
+    "probe_energy": 4
+  }
+}
