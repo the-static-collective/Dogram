@@ -57,6 +57,22 @@ class MathBandReviewRegressionTests(unittest.TestCase):
         self.assertEqual(outcome.status, "BROKEN")
         self.assertEqual(outcome.residual, 1)
 
+    def test_receipt_preserves_declared_common_stage_identity(self) -> None:
+        receipt = evaluate_bridge(
+            bridge_ref="common-stage-control",
+            voice_a_ref="voice-a",
+            voice_b_ref="voice-b",
+            common_stage_ref="integer-pair-quarter-turn-stage",
+            required_assumptions=(),
+            provided_assumptions=(),
+            probes=(ProbeObservation("identity", (1, 2), (1, 2)),),
+        )
+
+        self.assertEqual(
+            receipt.common_stage_ref,
+            "integer-pair-quarter-turn-stage",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
