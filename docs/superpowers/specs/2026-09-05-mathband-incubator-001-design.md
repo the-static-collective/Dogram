@@ -163,11 +163,13 @@ The common stage is not a master ontology.
 
 ### 3.4 Probe family
 
-A probe family `P` is declared before bridge scoring.
+A probe family `P` is declared **before** bridge scoring and before any result from either side is inspected.
 
 For each `p in P`, both sides must produce comparable typed outputs on the common stage or explicitly return `UNMAPPED`/`UNDEFINED`.
 
-The first decisive disagreement is retained rather than hidden by aggregate scoring.
+If some probes are designated load-bearing or decisive, that designation and their evaluation order must also be frozen in the fixture before execution. MathBand may not search the observed outputs for a convenient discriminator and then retroactively call it decisive.
+
+The first predeclared decisive disagreement is retained rather than hidden by aggregate scoring.
 
 ### 3.5 Receipt
 
@@ -258,6 +260,20 @@ Refusal is a successful constitutional outcome.
 
 No unfamiliar or speculative bridge may be treated as a meaningful MathBand result until the bridge contract survives the five hostile classes below on known fixtures.
 
+### 5.0 Bat independence rule
+
+The hostile fixture generator/oracle must be independent of the bridge evaluator under test.
+
+MathBand may consume a frozen mutation and its predeclared expected constitutional behavior, but it may not generate the mutation, choose the expected answer after evaluation, or grade its own output using the same bridge logic.
+
+At minimum, fixture construction and expected decisive probes live outside the evaluator function and are frozen before the run.
+
+```text
+EVALUATOR != BAT ORACLE
+```
+
+This prevents the harness from proving only that MathBand agrees with itself.
+
 ### BAT-1 — Rename Bat
 
 Change only presentation:
@@ -344,18 +360,24 @@ extra structure discarded to force bridge success
 
 ### BAT-5 — False-Friend Bat
 
-Construct two superficially similar formulations with one decisive structural incompatibility.
+Construct two superficially similar formulations with one predeclared decisive structural incompatibility.
 
 Expected:
 
 ```text
-first discriminating probe kills the declared bridge
+first predeclared discriminating probe kills the declared bridge
 ```
 
 Incorrect:
 
 ```text
 surface resemblance or low aggregate residue overrides decisive mismatch
+```
+
+or:
+
+```text
+probe selected post-hoc because it produces the desired verdict
 ```
 
 ---
@@ -566,7 +588,9 @@ The first red tests should establish:
 7. lossy mapping is explicitly represented;
 8. absent required assumptions produce `REFUSE` rather than guessed normalization;
 9. fixture and receipt ordering are deterministic;
-10. public Dogram operator floor remains unchanged.
+10. public Dogram operator floor remains unchanged;
+11. the hostile fixture oracle is independent of the evaluator under test;
+12. decisive-probe identity/order is frozen before bridge execution.
 
 At least one hostile fixture must be constructed so that a naïve aggregate similarity score would incorrectly prefer the false bridge. MathBand must still reject it because the decisive probe is load-bearing.
 
@@ -578,10 +602,11 @@ MATHBAND-INCUBATOR-001 succeeds only if:
 
 - exact known bridges survive all harmless representation attacks;
 - partial bridges remain explicitly partial;
-- false friends fail under decisive probes;
+- false friends fail under predeclared decisive probes;
 - extra dimensions/operations survive as `EXTRA` or `UNMAPPED`;
 - residuals remain visible;
 - every successful comparison is scoped to a declared probe family and assumptions;
+- hostile fixtures and expected outcomes are frozen independently of the evaluator;
 - no result claims truth, priority, influence, semantic identity, or authority;
 - the public Dogram operator floor remains unchanged.
 
@@ -650,7 +675,7 @@ WHAT FAILS TO MAP MUST NOT BE SILENTLY ERASED.
 ```
 
 ```text
-THE FIRST DECISIVE PROBE OUTRANKS A THOUSAND COSMETIC SIMILARITIES.
+THE FIRST PREDECLARED DECISIVE PROBE OUTRANKS A THOUSAND COSMETIC SIMILARITIES.
 ```
 
 ```text
