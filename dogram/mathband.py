@@ -46,6 +46,7 @@ class MathBandReceipt:
     bridge_ref: str
     voice_a_ref: str
     voice_b_ref: str
+    common_stage_ref: str | None
     declared_assumptions: tuple[str, ...]
     declared_transforms: tuple[str, ...]
     declared_probe_family: tuple[str, ...]
@@ -118,6 +119,7 @@ def evaluate_bridge(
     required_assumptions: tuple[str, ...],
     provided_assumptions: tuple[str, ...],
     probes: tuple[ProbeObservation, ...],
+    common_stage_ref: str | None = None,
     declared_transforms: tuple[str, ...] = (),
     extra_a: tuple[str, ...] = (),
     extra_b: tuple[str, ...] = (),
@@ -127,6 +129,8 @@ def evaluate_bridge(
 
     if not all(_nonempty_text(value) for value in (bridge_ref, voice_a_ref, voice_b_ref)):
         raise ValueError("bridge and voice refs must be non-empty strings")
+    if common_stage_ref is not None and not _nonempty_text(common_stage_ref):
+        raise ValueError("common stage ref must be a non-empty string when provided")
     if not probes:
         raise ValueError("at least one probe is required")
 
@@ -149,6 +153,7 @@ def evaluate_bridge(
             bridge_ref=bridge_ref,
             voice_a_ref=voice_a_ref,
             voice_b_ref=voice_b_ref,
+            common_stage_ref=common_stage_ref,
             declared_assumptions=provided_assumptions,
             declared_transforms=declared_transforms,
             declared_probe_family=declared_probe_family,
@@ -231,6 +236,7 @@ def evaluate_bridge(
         bridge_ref=bridge_ref,
         voice_a_ref=voice_a_ref,
         voice_b_ref=voice_b_ref,
+        common_stage_ref=common_stage_ref,
         declared_assumptions=provided_assumptions,
         declared_transforms=declared_transforms,
         declared_probe_family=declared_probe_family,
