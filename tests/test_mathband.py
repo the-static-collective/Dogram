@@ -206,6 +206,100 @@ class MathBandTests(unittest.TestCase):
         self.assertEqual(receipt.outcomes, ())
         self.assertEqual(receipt.refusals, ("missing assumption: quarter_turn_action",))
 
+    def test_false_friend_bat_cannot_outvote_decisive_failure(self) -> None:
+        pair = tuple(self.fixture["false_friend_bat"]["probe_pair"])
+        false_matrix = tuple(tuple(row) for row in self.fixture["false_friend_bat"]["matrix"])
+
+        complex_once = _complex_apply_n(pair, 1)
+        false_once = _matrix_apply_n(false_matrix, pair, 1)
+        complex_twice = _complex_apply_n(pair, 2)
+        false_twice = _matrix_apply_n(false_matrix, pair, 2)
+        complex_four = _complex_apply_n(pair, 4)
+        false_four = _matrix_apply_n(false_matrix, pair, 4)
+
+        probes = (
+            ProbeObservation("norm-input", _norm_sq(pair), _norm_sq(pair)),
+            ProbeObservation("norm-output", _norm_sq(complex_once), _norm_sq(false_once)),
+            ProbeObservation(
+                "origin-fixed",
+                _complex_apply_n((0, 0), 1),
+                _matrix_apply_n(false_matrix, (0, 0), 1),
+            ),
+            ProbeObservation("four-step-return", complex_four, false_four),
+            ProbeObservation(
+                "two-turn-output",
+                complex_twice,
+                false_twice,
+                decisive=True,
+                must_preserve=True,
+            ),
+        )
+
+        receipt = evaluate_bridge(
+            bridge_ref="complex-quarter-turn__reflection-false-friend",
+            voice_a_ref=self.calibration["voice_a_ref"],
+            voice_b_ref="reflection-like-matrix",
+            required_assumptions=("pair_identification",),
+            provided_assumptions=("pair_identification",),
+            probes=probes,
+        )
+
+        self.assertEqual(sum(o.status == "PRESERVED" for o in receipt.outcomes), 4)
+        self.assertEqual(receipt.outcomes[-1].status, "BROKEN")
+        self.assertEqual(
+            receipt.first_decisive_probe,
+            self.fixture["false_friend_bat"]["decisive_probe"],
+        )
+
+    def test_numeric_disagreement_within_tolerance_is_residual_not_exact(self) -> None:
+        left, right, tolerance = self.fixture["residual_bat"]["within_tolerance"]
+        receipt = evaluate_bridge(
+            bridge_ref="approximate-control",
+            voice_a_ref="numeric-a",
+            voice_b_ref="numeric-b",
+            required_assumptions=(),
+            provided_assumptions=(),
+            probes=(
+                ProbeObservation(
+                    "approximate-probe",
+                    left,
+                    right,
+                    comparison="numeric",
+                    tolerance=tolerance,
+                    decisive=True,
+                ),
+            ),
+        )
+
+        self.assertEqual(receipt.outcomes[0].status, "RESIDUAL")
+        self.assertAlmostEqual(receipt.outcomes[0].residual, abs(left - right))
+        self.assertEqual(receipt.exactness, "approximate")
+        self.assertIsNone(receipt.first_decisive_probe)
+
+    def test_numeric_disagreement_outside_tolerance_breaks_decisive_probe(self) -> None:
+        left, right, tolerance = self.fixture["residual_bat"]["outside_tolerance"]
+        receipt = evaluate_bridge(
+            bridge_ref="approximate-control",
+            voice_a_ref="numeric-a",
+            voice_b_ref="numeric-b",
+            required_assumptions=(),
+            provided_assumptions=(),
+            probes=(
+                ProbeObservation(
+                    "approximate-probe",
+                    left,
+                    right,
+                    comparison="numeric",
+                    tolerance=tolerance,
+                    decisive=True,
+                ),
+            ),
+        )
+
+        self.assertEqual(receipt.outcomes[0].status, "BROKEN")
+        self.assertGreater(receipt.outcomes[0].residual, tolerance)
+        self.assertEqual(receipt.first_decisive_probe, "approximate-probe")
+
 
 if __name__ == "__main__":
     unittest.main()
