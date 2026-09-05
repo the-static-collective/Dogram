@@ -1,0 +1,37 @@
+{
+  "specimen_id": "ORBIT-AUDIO-INVERSE-001",
+  "source": {
+    "label": "NASA GSFC StarChild Solar System Data",
+    "url": "https://starchild.gsfc.nasa.gov/docs/StarChild/teachers/orbiting.html",
+    "quantity": "sidereal orbital period in Earth days"
+  },
+  "period_days": {
+    "Mercury": 87.97,
+    "Venus": 224.70,
+    "Earth": 365.26,
+    "Mars": 686.98,
+    "Jupiter": 4332.71
+  },
+  "declared_scale_hz_days": 238299.05,
+  "tones_hz": {
+    "Mercury": 2708.867227463908,
+    "Venus": 1060.5209167779262,
+    "Earth": 652.4093796199967,
+    "Mars": 346.8791667879705,
+    "Jupiter": 55.0
+  },
+  "scrambled_observed_hz": [
+    652.4093796199967,
+    2708.867227463908,
+    55.0,
+    346.8791667879705,
+    1060.5209167779262
+  ],
+  "expected_assignment": [
+    "Earth",
+    "Mercury",
+    "Jupiter",
+    "Mars",
+    "Venus"
+  ]
+}
