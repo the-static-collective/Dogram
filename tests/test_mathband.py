@@ -47,6 +47,10 @@ def _norm_sq(pair: tuple[int, int]) -> int:
     return a * a + b * b
 
 
+def _semantic_signature(receipt) -> tuple[tuple[str, object, object], ...]:
+    return tuple(sorted((outcome.status, outcome.left, outcome.right) for outcome in receipt.outcomes))
+
+
 class MathBandTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -82,6 +86,67 @@ class MathBandTests(unittest.TestCase):
         self.assertEqual(receipt.first_decisive_probe, None)
         self.assertEqual(receipt.exactness, "exact")
         self.assertEqual(receipt.refusals, ())
+
+    def test_rename_bat_preserves_semantics_under_reordering_and_renaming(self) -> None:
+        baseline = evaluate_bridge(
+            bridge_ref=self.calibration["bridge_ref"],
+            voice_a_ref=self.calibration["voice_a_ref"],
+            voice_b_ref=self.calibration["voice_b_ref"],
+            required_assumptions=tuple(self.calibration["required_assumptions"]),
+            provided_assumptions=tuple(self.calibration["required_assumptions"]),
+            probes=self._exact_probes(),
+        )
+        renamed = tuple(
+            ProbeObservation(
+                name=f"{self.calibration['rename_prefix']}:{index}",
+                left=probe.left,
+                right=probe.right,
+                comparison="exact",
+                must_preserve=True,
+                decisive=True,
+            )
+            for index, probe in enumerate(reversed(self._exact_probes()))
+        )
+        attacked = evaluate_bridge(
+            bridge_ref=self.calibration["bridge_ref"],
+            voice_a_ref="voice-a-renamed",
+            voice_b_ref="voice-b-renamed",
+            required_assumptions=tuple(self.calibration["required_assumptions"]),
+            provided_assumptions=tuple(self.calibration["required_assumptions"]),
+            probes=renamed,
+        )
+
+        self.assertEqual(_semantic_signature(attacked), _semantic_signature(baseline))
+        self.assertEqual(attacked.first_decisive_probe, None)
+
+    def test_gauge_bat_preserves_relation_and_receipts_common_scale(self) -> None:
+        scale = self.calibration["scale_factor"]
+        scaled_pairs = tuple((a * scale, b * scale) for a, b in self.pairs)
+        probes = tuple(
+            ProbeObservation(
+                name=f"scaled:{a},{b}",
+                left=_complex_quarter_turn((a, b)),
+                right=_matrix_apply(self.matrix, (a, b)),
+                comparison="exact",
+                must_preserve=True,
+                decisive=True,
+            )
+            for a, b in scaled_pairs
+        )
+
+        receipt = evaluate_bridge(
+            bridge_ref=self.calibration["bridge_ref"],
+            voice_a_ref=self.calibration["voice_a_ref"],
+            voice_b_ref=self.calibration["voice_b_ref"],
+            required_assumptions=tuple(self.calibration["required_assumptions"]),
+            provided_assumptions=tuple(self.calibration["required_assumptions"]),
+            probes=probes,
+            declared_transforms=(self.calibration["gauge_transform"],),
+        )
+
+        self.assertEqual({outcome.status for outcome in receipt.outcomes}, {"PRESERVED"})
+        self.assertEqual(receipt.declared_transforms, ("common_integer_scale:7",))
+        self.assertEqual(receipt.exactness, "exact")
 
 
 if __name__ == "__main__":
