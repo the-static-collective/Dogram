@@ -1,0 +1,32 @@
+{
+  "specimen": "COHOMOLOGOUS-ASSOCIATOR-GAUGE-001",
+  "groups": {
+    "objects": "Z/3Z",
+    "automorphisms": "Z/3Z",
+    "action": "trivial"
+  },
+  "base_associator": "a(g,h,k)=g*floor((h+k)/3) mod 3",
+  "declared_beta": "beta(1,1)=1; beta(g,h)=0 otherwise",
+  "shift": "a_prime=a+delta(beta) mod 3",
+  "pentagon_residual_values": [0],
+  "normalized_2cochain_count": 81,
+  "base_associator_is_coboundary": false,
+  "table_delta": [
+    {"triple": [1, 1, 2], "delta": 2},
+    {"triple": [1, 2, 2], "delta": 1},
+    {"triple": [2, 1, 1], "delta": 1},
+    {"triple": [2, 2, 1], "delta": 2}
+  ],
+  "candidate_seals": [
+    "RAW ASSOCIATOR TABLE != COHERENCE CLASS.",
+    "A PRESENTATION CHANGE NEEDS ITS COBOUNDARY RECEIPT.",
+    "KEEP THE COCHAIN WITNESS; DO NOT CALL POINTWISE DIFFERENCE A CLASS DIFFERENCE."
+  ],
+  "refusals": [
+    "COHOMOLOGOUS != HISTORICALLY IDENTICAL",
+    "COHOMOLOGY CLASS != CAUSAL CLASS",
+    "PRESENTATION CHANGE != OCCURRENCE",
+    "COHERENCE EQUIVALENCE != EVIDENCE EQUIVALENCE",
+    "ALGEBRAIC GAUGE != PHYSICAL GAUGE"
+  ]
+}
