@@ -1,0 +1,22 @@
+{
+  "schema": "LOCAL-GLOBAL-CYCLE-COHOMOLOGY-001",
+  "graph": {
+    "vertices": [0, 1, 2],
+    "oriented_edges": [[0, 1], [1, 2], [2, 0]],
+    "coefficient_field": "GF(2)"
+  },
+  "control": {
+    "edge_bits": [0, 0, 0],
+    "global_solutions": [[0, 0, 0], [1, 1, 1]]
+  },
+  "hostile": {
+    "edge_bits": [0, 0, 1],
+    "global_solutions": []
+  },
+  "interpretation_boundary": [
+    "local satisfiable != globally glueable",
+    "nonzero H1 class != historical occurrence",
+    "cohomology obstruction != causal conflict",
+    "global section != truth"
+  ]
+}
