@@ -1,0 +1,38 @@
+{
+  "specimen": "WEAK2-ASSOCIATOR-COHOMOLOGY-001",
+  "groups": {
+    "objects": "Z/2Z",
+    "automorphisms": "Z/2Z",
+    "action": "trivial"
+  },
+  "associator": "a(g,h,k)=g*h*k mod 2",
+  "normalization": true,
+  "pentagon_residual_values": [0],
+  "triple_111": {
+    "left_object": 1,
+    "right_object": 1,
+    "associator_witness": 1,
+    "strict_on_this_triple": false
+  },
+  "normalized_2_cochains": [
+    {
+      "beta_11": 0,
+      "matches_associator": false
+    },
+    {
+      "beta_11": 1,
+      "matches_associator": false
+    }
+  ],
+  "candidate_seals": [
+    "SAME OBJECT-LEVEL PRODUCT DOES NOT FORCE A ZERO ASSOCIATOR RECEIPT.",
+    "COHERENT EQUIVALENCE CAN REQUIRE A WITNESS EVEN WHEN THE END OBJECT IS LITERALLY THE SAME.",
+    "KEEP THE ASSOCIATOR; DO NOT FLATTEN WEAK COHERENCE INTO STRICT EQUALITY."
+  ],
+  "refusals": [
+    "ASSOCIATOR WITNESS != HISTORICAL EVENT",
+    "COHOMOLOGY CLASS != CAUSAL CLASS",
+    "PENTAGON COHERENCE != TRUTH",
+    "NONTRIVIAL H3 != PHYSICAL OBSTRUCTION"
+  ]
+}
