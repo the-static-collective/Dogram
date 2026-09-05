@@ -1,0 +1,14 @@
+{
+  "calibration": {
+    "bridge_ref": "complex-quarter-turn__matrix-quarter-turn",
+    "voice_a_ref": "complex-multiplication-by-i",
+    "voice_b_ref": "matrix-quarter-turn",
+    "required_assumptions": [
+      "complex_pair_identification",
+      "quarter_turn_action"
+    ],
+    "pairs": [[1, 2], [-3, 4], [0, 5], [7, 0]],
+    "rotation_matrix": [[0, -1], [1, 0]],
+    "scale_factor": 7
+  }
+}
