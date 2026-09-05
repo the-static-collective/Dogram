@@ -54,14 +54,20 @@ def _nonempty_text(value: object) -> bool:
     return isinstance(value, str) and bool(value)
 
 
+def _finite_number(value: object) -> bool:
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and isfinite(float(value))
+    )
+
+
 def _validate_probe(probe: ProbeObservation) -> None:
     if not _nonempty_text(probe.name):
         raise ValueError("probe names must be non-empty strings")
     if probe.comparison not in ("exact", "numeric"):
         raise ValueError("unsupported comparison kind")
-    if not isinstance(probe.tolerance, (int, float)) or isinstance(probe.tolerance, bool):
-        raise ValueError("probe tolerance must be numeric")
-    if not isfinite(float(probe.tolerance)) or float(probe.tolerance) < 0.0:
+    if not _finite_number(probe.tolerance) or float(probe.tolerance) < 0.0:
         raise ValueError("probe tolerance must be finite and non-negative")
 
 
@@ -115,7 +121,6 @@ def evaluate_bridge(
         )
 
     outcomes: list[ProbeOutcome] = []
-    first_decisive_probe: str | None = None
 
     for probe in probes:
         if not probe.left_defined or not probe.right_defined:
@@ -132,17 +137,31 @@ def evaluate_bridge(
             )
             continue
 
-        if probe.comparison != "exact":
-            raise ValueError("numeric comparison is not implemented in the exact floor")
-
-        if probe.left == probe.right:
-            status: ProbeStatus = "PRESERVED"
+        residual: float | None = None
+        if probe.comparison == "numeric":
+            if not _finite_number(probe.left) or not _finite_number(probe.right):
+                raise ValueError(
+                    "numeric probes require finite numbers and nonnegative tolerance"
+                )
+            residual = abs(float(probe.left) - float(probe.right))
+            if residual == 0.0:
+                status: ProbeStatus = "PRESERVED"
+                delta = None
+            elif residual <= probe.tolerance:
+                status = "RESIDUAL"
+                delta = (probe.left, probe.right)
+            elif probe.must_preserve:
+                status = "BROKEN"
+                delta = (probe.left, probe.right)
+            else:
+                status = "CHANGED"
+                delta = (probe.left, probe.right)
+        elif probe.left == probe.right:
+            status = "PRESERVED"
             delta = None
         else:
             status = "BROKEN" if probe.must_preserve else "CHANGED"
             delta = (probe.left, probe.right)
-            if probe.decisive and status == "BROKEN" and first_decisive_probe is None:
-                first_decisive_probe = probe.name
 
         outcomes.append(
             ProbeOutcome(
@@ -151,10 +170,24 @@ def evaluate_bridge(
                 left=probe.left,
                 right=probe.right,
                 delta=delta,
-                residual=None,
+                residual=residual,
                 decisive=probe.decisive,
             )
         )
+
+    first_decisive_probe = next(
+        (
+            outcome.name
+            for outcome in outcomes
+            if outcome.decisive and outcome.status == "BROKEN"
+        ),
+        None,
+    )
+    exactness: Exactness = (
+        "approximate"
+        if any(outcome.status == "RESIDUAL" for outcome in outcomes) or lossy_steps
+        else "exact"
+    )
 
     return MathBandReceipt(
         bridge_ref=bridge_ref,
@@ -166,7 +199,7 @@ def evaluate_bridge(
         extra_a=extra_a,
         extra_b=extra_b,
         lossy_steps=lossy_steps,
-        exactness="exact",
+        exactness=exactness,
         first_decisive_probe=first_decisive_probe,
         refusals=(),
     )
