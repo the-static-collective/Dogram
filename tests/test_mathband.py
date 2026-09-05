@@ -178,7 +178,11 @@ class MathBandTests(unittest.TestCase):
         )
 
         self.assertEqual(receipt.outcomes[0].status, "PRESERVED")
-        self.assertEqual(receipt.outcomes[1].status, "UNMAPPED")
+        unmapped = receipt.outcomes[1]
+        self.assertEqual(unmapped.status, "UNMAPPED")
+        self.assertEqual(unmapped.comparison, "exact")
+        self.assertFalse(unmapped.left_defined)
+        self.assertFalse(unmapped.right_defined)
 
     def test_extra_voice_bat_preserves_unmatched_structure(self) -> None:
         receipt = evaluate_bridge(
@@ -251,6 +255,7 @@ class MathBandTests(unittest.TestCase):
 
         self.assertEqual(sum(o.status == "PRESERVED" for o in receipt.outcomes), 4)
         self.assertEqual(receipt.outcomes[-1].status, "BROKEN")
+        self.assertTrue(receipt.outcomes[-1].must_preserve)
         self.assertEqual(
             receipt.first_decisive_probe,
             self.fixture["false_friend_bat"]["decisive_probe"],
@@ -276,8 +281,12 @@ class MathBandTests(unittest.TestCase):
             ),
         )
 
-        self.assertEqual(receipt.outcomes[0].status, "RESIDUAL")
-        self.assertAlmostEqual(receipt.outcomes[0].residual, abs(left - right))
+        outcome = receipt.outcomes[0]
+        self.assertEqual(outcome.status, "RESIDUAL")
+        self.assertAlmostEqual(outcome.residual, abs(left - right))
+        self.assertEqual(outcome.comparison, "numeric")
+        self.assertEqual(outcome.tolerance, tolerance)
+        self.assertTrue(outcome.must_preserve)
         self.assertEqual(receipt.exactness, "approximate")
         self.assertIsNone(receipt.first_decisive_probe)
 
