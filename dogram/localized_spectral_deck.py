@@ -7,17 +7,19 @@ from typing import Iterable
 
 Edge = tuple[int, int]
 Polynomial = tuple[int, ...]
+DegreeSequence = tuple[int, ...]
 
 
 @dataclass(frozen=True)
 class LocalizedSpectralDeckReceipt:
-    degree_sequence: tuple[int, ...]
+    degree_sequence: DegreeSequence
     laplacian_characteristic_polynomial: Polynomial
     articulation_count: int
     bridge_count: int
     diameter: int
     distance_histogram: tuple[tuple[int, int], ...]
     triangle_count: int
+    vertex_deleted_degree_deck: tuple[DegreeSequence, ...]
     vertex_deleted_laplacian_deck: tuple[Polynomial, ...]
 
 
@@ -85,6 +87,11 @@ def _laplacian(nodes: tuple[int, ...], edges: tuple[Edge, ...]) -> list[list[int
     return matrix
 
 
+def _degree_sequence(nodes: tuple[int, ...], edges: tuple[Edge, ...]) -> DegreeSequence:
+    adj = _adjacency(nodes, edges)
+    return tuple(sorted((len(adj[node]) for node in nodes), reverse=True))
+
+
 def _distances(adj: dict[int, set[int]], start: int) -> dict[int, int]:
     dist = {start: 0}
     queue = deque([start])
@@ -132,7 +139,7 @@ def _deleted(nodes: tuple[int, ...], edges: tuple[Edge, ...], vertex: int) -> tu
 def analyze_graph(edges: Iterable[Edge]) -> LocalizedSpectralDeckReceipt:
     nodes, ordered_edges = _normalize_edges(edges)
     adj = _adjacency(nodes, ordered_edges)
-    degrees = tuple(sorted((len(adj[node]) for node in nodes), reverse=True))
+    degrees = _degree_sequence(nodes, ordered_edges)
     charpoly = _charpoly(_laplacian(nodes, ordered_edges))
 
     articulation_count = 0
@@ -165,10 +172,12 @@ def analyze_graph(edges: Iterable[Edge]) -> LocalizedSpectralDeckReceipt:
                 if w in adj[u] and w in adj[v]:
                     triangle_count += 1
 
-    deck: list[Polynomial] = []
+    degree_deck: list[DegreeSequence] = []
+    spectral_deck: list[Polynomial] = []
     for vertex in nodes:
         kept_nodes, kept_edges = _deleted(nodes, ordered_edges, vertex)
-        deck.append(_charpoly(_laplacian(kept_nodes, kept_edges)))
+        degree_deck.append(_degree_sequence(kept_nodes, kept_edges))
+        spectral_deck.append(_charpoly(_laplacian(kept_nodes, kept_edges)))
 
     return LocalizedSpectralDeckReceipt(
         degree_sequence=degrees,
@@ -178,5 +187,6 @@ def analyze_graph(edges: Iterable[Edge]) -> LocalizedSpectralDeckReceipt:
         diameter=diameter,
         distance_histogram=distance_histogram,
         triangle_count=triangle_count,
-        vertex_deleted_laplacian_deck=tuple(sorted(deck)),
+        vertex_deleted_degree_deck=tuple(sorted(degree_deck)),
+        vertex_deleted_laplacian_deck=tuple(sorted(spectral_deck)),
     )
