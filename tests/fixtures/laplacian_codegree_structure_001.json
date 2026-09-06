@@ -1,0 +1,13 @@
+{
+  "schema": "dogram.research/laplacian-codegree-structure-001",
+  "vertices": 7,
+  "graph_a_edges": [[0,1],[0,4],[1,2],[1,4],[2,3],[3,6],[4,5]],
+  "graph_b_edges": [[0,1],[0,3],[0,4],[1,2],[2,5],[2,6],[5,6]],
+  "expected_degree_sequence": [3,3,2,2,2,1,1],
+  "expected_laplacian_characteristic_polynomial": [1,-14,75,-192,239,-130,21,0],
+  "expected_graph_a_articulation_vertices": [1,2,3,4],
+  "expected_graph_b_articulation_vertices": [0,1,2],
+  "expected_graph_a_diameter": 5,
+  "expected_graph_b_diameter": 4,
+  "seal": "SAME COMPLETE LAPLACIAN SPECTRUM + SAME DEGREE MULTISET != SAME CUT GEOMETRY"
+}
