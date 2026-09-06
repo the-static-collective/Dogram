@@ -27,6 +27,20 @@ class LocalizedSpectralDeckTests(unittest.TestCase):
         self.assertEqual(control.distance_histogram, hostile.distance_histogram)
         self.assertEqual(control.triangle_count, hostile.triangle_count)
 
+    def test_vertex_deleted_degree_deck_is_a_strictly_simpler_separating_probe(self) -> None:
+        control = analyze_graph(tuple(map(tuple, self.fixture["control"]["edges"])))
+        hostile = analyze_graph(tuple(map(tuple, self.fixture["hostile"]["edges"])))
+
+        self.assertEqual(
+            [list(card) for card in control.vertex_deleted_degree_deck],
+            self.fixture["control"]["vertex_deleted_degree_deck"],
+        )
+        self.assertEqual(
+            [list(card) for card in hostile.vertex_deleted_degree_deck],
+            self.fixture["hostile"]["vertex_deleted_degree_deck"],
+        )
+        self.assertNotEqual(control.vertex_deleted_degree_deck, hostile.vertex_deleted_degree_deck)
+
     def test_vertex_deleted_laplacian_deck_separates_pair(self) -> None:
         for key in ("control", "hostile"):
             expected = self.fixture[key]
