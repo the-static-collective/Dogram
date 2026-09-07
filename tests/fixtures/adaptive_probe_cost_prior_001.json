@@ -1,0 +1,40 @@
+{
+  "specimen": "ADAPTIVE-PROBE-COST-PRIOR-001",
+  "carrier": ["a", "b", "c", "d"],
+  "target_labels": {"a": 1, "b": 1, "c": 0, "d": 0},
+  "adaptive_policy": {
+    "probe_costs": {"root": 1, "branch": 2},
+    "paths": {
+      "a": ["root"],
+      "b": ["root", "branch"],
+      "c": ["root", "branch"],
+      "d": ["root", "branch"]
+    },
+    "state_costs": {"a": 1, "b": 3, "c": 3, "d": 3},
+    "worst_case_cost": 3
+  },
+  "fixed_policy": {
+    "probe_costs": {"fixed": 2},
+    "paths": {
+      "a": ["fixed"],
+      "b": ["fixed"],
+      "c": ["fixed"],
+      "d": ["fixed"]
+    },
+    "state_costs": {"a": 2, "b": 2, "c": 2, "d": 2},
+    "worst_case_cost": 2
+  },
+  "priors": {
+    "a_heavy": {"a": "3/4", "b": "1/12", "c": "1/12", "d": "1/12"},
+    "uniform": {"a": "1/4", "b": "1/4", "c": "1/4", "d": "1/4"}
+  },
+  "expected_costs": {
+    "a_heavy": {"adaptive": "3/2", "fixed": "2"},
+    "uniform": {"adaptive": "5/2", "fixed": "2"}
+  },
+  "seals": [
+    "EXPECTED COST REQUIRES A DECLARED DISTRIBUTION; WORST-CASE COST DOES NOT.",
+    "SAME POLICY + SAME COSTS + SAME TARGET != SAME EXPECTED-COST ORDER AFTER PRIOR CHANGE.",
+    "A PRIOR-WEIGHTED ADVANTAGE IS A CONDITIONAL RECEIPT, NOT A UNIVERSAL PREFERENCE."
+  ]
+}
