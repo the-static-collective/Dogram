@@ -1,0 +1,37 @@
+{
+  "id": "CRITICAL-HESSIAN-INERTIA-001",
+  "base": {
+    "objective": "f(x,y)=x^2-y^2",
+    "point": [0, 0],
+    "gradient": [0, 0],
+    "hessian": [[2, 0], [0, -2]],
+    "characteristic_coefficients": [1, 0, -4],
+    "inertia": {"positive": 1, "negative": 1, "zero": 0},
+    "morse_index": 1
+  },
+  "coordinate_map": {
+    "formula": "phi(u,v)=(u+v+u^2, u+3v+v^2)",
+    "point": [0, 0],
+    "jacobian": [[1, 1], [1, 3]],
+    "jacobian_determinant": 2,
+    "component_hessians": [
+      [[2, 0], [0, 0]],
+      [[0, 0], [0, 2]]
+    ]
+  },
+  "expected": {
+    "second_order_correction": [[0, 0], [0, 0]],
+    "transformed_hessian": [[0, -4], [-4, -16]],
+    "transformed_characteristic_coefficients": [1, 16, -16],
+    "base_determinant": -4,
+    "transformed_determinant": -16,
+    "determinant_scale": 4,
+    "transformed_inertia": {"positive": 1, "negative": 1, "zero": 0},
+    "transformed_morse_index": 1
+  },
+  "seals": [
+    "RAW HESSIAN SPECTRUM IS NOT A COORDINATE-INVARIANT CRITICAL-POINT RECEIPT.",
+    "HESSIAN INERTIA AT A CRITICAL POINT SURVIVES INVERTIBLE REPARAMETERIZATION.",
+    "KEEP THE JACOBIAN; CONGRUENCE IS NOT SIMILARITY."
+  ]
+}
