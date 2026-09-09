@@ -1,0 +1,34 @@
+{
+  "specimen": "COORDINATE-COVARIANCE-001",
+  "base": {
+    "objective": [1, 0],
+    "constraints": [
+      {"normal": [-1, 0], "bound": 0},
+      {"normal": [0, -1], "bound": 0},
+      {"normal": [1, 1], "bound": 2}
+    ],
+    "primal_optimum": [2, 0],
+    "dual": ["0", "1", "1"]
+  },
+  "coordinate_map": {
+    "relation": "x = T z",
+    "T": [[1, 1], [1, 2]],
+    "T_inverse": [[2, -1], [-1, 1]]
+  },
+  "transformed": {
+    "objective": [1, 1],
+    "constraints": [
+      {"normal": [-1, -1], "bound": 0},
+      {"normal": [-1, -2], "bound": 0},
+      {"normal": [2, 3], "bound": 2}
+    ],
+    "primal_optimum": [4, -2],
+    "dual": ["0", "1", "1"]
+  },
+  "invariants": {
+    "objective_value": 2,
+    "base_stationarity_residual": ["0", "0"],
+    "transformed_stationarity_residual": ["0", "0"]
+  },
+  "seal": "A COORDINATE CHANGE CAN MOVE EVERY PRIMAL COORDINATE AND COVECTOR COEFFICIENT IN THE RECEIPT WITHOUT MOVING THE DECLARED OPTIMIZATION GEOMETRY; KEEP THE CHANGE-OF-BASIS MAP."
+}
