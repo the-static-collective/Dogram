@@ -1,0 +1,16 @@
+{
+  "id": "SMOOTH-FLAT-GERM-001",
+  "function": "h(x)=exp(-1/x^2) for x!=0; h(0)=0",
+  "base_point": 0,
+  "declared_probe_orders": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+  "expected_taylor_coefficients": [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  "off_origin_samples": ["1", "1/2", "-1/2"],
+  "expected_off_origin_nonzero": true,
+  "derivative_recurrence": "P_{n+1}(y)=-y^2 P_n'(y)+2 y^3 P_n(y), y=1/x",
+  "regularity_boundary": "C-infinity, not analytic at 0",
+  "seals": [
+    "SAME INFINITE TAYLOR SERIES != SAME SMOOTH GERM.",
+    "RECEIPT THE REGULARITY CATEGORY.",
+    "FLAT RESIDUE != ZERO GERM."
+  ]
+}
