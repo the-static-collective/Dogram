@@ -1,0 +1,29 @@
+{
+  "left": {
+    "name": "cubic",
+    "coefficients_ascending": [0, 0, 0, 1]
+  },
+  "right": {
+    "name": "quartic",
+    "coefficients_ascending": [0, 0, 0, 0, 1]
+  },
+  "declared_jet_order": 2,
+  "coordinate_map": {
+    "name": "phi",
+    "coefficients_ascending": [0, 2, 1]
+  },
+  "expected": {
+    "shared_truncated_jet": [0, 0, 0],
+    "left_first_nonzero_order": 3,
+    "right_first_nonzero_order": 4,
+    "left_first_nonzero_derivative": 6,
+    "right_first_nonzero_derivative": 24,
+    "left_transformed_coefficients_ascending": [0, 0, 0, 8, 12, 6, 1],
+    "right_transformed_coefficients_ascending": [0, 0, 0, 0, 16, 32, 24, 8, 1],
+    "left_transformed_first_nonzero_order": 3,
+    "right_transformed_first_nonzero_order": 4,
+    "left_transformed_first_nonzero_derivative": 48,
+    "right_transformed_first_nonzero_derivative": 384,
+    "coordinate_linear_term": 2
+  }
+}
