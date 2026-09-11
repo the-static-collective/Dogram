@@ -1,0 +1,23 @@
+{
+  "specimen": "FACET-SCALING-MULTIPLIER-001",
+  "objective": [1, 0],
+  "base_constraints": [
+    {"normal": [-1, 0], "bound": 0},
+    {"normal": [0, -1], "bound": 0},
+    {"normal": [1, 1], "bound": 2}
+  ],
+  "scaled_constraints": [
+    {"normal": [-1, 0], "bound": 0},
+    {"normal": [0, -1], "bound": 0},
+    {"normal": [7, 7], "bound": 14}
+  ],
+  "primal_optimum": [2, 0],
+  "primal_value": 2,
+  "base_dual": ["0", "1", "1"],
+  "scaled_dual": ["0", "1", "1/7"],
+  "base_scaled_facet_contribution": ["1", "1"],
+  "rescaled_facet_contribution": ["1", "1"],
+  "base_facet_dual_objective_contribution": "2",
+  "rescaled_facet_dual_objective_contribution": "2",
+  "seal": "RAW MULTIPLIER MAGNITUDE IS A COORDINATE OF THE CONSTRAINT PRESENTATION; KEEP THE NORMALIZATION RECEIPT BEFORE COMPARING IT."
+}
