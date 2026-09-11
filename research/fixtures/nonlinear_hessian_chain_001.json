@@ -1,0 +1,33 @@
+{
+  "specimen": "NONLINEAR-HESSIAN-CHAIN-001",
+  "coordinate_map": {
+    "phi_coefficients_low_to_high": [0, 1, 1],
+    "evaluation_z": 1,
+    "expected_x": 2,
+    "expected_jacobian": 3,
+    "expected_second_derivative": 2
+  },
+  "noncritical_objective": {
+    "f_coefficients_low_to_high": [0, 1, 1],
+    "expected_base_gradient": 5,
+    "expected_base_hessian": 2,
+    "expected_transformed_gradient": 15,
+    "expected_naive_hessian_pullback": 18,
+    "expected_second_order_correction": 10,
+    "expected_transformed_hessian": 28
+  },
+  "critical_control": {
+    "f_coefficients_low_to_high": [4, -4, 1],
+    "expected_base_gradient": 0,
+    "expected_base_hessian": 2,
+    "expected_transformed_gradient": 0,
+    "expected_naive_hessian_pullback": 18,
+    "expected_second_order_correction": 0,
+    "expected_transformed_hessian": 18
+  },
+  "seals": [
+    "FIRST-ORDER COVARIANCE DOES NOT LICENSE SECOND-ORDER TENSOR LANGUAGE UNDER NONLINEAR REPARAMETERIZATION.",
+    "AT A CRITICAL POINT THE GRADIENT-WEIGHTED SECOND-DERIVATIVE CORRECTION VANISHES.",
+    "KEEP THE JACOBIAN AND THE SECOND DERIVATIVE OF THE COORDINATE MAP IN THE RECEIPT."
+  ]
+}
