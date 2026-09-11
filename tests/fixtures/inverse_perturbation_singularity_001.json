@@ -1,0 +1,10 @@
+{
+  "specimen": "INVERSE-PERTURBATION-SINGULARITY-001",
+  "frozen_parameters": [2, 4, 10, 100],
+  "forward_deltas": ["1/2", "1/4", "1/10", "1/100"],
+  "inverse_deltas": ["1", "2", "5", "50"],
+  "amplification_ratios": ["2", "8", "50", "5000"],
+  "distance_to_singularity_A": ["1/2", "1/4", "1/10", "1/100"],
+  "distance_to_singularity_B": ["1", "1/2", "1/5", "1/50"],
+  "seal": "SMALL FORWARD-OPERATOR DELTA != SMALL INVERSE DELTA NEAR RANK LOSS. KEEP THE DISTANCE TO SINGULARITY IN THE RECEIPT."
+}
