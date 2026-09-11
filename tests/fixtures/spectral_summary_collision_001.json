@@ -1,0 +1,35 @@
+{
+  "schema": "SPECTRAL-SUMMARY-COLLISION-001",
+  "host_graph": "path_3_vertices",
+  "declared_coboundary": "delta(x0,x1,x2)=(p(x1-x0),q(x2-x1))",
+  "control": {
+    "edge_scales": [1, 8],
+    "global_section_basis": [1, 1, 1],
+    "nullity": 1,
+    "trace": 130,
+    "characteristic_polynomial": [1, -130, 192, 0],
+    "nonzero_eigenvalue_product": 192,
+    "nonzero_eigenvalues_exact": ["65-sqrt(4033)", "65+sqrt(4033)"]
+  },
+  "hostile": {
+    "edge_scales": [4, 7],
+    "global_section_basis": [1, 1, 1],
+    "nullity": 1,
+    "trace": 130,
+    "characteristic_polynomial": [1, -130, 2352, 0],
+    "nonzero_eigenvalue_product": 2352,
+    "nonzero_eigenvalues_exact": ["65-sqrt(1873)", "65+sqrt(1873)"]
+  },
+  "same_receipts": [
+    "host graph",
+    "global section basis",
+    "nullity",
+    "trace"
+  ],
+  "different_receipts": [
+    "characteristic polynomial",
+    "nonzero eigenvalue product",
+    "nonzero eigenvalue pair"
+  ],
+  "seal": "SAME KERNEL + SAME TRACE != SAME SPECTRUM."
+}
