@@ -1,0 +1,20 @@
+{
+  "schema": "banach-section-obstruction-001",
+  "sequence": "0 -> c0 -> l_infinity -> l_infinity/c0 -> 0",
+  "quotient_map": "q : l_infinity -> l_infinity/c0",
+  "algebraic_category": "real vector spaces",
+  "topological_category": "Banach spaces with bounded linear maps",
+  "implication": "bounded section s with q o s = id gives bounded projection P = I - s o q onto c0",
+  "theorem_gate": "Phillips: c0 is not complemented in l_infinity",
+  "expected": {
+    "algebraic_section_exists_when_vector_space_splitting_declared": true,
+    "bounded_linear_section_exists_when_phillips_declared": false,
+    "kernel": "c0"
+  },
+  "seals": [
+    "ALGEBRAIC LIFT EXISTS != BOUNDED LINEAR LIFT EXISTS.",
+    "RECEIPT THE MORPHISM CLASS.",
+    "A SECTION IN ONE CATEGORY NEED NOT BE A SECTION IN A STRONGER CATEGORY.",
+    "THEOREM-GATED INFINITE CLAIM != FINITE COMPUTATIONAL PROOF."
+  ]
+}
