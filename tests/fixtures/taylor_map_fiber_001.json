@@ -1,0 +1,14 @@
+{
+  "id": "TAYLOR-MAP-FIBER-001",
+  "base_taylor_coefficients": [1, -2, 3],
+  "flat_scales": [0, 1, 2],
+  "base_point": 0,
+  "off_origin_sample": "1/2",
+  "declared_flat_kernel_fact": "all derivatives of h(x)=exp(-1/x^2), h(0)=0, vanish at 0",
+  "declared_borel_fact": "every formal real power series is the Taylor series of at least one C-infinity germ at 0",
+  "seals": [
+    "THE TAYLOR MAP CAN BE SURJECTIVE WITHOUT BEING INJECTIVE.",
+    "A TAYLOR FIBER CAN CONTAIN DISTINCT SMOOTH GERMS.",
+    "RECONSTRUCTION NEEDS A SECTION, AND A SECTION IS EXTRA STRUCTURE."
+  ]
+}
