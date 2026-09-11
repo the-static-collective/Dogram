@@ -1,0 +1,9 @@
+{
+  "specimen": "CONVEX-PRESENTATION-INVARIANCE-001",
+  "minimal_generators": [[0,0],[2,0],[0,2]],
+  "redundant_generators": [[0,0],[2,0],[0,2],[1,1]],
+  "redundant_witness": {"point":[1,1],"combination":{"[2,0]":"1/2","[0,2]":"1/2"}},
+  "support_directions": [[1,0],[0,1],[1,1],[-1,0],[0,-1]],
+  "uniform_generator_mean_minimal": ["2/3","2/3"],
+  "uniform_generator_mean_redundant": ["3/4","3/4"]
+}
