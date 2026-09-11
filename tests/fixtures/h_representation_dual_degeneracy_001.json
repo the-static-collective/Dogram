@@ -1,0 +1,20 @@
+{
+  "specimen": "H-REPRESENTATION-DUAL-DEGENERACY-001",
+  "objective": [1, 0],
+  "minimal_constraints": [
+    {"a": [-1, 0], "b": 0, "label": "x>=0"},
+    {"a": [0, -1], "b": 0, "label": "y>=0"},
+    {"a": [1, 1], "b": 2, "label": "x+y<=2"}
+  ],
+  "redundant_constraints": [
+    {"a": [-1, 0], "b": 0, "label": "x>=0"},
+    {"a": [0, -1], "b": 0, "label": "y>=0"},
+    {"a": [1, 1], "b": 2, "label": "x+y<=2"},
+    {"a": [1, 0], "b": 2, "label": "x<=2"}
+  ],
+  "primal_vertices": [[0, 0], [2, 0], [0, 2]],
+  "primal_optimum": 2,
+  "minimal_dual_unique": [0, 1, 1],
+  "redundant_dual_family": "lambda=(0,t,t,1-t), 0<=t<=1",
+  "redundancy_witness": "x<=x+y<=2 because y>=0"
+}
