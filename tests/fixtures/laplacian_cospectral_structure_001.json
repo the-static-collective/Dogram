@@ -1,0 +1,22 @@
+{
+  "specimen_id": "LAPLACIAN-COSPECTRAL-STRUCTURE-001",
+  "graph_a": {
+    "vertex_count": 6,
+    "edges": [[0,2],[1,2],[1,3],[1,4],[2,5],[3,5],[4,5]],
+    "degree_sequence": [3,3,3,2,2,1],
+    "triangle_count": 0
+  },
+  "graph_b": {
+    "vertex_count": 6,
+    "edges": [[0,2],[0,5],[1,3],[1,4],[2,3],[3,4],[3,5]],
+    "degree_sequence": [4,2,2,2,2,2],
+    "triangle_count": 1
+  },
+  "shared": {
+    "edge_count": 7,
+    "connected": true,
+    "laplacian_characteristic_coefficients": [1,-14,73,-176,192,-72,0],
+    "spanning_tree_count_from_spectrum": 12
+  },
+  "seal": "SAME COMPLETE LAPLACIAN SPECTRUM != SAME GRAPH STRUCTURE"
+}
