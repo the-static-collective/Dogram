@@ -1,0 +1,26 @@
+{
+  "states": ["a", "b", "c", "d"],
+  "target_pair": ["a", "d"],
+  "probes": {
+    "coarse": ["all", "all", "all", "all"],
+    "vertical": ["L", "L", "R", "R"],
+    "diagonal": ["U", "D", "U", "D"],
+    "joint": ["LU", "LD", "RU", "RD"]
+  },
+  "costs": {
+    "coarse": 0,
+    "vertical": 4,
+    "diagonal": 2,
+    "joint": 3
+  },
+  "separating_probes": ["vertical", "diagonal", "joint"],
+  "information_minimal_separators": ["vertical", "diagonal"],
+  "cost_minimal_separators": ["diagonal"],
+  "pareto_separators": ["diagonal", "joint"],
+  "dominance": {
+    "joint>vertical": true,
+    "diagonal>vertical": false,
+    "joint>diagonal": false,
+    "diagonal>joint": false
+  }
+}
