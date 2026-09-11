@@ -1,0 +1,36 @@
+{
+  "specimen": "UNIFORM-RIGHT-INVERSE-001",
+  "spaces": {
+    "domain": "R^3 with Euclidean norm",
+    "codomain": "R^2 with Euclidean norm"
+  },
+  "family": {
+    "parameter": "integer n >= 1",
+    "map": "A_n(x,y,z)=(x,y/n)",
+    "operator_norm": "1",
+    "smallest_positive_singular_value": "1/n",
+    "canonical_section": "S_n(u,v)=(u,nv,0)",
+    "optimal_section_norm": "n"
+  },
+  "frozen_parameters": [1, 2, 5, 10],
+  "frozen_optimal_section_norms": ["1", "2", "5", "10"],
+  "uniform_bound_controls": [
+    {"bound": "0", "witness_n": 1},
+    {"bound": "3/2", "witness_n": 2},
+    {"bound": "10", "witness_n": 11},
+    {"bound": "101/7", "witness_n": 15}
+  ],
+  "seals": [
+    "POINTWISE BOUNDED SECTION EXISTS != UNIFORMLY BOUNDED FAMILY OF SECTIONS EXISTS.",
+    "KEEP THE CONDITIONING CONSTANT IN THE RECEIPT.",
+    "NORMALIZED FORWARD OPERATOR NORM != UNIFORM INVERSE CONTROL.",
+    "FOR EVERY PROPOSED BOUND C, AN EXPLICIT PARAMETER n > C DEFEATS IT."
+  ],
+  "refusals": [
+    "LARGE SECTION NORM != LARGE EVIDENCE",
+    "ILL-CONDITIONED != FALSE",
+    "UNIFORM BOUND FAILURE != OCCURRENCE FAILURE",
+    "PARAMETER LIMIT != HISTORICAL LIMIT",
+    "RIGHT-INVERSE COST != AUTHORITY WEIGHT"
+  ]
+}
