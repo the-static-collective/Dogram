@@ -1,0 +1,20 @@
+{
+  "specimen": "PSEUDOINVERSE-RANK-STRATUM-001",
+  "limit": ["1", "0"],
+  "parameters": [2, 5, 10],
+  "rank_changing": {
+    "formula": ["1", "1/n"],
+    "ranks": [2, 2, 2],
+    "pseudoinverse_second_coordinates": ["2", "5", "10"]
+  },
+  "rank_preserving": {
+    "formula": ["1+1/n", "0"],
+    "ranks": [1, 1, 1],
+    "pseudoinverse_first_coordinates": ["2/3", "5/6", "10/11"]
+  },
+  "seals": [
+    "PSEUDOINVERSE CONTINUITY REQUIRES A RANK-STRATUM RECEIPT.",
+    "SAME MATRIX LIMIT != SAME PSEUDOINVERSE LIMIT WHEN APPROACH RANK DIFFERS.",
+    "RANK DELTA != OCCURRENCE DELTA."
+  ]
+}
