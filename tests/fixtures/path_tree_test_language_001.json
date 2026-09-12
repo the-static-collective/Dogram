@@ -1,0 +1,26 @@
+{
+  "left": {
+    "name": "C6_plus_K1",
+    "vertex_count": 7,
+    "edges": [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0]]
+  },
+  "right": {
+    "name": "subdivided_K1_3",
+    "vertex_count": 7,
+    "edges": [[0,1],[1,2],[0,3],[3,6],[0,4],[4,5]]
+  },
+  "branching_source": {
+    "name": "K1_3",
+    "vertex_count": 4,
+    "edges": [[0,1],[0,2],[0,3]]
+  },
+  "expected": {
+    "path_walk_counts_0_through_8": [7,12,24,48,96,192,384,768,1536],
+    "path_recurrence_eigenvalue": 2,
+    "left_degrees": [2,2,2,2,2,2,0],
+    "right_degrees": [3,2,1,2,2,1,1],
+    "left_K1_3_hom_count": 48,
+    "right_K1_3_hom_count": 54,
+    "branching_delta": 6
+  }
+}
