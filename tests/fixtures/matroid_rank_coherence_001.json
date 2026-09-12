@@ -1,0 +1,25 @@
+{
+  "ground_set": ["a", "b", "c"],
+  "valid_u1_3": [
+    {"subset": [], "rank": 0},
+    {"subset": ["a"], "rank": 1},
+    {"subset": ["b"], "rank": 1},
+    {"subset": ["c"], "rank": 1},
+    {"subset": ["a", "b"], "rank": 1},
+    {"subset": ["a", "c"], "rank": 1},
+    {"subset": ["b", "c"], "rank": 1},
+    {"subset": ["a", "b", "c"], "rank": 1}
+  ],
+  "hostile_top_lift": [
+    {"subset": [], "rank": 0},
+    {"subset": ["a"], "rank": 1},
+    {"subset": ["b"], "rank": 1},
+    {"subset": ["c"], "rank": 1},
+    {"subset": ["a", "b"], "rank": 1},
+    {"subset": ["a", "c"], "rank": 1},
+    {"subset": ["b", "c"], "rank": 1},
+    {"subset": ["a", "b", "c"], "rank": 2}
+  ],
+  "expected_submodularity_residual": 1,
+  "seal": "LOCAL RANK PLAUSIBILITY != GLOBAL MATROID COHERENCE"
+}
