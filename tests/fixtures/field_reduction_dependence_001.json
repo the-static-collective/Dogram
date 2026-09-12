@@ -1,0 +1,20 @@
+{
+  "name": "FIELD-REDUCTION-DEPENDENCE-001",
+  "matrix": [
+    [1, 0, 0, 1, 1, 0, 1],
+    [0, 1, 0, 1, 0, 1, 1],
+    [0, 0, 1, 0, 1, 1, 1]
+  ],
+  "labels": ["1", "2", "3", "4", "5", "6", "7"],
+  "rank": 3,
+  "prime_a": 2,
+  "prime_b": 3,
+  "expected": {
+    "prime_a_basis_count": 28,
+    "prime_b_basis_count": 29,
+    "only_a": [],
+    "only_b": [["4", "5", "6"]],
+    "changed_subsets": [["4", "5", "6"]],
+    "integer_minor_456_determinant": -2
+  }
+}
