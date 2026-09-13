@@ -12,13 +12,15 @@ jobs:
         python-version: ["3.12"]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Unit tests
         run: python -m unittest discover -s tests -v
       - name: Compile
-        run: python -m compileall -q dogram tests
+        run: python -m compileall -q dogram tests scripts
       - name: Constitutional floor
         run: |
           python - <<'PY'
@@ -76,3 +78,14 @@ jobs:
 
           print("scope scan OK")
           PY
+      - name: PR structural impact receipt
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          rm -rf /tmp/dogram-impact-base /tmp/dogram-impact-head
+          mkdir -p /tmp/dogram-impact-base /tmp/dogram-impact-head
+          git archive "$BASE_SHA" | tar -x -C /tmp/dogram-impact-base
+          git archive "$HEAD_SHA" | tar -x -C /tmp/dogram-impact-head
+          python -m scripts.pr_impact_check /tmp/dogram-impact-base /tmp/dogram-impact-head --output pr-impact.json
