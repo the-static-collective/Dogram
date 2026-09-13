@@ -1,0 +1,31 @@
+{
+  "crossed_module": {
+    "H": "S3",
+    "G": "S3",
+    "boundary": "identity",
+    "action": "conjugation",
+    "composition_convention": "compose(left,right) means left after right"
+  },
+  "cells": {
+    "left_bottom": {"h": "(12)", "g": "e"},
+    "left_top": {"h": "e", "g": "(12)"},
+    "right_bottom": {"h": "e", "g": "e"},
+    "right_top": {"h": "(23)", "g": "e"}
+  },
+  "whiskered_right_top_h": "(13)",
+  "lawful": {
+    "vertical_then_horizontal": "(123)",
+    "horizontal_then_vertical": "(123)",
+    "interchange_holds": true
+  },
+  "naive_without_action": {
+    "vertical_then_horizontal": "(123)",
+    "horizontal_then_vertical": "(132)",
+    "interchange_fails": true
+  },
+  "candidate_seals": [
+    "INTERCHANGE IS A RECEIPT ABOUT TYPED COMPOSITION, NOT A LICENSE TO DROP WHISKERING.",
+    "SAME FOUR CELLS + SAME TYPING != SAME PASTING RESULT UNDER AN ILLEGAL COMPOSITION LAW.",
+    "KEEP THE ACTION THAT MAKES THE SQUARE COMMUTE."
+  ]
+}
