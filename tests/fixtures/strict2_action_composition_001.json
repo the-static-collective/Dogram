@@ -1,0 +1,29 @@
+{
+  "crossed_module": {
+    "H": "Z/3Z",
+    "G": "Z/2Z",
+    "boundary": "trivial",
+    "action": "0 acts identically; 1 acts by inversion on Z/3Z"
+  },
+  "higher_labels": [1, 1],
+  "even_factorization": {
+    "g_factors": [0, 0],
+    "total_g": 0,
+    "acted_right_h": 1,
+    "composite_h": 2,
+    "naive_h_without_action": 2
+  },
+  "odd_factorization": {
+    "g_factors": [1, 1],
+    "total_g": 0,
+    "acted_right_h": 2,
+    "composite_h": 0,
+    "naive_h_without_action": 2
+  },
+  "higher_composite_delta_mod_3": 1,
+  "candidate_seals": [
+    "SAME OUTER 1-BOUNDARY + SAME HIGHER LABELS != SAME HIGHER COMPOSITE.",
+    "THE ACTION CONTEXT IS PART OF THE COMPOSITION RECEIPT.",
+    "DO NOT REPLACE A SEMIDIRECT PRODUCT WITH A DIRECT PRODUCT BECAUSE THE OUTER PRODUCT AGREES."
+  ]
+}
