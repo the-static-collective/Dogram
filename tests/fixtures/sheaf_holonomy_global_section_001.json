@@ -1,0 +1,31 @@
+{
+  "base_graph": {
+    "vertices": [0, 1, 2],
+    "oriented_edges": [[0, 1], [1, 2], [2, 0]],
+    "vertex_stalk_dimensions": [1, 1, 1],
+    "edge_stalk_dimensions": [1, 1, 1],
+    "absolute_transport_values": [1, 1, 1]
+  },
+  "flat": {
+    "transports": [1, 1, 1],
+    "transport_product": 1,
+    "constraint_matrix": [[-1, 1, 0], [0, -1, 1], [1, 0, -1]],
+    "constraint_rank": 2,
+    "global_section_dimension": 1,
+    "laplacian": [[2, -1, -1], [-1, 2, -1], [-1, -1, 2]],
+    "laplacian_charpoly": [1, -6, 9, 0],
+    "laplacian_determinant": 0,
+    "laplacian_spectrum": [[0, 1], [3, 2]]
+  },
+  "twisted": {
+    "transports": [1, 1, -1],
+    "transport_product": -1,
+    "constraint_matrix": [[-1, 1, 0], [0, -1, 1], [1, 0, 1]],
+    "constraint_rank": 3,
+    "global_section_dimension": 0,
+    "laplacian": [[2, -1, 1], [-1, 2, -1], [1, -1, 2]],
+    "laplacian_charpoly": [1, -6, 9, -4],
+    "laplacian_determinant": 4,
+    "laplacian_spectrum": [[1, 2], [4, 1]]
+  }
+}
