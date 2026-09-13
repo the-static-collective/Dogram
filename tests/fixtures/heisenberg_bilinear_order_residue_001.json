@@ -1,0 +1,29 @@
+{
+  "schema": "dogram.research/heisenberg-bilinear-order-residue/v0",
+  "field": "Q",
+  "generators": {
+    "X": [[0, 1, 0], [0, 0, 0], [0, 0, 0]],
+    "Y": [[0, 0, 0], [0, 0, 1], [0, 0, 0]]
+  },
+  "parameters": {
+    "s": {"numerator": 2, "denominator": 3},
+    "t": {"numerator": 5, "denominator": 7}
+  },
+  "expected": {
+    "bracket": [[0, 0, 1], [0, 0, 0], [0, 0, 0]],
+    "bilinear_residue": {"numerator": 10, "denominator": 21},
+    "forward_central_rectangle": {
+      "00": {"kind": "integer", "value": 0},
+      "01": {"kind": "integer", "value": 0},
+      "10": {"kind": "integer", "value": 0},
+      "11": {"kind": "rational", "numerator": 10, "denominator": 21}
+    },
+    "reverse_central_rectangle": {
+      "00": {"kind": "integer", "value": 0},
+      "01": {"kind": "integer", "value": 0},
+      "10": {"kind": "integer", "value": 0},
+      "11": {"kind": "integer", "value": 0}
+    },
+    "group_commutator": [[1, 0, {"numerator": 10, "denominator": 21}], [0, 1, 0], [0, 0, 1]]
+  }
+}
