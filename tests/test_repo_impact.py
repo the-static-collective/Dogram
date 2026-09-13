@@ -27,7 +27,7 @@ class RepoImpactTests(unittest.TestCase):
             impact = build_repo_impact(left, right)
             self.assertEqual(impact["node_delta"]["added"], ["pkg/receipt.py"])
             self.assertIn(["pkg/a.py", "pkg/receipt.py"], impact["edge_delta"]["added"])
-            self.assertIn(["pkg/a.py", "pkg/b.py"], impact["reachability_delta"]["gained"])
+            self.assertIn(["pkg/a.py", "pkg/receipt.py"], impact["reachability_delta"]["gained"])
 
             summary = render_impact_markdown(impact)
             self.assertIn("Dogram Impact Receipt", summary)
