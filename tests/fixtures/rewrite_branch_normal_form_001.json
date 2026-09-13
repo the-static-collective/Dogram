@@ -1,0 +1,16 @@
+{
+  "convergent": {
+    "start": "abc",
+    "rules": [["abc", "ab"], ["abc", "ac"], ["ab", "a"], ["ac", "a"]],
+    "expected_immediate_successors": ["ab", "ac"],
+    "expected_normal_forms": ["a"],
+    "expected_reachable_state_count": 4
+  },
+  "divergent": {
+    "start": "abc",
+    "rules": [["abc", "ab"], ["abc", "ac"], ["ab", "a"], ["ac", "c"]],
+    "expected_immediate_successors": ["ab", "ac"],
+    "expected_normal_forms": ["a", "c"],
+    "expected_reachable_state_count": 5
+  }
+}
