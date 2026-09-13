@@ -1,0 +1,28 @@
+{
+  "left": {
+    "name": "C6",
+    "vertex_count": 6,
+    "degree": 2,
+    "component_count": 1
+  },
+  "right": {
+    "name": "2K3",
+    "vertex_count": 6,
+    "degree": 2,
+    "component_count": 2
+  },
+  "tree_formula": {
+    "description": "For every finite tree T with m>=1 vertices, hom(T,Q)=n*d^(m-1) for an n-vertex d-regular target Q.",
+    "shared_n": 6,
+    "shared_d": 2,
+    "sample_vertex_counts": [1, 2, 3, 4, 7],
+    "sample_counts": [6, 12, 24, 48, 384]
+  },
+  "separator": {
+    "source": "K3",
+    "treewidth": 2,
+    "hom_left": 0,
+    "hom_right": 12,
+    "delta": 12
+  }
+}
