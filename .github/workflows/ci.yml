@@ -88,4 +88,4 @@ jobs:
           mkdir -p /tmp/dogram-impact-base /tmp/dogram-impact-head
           git archive "$BASE_SHA" | tar -x -C /tmp/dogram-impact-base
           git archive "$HEAD_SHA" | tar -x -C /tmp/dogram-impact-head
-          python scripts/pr_impact_check.py /tmp/dogram-impact-base /tmp/dogram-impact-head --output pr-impact.json
+          python -m scripts.pr_impact_check /tmp/dogram-impact-base /tmp/dogram-impact-head --output pr-impact.json
