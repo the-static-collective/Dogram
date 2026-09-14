@@ -1,0 +1,14 @@
+{
+  "alphabet": ["a", "b"],
+  "words": ["ab", "ba"],
+  "parikh": {"a": 1, "b": 1},
+  "parallel_independence": [["a", "b"], ["b", "a"]],
+  "parallel_trace_partition": [["ab", "ba"]],
+  "ordered_independence": [],
+  "ordered_trace_partition": [["ab"], ["ba"]],
+  "delta": {
+    "linear_language_size": 0,
+    "parikh_surface": 0,
+    "trace_class_count": 1
+  }
+}
