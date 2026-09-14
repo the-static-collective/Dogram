@@ -1,0 +1,17 @@
+{
+  "group": "Z/3Z",
+  "coefficients": "Z/3Z",
+  "action": "trivial",
+  "beta_support": [[1, 1, 1]],
+  "nonzero_shifted_entries": [
+    [1, 1, 2, 2],
+    [1, 2, 2, 1],
+    [2, 1, 1, 1],
+    [2, 2, 1, 2]
+  ],
+  "raw_associator_delta_count": 4,
+  "normalized": true,
+  "pentagon_residual_nonzero_count": 0,
+  "cohomology_relation": "shifted = zero + delta(beta)",
+  "same_cohomology_class": true
+}
