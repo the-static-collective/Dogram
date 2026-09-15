@@ -1,0 +1,14 @@
+{
+  "specimen": "ROBUST-SEPARATING-DISTANCE-001",
+  "signatures": {"x0":"000","x1":"011","x2":"101","x3":"110"},
+  "pairwise_distances": [2,2,2,2,2,2],
+  "minimum_distance": 2,
+  "safe_arbitrary_view_erasures": 1,
+  "guaranteed_arbitrary_bit_flip_corrections": 0,
+  "notes": [
+    "Every pair is separated by exactly two declared views.",
+    "Deleting any one view leaves four distinct projected signatures.",
+    "Deleting two views is not guaranteed to preserve separation.",
+    "Distance two detects but does not uniquely correct an arbitrary single flipped view bit."
+  ]
+}
