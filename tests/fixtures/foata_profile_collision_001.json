@@ -1,0 +1,23 @@
+{
+  "alphabet": ["a", "b", "c", "d"],
+  "independence": [["a", "b"], ["b", "a"]],
+  "left": {
+    "word": "abcd",
+    "trace_class": ["abcd", "bacd"],
+    "foata_layers": [["a", "b"], ["c"], ["d"]],
+    "layer_size_profile": [2, 1, 1]
+  },
+  "right": {
+    "word": "abdc",
+    "trace_class": ["abdc", "badc"],
+    "foata_layers": [["a", "b"], ["d"], ["c"]],
+    "layer_size_profile": [2, 1, 1]
+  },
+  "parikh": {"a": 1, "b": 1, "c": 1, "d": 1},
+  "delta": {
+    "parikh_surface": 0,
+    "layer_size_profile": 0,
+    "trace_equivalence": false,
+    "full_foata_form": true
+  }
+}
