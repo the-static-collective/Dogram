@@ -1,0 +1,14 @@
+{
+  "alphabet": ["a", "b", "c"],
+  "independence": [["a", "c"], ["c", "a"]],
+  "left": "abac",
+  "right": "baac",
+  "left_trace_class": ["abac", "abca"],
+  "right_trace_class": ["baac", "baca", "bcaa"],
+  "left_projection_receipt": {"aa": "aa", "ab": "aba", "bb": "b", "bc": "bc", "cc": "c"},
+  "right_projection_receipt": {"aa": "aa", "ab": "baa", "bb": "b", "bc": "bc", "cc": "c"},
+  "differing_dependent_projections": ["ab"],
+  "omitted_projection": "ab",
+  "reduced_receipts_equal": true,
+  "trace_classes_disjoint": true
+}
