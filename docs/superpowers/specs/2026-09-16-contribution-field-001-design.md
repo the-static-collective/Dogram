@@ -6,17 +6,19 @@
 
 ## Purpose
 
-`CONTRIBUTION-FIELD-001` explores one narrow architectural claim:
+`CONTRIBUTION-FIELD-001` explores one architectural claim:
 
 > Attributable contribution history can be represented as a typed, time-addressed graph that Dogram may measure without deciding what the graph means, what a contributor is worth, or what any economic reward should be.
 
-The long-horizon intent is to support creative participation across code, music, research, teaching, repair, maintenance, physical places, community infrastructure, and other domains without collapsing them into one universal score.
+The long horizon is creative participation across code, music, research, teaching, repair, maintenance, physical places, community infrastructure, and other domains without collapsing them into one universal score.
 
-The first proving ground is deliberately smaller: a finite synthetic contribution field with one immutable Workmark birth record, later attributable history, and neutral Dogram measurements across two cuts.
+The first proving ground is deliberately small: a finite synthetic contribution field with one immutable Workmark birth record, later attributable history, and neutral Dogram measurements across two cuts.
 
-The design also defines a downstream boundary for **Full Measure — World Layer**:
+The design also freezes a downstream boundary for **Full Measure — World Layer**:
 
-> Dogram computes the contribution field. Full Measure may turn receipted measurements into playable story, participation openings, quests, chronicles, and character/world texture without manufacturing graph facts or rewriting contribution history.
+> Dogram computes the contribution field. Full Measure may later turn receipted measurements into playable story, participation openings, quests, chronicles, and character/world texture without manufacturing graph facts or rewriting contribution history.
+
+The first implementation scope is **Dogram only**. Full Measure integration is a separate owner-local design gate after Dogram exports a stable frozen receipt fixture.
 
 ## Constitutional laws
 
@@ -52,7 +54,7 @@ Dogram already owns deterministic graph calculation and explicit receipts. Its c
 - `ANTI-COLLAPSE-REACHABILITY-001` — explicit measurement of distinctions lost under a declared projection;
 - public `ablate@1` and `reach@1` operators — finite reachability change under declared graph intervention.
 
-`CONTRIBUTION-FIELD-001` should reuse those laws and patterns rather than create a parallel social/economic graph engine.
+`CONTRIBUTION-FIELD-001` reuses those laws and patterns rather than creating a parallel social/economic graph engine.
 
 It does **not** promote the contribution vocabulary below into a universal ontology and does **not** make Dogram the canonical owner of human identity, reputation, economics, social meaning, or historical truth.
 
@@ -64,11 +66,11 @@ At a declared cut `t`, a contribution field is a finite typed graph:
 G_t = (V_t, E_t, type, receipts)
 ```
 
-where every included vertex or edge must be attributable to supplied evidence at that cut.
+Every included vertex or edge must be attributable to supplied evidence at that cut.
 
 ### Candidate vertex kinds
 
-The first specimen may declare only the kinds it actually needs. The broader vocabulary is a future-facing specimen language, not canon:
+The broader vocabulary is future-facing specimen language, not canon. A specimen declares only the kinds it needs.
 
 ```text
 PERSON
@@ -85,7 +87,7 @@ WORKMARK
 
 ### Candidate edge kinds
 
-Likewise, relation names are declared locally by a specimen:
+Relation names are likewise local declarations:
 
 ```text
 CREATED
@@ -112,9 +114,9 @@ NARRATIVE COHERENCE != GRAPH EVIDENCE
 
 ## Event and cut discipline
 
-Contribution history is time-addressed rather than stored as one mutable present-tense object.
+Contribution history is time-addressed rather than one mutable present-tense object.
 
-Each event admitted to the specimen must carry enough supplied identity to distinguish at minimum:
+Each admitted event carries enough supplied identity to distinguish at minimum:
 
 ```text
 event_id
@@ -168,7 +170,7 @@ WORKMARK != AUTHORITY
 WORKMARK != OWNERSHIP OF THE UNDERLYING WORK
 ```
 
-The first specimen should treat the Workmark as immutable birth metadata plus references. Any later description of its state must be derived from later receipts, not written back into the origin.
+Any later description of its state is derived from later receipts, not written back into the origin.
 
 ## Executable Workmark horizon (`xWM`)
 
@@ -185,7 +187,7 @@ xWM
   -> emit a fresh measurement receipt
 ```
 
-The executable recipe may calculate. It may not mint value, authority, reputation, payment, or narrative canon.
+The recipe may calculate. It may not mint value, authority, reputation, payment, or narrative canon.
 
 ```text
 EXECUTABLE QUERY != EXECUTABLE CLAIM
@@ -193,7 +195,7 @@ EXECUTABLE QUERY != EXECUTABLE CLAIM
 
 ## Dogram measurement layer
 
-For one Workmark `W` at cut `t`, Dogram may calculate a declared measurement vector:
+For one Workmark `W` at cut `t`, a future declared measurement vector may contain quantities such as:
 
 ```text
 M_t(W) = {
@@ -211,7 +213,7 @@ M_t(W) = {
 }
 ```
 
-The first executable specimen should implement only the smallest subset necessary to prove the architecture. The complete list above is a horizon, not a v0 requirement.
+The first executable specimen implements only the smallest subset necessary to prove the architecture.
 
 Every measure must declare:
 
@@ -226,7 +228,7 @@ No Dogram measurement may emit `good`, `valuable`, `deserving`, `trusted`, `impo
 
 ## Counterfactual structural contribution
 
-Existing Dogram ablation gives a useful neutral question:
+Existing Dogram ablation gives a neutral question:
 
 > Under this finite declared model, what reachability changes if this one declared contribution node or edge is removed?
 
@@ -238,13 +240,11 @@ ABLATION DELTA != HISTORICAL NECESSITY
 ABLATION DELTA != MORAL CREDIT
 ```
 
-A large delta may be consumed by a later declared valuation policy, but Dogram does not perform that policy step.
+A later declared valuation policy may consume that receipt. Dogram does not perform the policy step.
 
 ## Economic-lens boundary
 
-The contribution field is intended to permit many optional economic or reputation interpretations without embedding one into history.
-
-Conceptually:
+The same contribution history may support multiple optional interpretations without embedding one into history.
 
 ```text
 CONTRIBUTION FIELD
@@ -257,9 +257,7 @@ DECLARED LENS C -> optional stewardship/reputation view
 DECLARED LENS D -> no economic interpretation
 ```
 
-A lens must remain attributable and explicit about which Dogram measurements it consumes and what additional assumptions it introduces.
-
-The same field may lawfully support conflicting lenses.
+A lens must explicitly name which measurements it consumes and what additional assumptions it introduces.
 
 ```text
 SAME HISTORY != SAME VALUATION
@@ -271,9 +269,9 @@ No universal scalar social-credit score is part of this design.
 
 ## Full Measure story-layer handoff
 
-Full Measure is the playable world layer. It already distinguishes attributable events from narrative garments: models may propose quests or narrate chronicles, but they may not manufacture witness, Deeds, truth, or memory.
+Full Measure is the playable world layer. Its existing boundary already separates attributable events from narrative garments: models may propose quests or narrate chronicles, but they may not manufacture witness, Deeds, truth, or memory.
 
-`CONTRIBUTION-FIELD-001` should enter Full Measure through a read-only adapter/reference seam, not by merging runtimes.
+This section constrains a **future Full Measure integration**. It does not authorize implementing Full Measure code as part of the first Dogram plan.
 
 ### Handoff direction
 
@@ -284,7 +282,9 @@ contribution-field specimen
         ↓
 Dogram measurements + delta receipt
         ↓
-Full Measure adapter
+FROZEN DOGRAM HANDOFF FIXTURE
+        ↓
+[separate Full Measure owner-local adapter gate]
         ↓
 playable projection / chronicle / quest proposal / participation opening
         ↓
@@ -300,20 +300,20 @@ FULL MEASURE STORY MAY NOT WRITE DOGRAM HISTORY BY NARRATION ALONE
 
 A Full Measure action may later become a new source event only if the relevant owner produces an attributable event/receipt through its existing authority path. That new receipt may then enter a later contribution-field cut like any other supplied evidence.
 
-### Full Measure import declaration
+### Required future Full Measure import declaration
 
-To satisfy Full Measure's existing Project Weave rule, the eventual adapter must declare:
+To satisfy Full Measure's existing Project Weave rule, its eventual adapter must declare:
 
-1. **source project + source version** — exact Dogram version/SHA and contribution-field receipt version;
-2. **objects read** — Workmark birth refs, declared contribution-field receipt, declared Dogram measurement receipts;
-3. **objects proposed** — Full Measure-local chronicle entries, quest hooks, participation openings, or other explicitly proposed story projections;
+1. **source project + source version** — exact Dogram SHA and contribution-field receipt version;
+2. **objects read** — Workmark birth refs, declared contribution-field receipt, declared measurement receipts;
+3. **objects proposed** — Full Measure-local chronicle entries, quest hooks, participation openings, or other explicit story projections;
 4. **authority required to accept** — existing Full Measure/Jubilee human witness and world authority for any sheet-changing Deed, Harvest, Capacity, constituted position, or equivalent state;
 5. **receipts emitted** — Full Measure-local story/proposal receipt referencing the exact Dogram inputs it used;
-6. **forbidden reads** — hidden graph nodes, private/held material not present in the supplied receipts, unrelated repository state, and any source data outside the declared adapter scope.
+6. **forbidden reads** — hidden graph nodes, private/held material not present in supplied receipts, unrelated repository state, and source data outside the declared adapter scope.
 
 ### Story-law boundary
 
-Full Measure may say:
+Full Measure may eventually say:
 
 > This contribution has acquired seven later carried descendants in the declared field, and here is a quest opening around one unresolved branch.
 
@@ -330,7 +330,7 @@ STORY PROPOSAL -X-> SOURCE FACT
 
 ## Creative-participation horizon
 
-The architecture should remain capable of receiving future evidence adapters for domains beyond Git/code, including:
+Future owner-specific evidence adapters may cover domains beyond Git/code, including:
 
 ```text
 music and arrangement lineage
@@ -344,9 +344,7 @@ physical tools and infrastructure
 gardens, venues, workshops, and other places
 ```
 
-These domains must not be forced into fake precision.
-
-Each adapter owns its evidence profile. Examples may include exact diffs, before/after measurements, human witness, instrument readings, source citations, declared reuse, or owner-specific receipts.
+These domains must not be forced into fake precision. Each adapter owns its evidence profile.
 
 ```text
 COMMON GRAPH GRAMMAR != COMMON EVIDENCE STRENGTH
@@ -354,7 +352,7 @@ COMMON GRAPH GRAMMAR != COMMON EVIDENCE STRENGTH
 
 ## Privacy and participation boundary
 
-The future system must permit contribution evidence to remain local, private, held, pseudonymous, or unpublished according to the owning domain's rules.
+Contribution evidence may remain local, private, held, pseudonymous, or unpublished according to the owning domain's rules.
 
 A Workmark is not required to be public merely because it exists.
 
@@ -368,13 +366,13 @@ PUBLIC != AGGREGATION CONSENT
 
 ## Hostile matrix
 
-Any implementation plan derived from this design must preserve at least the following hostile cases.
+Any implementation plan derived from this design must preserve at least these hostile cases.
 
 ### 1. Centrality laundering
 
 A highly connected node is supplied.
 
-Expected: Dogram may calculate centrality-like structure if explicitly requested, but no `value`, `merit`, or reward conclusion is emitted.
+Expected: Dogram may calculate declared structure, but emits no `value`, `merit`, or reward conclusion.
 
 ### 2. Edge-count gaming
 
@@ -386,11 +384,11 @@ Expected: the graph remains as supplied; no edge-count-to-value shortcut exists.
 
 A later event attempts to alter the original Workmark birth contribution or birth cut.
 
-Expected: refuse or classify invalid. Later history must be appended/related, not rewritten into origin.
+Expected: refuse or classify invalid. Later history is related to origin, not rewritten into it.
 
 ### 4. Narrative laundering
 
-A Full Measure chronicle proposes a relation absent from Dogram/source receipts, then attempts to feed the prose back as established graph history.
+A later Full Measure chronicle proposes a relation absent from Dogram/source receipts, then attempts to feed the prose back as established graph history.
 
 Expected: narration alone is insufficient evidence; no new graph edge is admitted.
 
@@ -402,7 +400,7 @@ Expected: preserve `incomplete`, not `complete` and not proven severance.
 
 ### 6. Relation-kind collapse
 
-`REPAIRED`, `INSPIRED`, and `DEPENDS_ON` are projected into one generic `RELATED_TO` edge before a measure that depends on relation type.
+`REPAIRED`, `INSPIRED`, and `DEPENDS_ON` are projected into one generic `RELATED_TO` edge before a relation-sensitive measure.
 
 Expected: anti-collapse receipt exposes lost distinctions; no silent equivalence.
 
@@ -416,23 +414,23 @@ Expected: Dogram reports graph reachability only; it does not assert historical 
 
 A caller requests one scalar ranking of people from contribution measurements.
 
-Expected: out of scope for Dogram. No person-score operator is introduced by this design.
+Expected: out of scope for Dogram. No person-score operator is introduced.
 
 ### 9. Private-material leakage
 
-A downstream Full Measure story request attempts to traverse source material not included in the declared Dogram handoff.
+A downstream story request attempts to traverse material not included in the declared handoff.
 
 Expected: unavailable/forbidden remains unavailable; story generation cannot widen the read boundary.
 
 ### 10. Self-minted value
 
-A contributor supplies their own contribution and a claimed value/importance field.
+A contributor supplies their own contribution plus a claimed value/importance field.
 
-Expected: contribution evidence and claimed interpretation remain separate. Dogram may receipt supplied structure but cannot promote the self-valuation into measurement fact.
+Expected: contribution evidence and claimed interpretation remain separate. Dogram cannot promote self-valuation into measurement fact.
 
-## First falsifiable specimen
+## First falsifiable Dogram specimen
 
-The first executable follow-up should remain synthetic and finite.
+The first executable follow-up remains synthetic, finite, and single-repository.
 
 Declared history:
 
@@ -460,7 +458,7 @@ C CHALLENGED part_of_X
 Y CARRIED part_of_X forward
 ```
 
-The specimen must prove:
+The first Dogram implementation must prove:
 
 1. `W_X` has identical birth identity at `t0` and `t1`;
 2. the attributable neighborhood around `W_X` differs between cuts;
@@ -468,11 +466,13 @@ The specimen must prove:
 4. Dogram emits the delta and retains both cut receipts;
 5. removing or changing one declared relation produces an explicit structural difference;
 6. no result contains value, merit, price, authority, human-worth, or historical-causation semantics;
-7. one Full Measure fixture adapter can consume the neutral receipt and produce only a proposed story/quest projection, with no sheet-changing authority.
+7. Dogram exports one frozen neutral handoff fixture sufficient for a later Full Measure owner-local adapter to consume without requiring hidden repository state.
+
+No Full Measure runtime code changes are part of this first implementation.
 
 ## Minimal first measurement set
 
-To prevent scope explosion, the first implementation should likely prove only:
+To prevent scope explosion, the first implementation should prove only:
 
 ```text
 descendant_count
@@ -509,14 +509,10 @@ This is a design sketch, not a promoted schema. Exact field names belong to impl
 
 - cryptocurrency, blockchain, NFT, or smart-contract integration;
 - exchange rates or token prices;
-- universal reputation;
+- universal reputation or contributor ranking;
 - a global social-credit score;
-- contributor ranking;
-- automated compensation;
-- automatic royalty allocation;
-- legal ownership determination;
-- intellectual-property adjudication;
-- taxation or securities treatment;
+- automated compensation or royalty allocation;
+- legal ownership, intellectual-property, tax, or securities conclusions;
 - identity verification;
 - public-by-default contribution history;
 - automatic causal inference;
@@ -532,20 +528,20 @@ This is a design sketch, not a promoted schema. Exact field names belong to impl
 - typed relation preservation within the declared specimen;
 - measurement and delta receipts;
 - incomplete/invalid lineage signaling;
-- neutral ablation/reachability calculations.
+- neutral ablation/reachability calculations;
+- the frozen neutral handoff fixture produced by the first proof.
 
 ### Dogram does not own
 
 - whether the supplied event is historically true;
 - who deserves credit;
-- economic valuation;
+- economic valuation or compensation;
 - social reputation;
-- compensation;
 - human worth;
 - narrative canon;
 - Full Measure world authority.
 
-### Full Measure owns
+### Full Measure owns in the later integration
 
 - playable projection of accepted inputs;
 - local story/quest/participation proposals;
@@ -559,35 +555,33 @@ This is a design sketch, not a promoted schema. Exact field names belong to impl
 - hidden access to contribution fields;
 - economic valuation authority merely because a measurement became playable.
 
-## Success criteria for the future shaper
+## Success criteria for the first Dogram implementation
 
-The design has succeeded if a later implementation can show all of the following without widening authority:
+A later implementation plan may proceed only if it remains small enough to show:
 
 1. one contribution has a stable immutable Workmark birth;
 2. later attributable events enlarge or modify its measured neighborhood;
-3. Dogram can compare two cuts and show the delta;
+3. Dogram compares two cuts and shows the delta;
 4. typed relation distinctions survive unless an explicit projection collapses them;
 5. missing evidence remains incomplete rather than invented;
 6. ablation produces a neutral structural difference only;
-7. Full Measure can consume the receipt as story input without converting it into source truth;
-8. no scalar person score or implicit economic policy appears anywhere in the Dogram output.
+7. the exported fixture contains enough pinned, neutral material for a later Full Measure adapter without requiring direct access to Dogram internals;
+8. no scalar person score or implicit economic policy appears anywhere in Dogram output.
 
-## Future horizons after the first proof
+## Follow-on owner-local gates
 
-Only after the first specimen survives hostile pressure should follow-on work consider:
+Only after the first Dogram specimen survives hostile pressure should follow-on work consider, each under its own design gate:
 
-- executable Workmarks (`xWM`);
-- additional measurement families;
-- multiple independent contribution domains;
-- declared valuation-lens protocols outside Dogram;
-- retroactive reward experiments;
-- commons-dividend allocation experiments;
-- sponsorship/bounty attachment to unresolved Workmarks;
-- place-centered contribution fields;
-- privacy-preserving/pseudonymous Workmark views;
-- Full Measure campaign surfaces that reveal contribution ancestry as living world history.
-
-Each horizon requires its own owner-local design gate.
+1. **Full Measure contribution-story adapter** — consume the frozen Dogram fixture and produce proposed chronicle/quest/participation surfaces under existing Full Measure authority;
+2. executable Workmarks (`xWM`);
+3. additional Dogram measurement families;
+4. multiple independent contribution domains;
+5. declared valuation-lens protocols outside Dogram;
+6. retroactive reward / commons-dividend experiments;
+7. sponsorship or bounty attachment to unresolved Workmarks;
+8. place-centered contribution fields;
+9. privacy-preserving or pseudonymous Workmark views;
+10. richer Full Measure campaign surfaces that reveal contribution ancestry as living world history.
 
 ## Compression
 
