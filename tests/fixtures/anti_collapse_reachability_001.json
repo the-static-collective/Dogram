@@ -1,0 +1,35 @@
+{
+  "bool_int": {
+    "lawful_quotient": true,
+    "factorization_witness_present": true,
+    "collapse_classes": [
+      ["int:1", "bool:true"],
+      ["int:0", "bool:false"]
+    ],
+    "preserved_distinctions": [
+      ["int:1", "int:0"],
+      ["int:1", "bool:false"],
+      ["bool:true", "int:0"],
+      ["bool:true", "bool:false"]
+    ],
+    "lost_distinctions": [
+      ["int:1", "bool:true"],
+      ["int:0", "bool:false"]
+    ]
+  },
+  "typed_address": {
+    "lawful_quotient": true,
+    "factorization_witness_present": true,
+    "collapse_classes": [
+      ["spine@A", "braid@A"],
+      ["spine@B"]
+    ],
+    "preserved_distinctions": [
+      ["spine@A", "spine@B"],
+      ["braid@A", "spine@B"]
+    ],
+    "lost_distinctions": [
+      ["spine@A", "braid@A"]
+    ]
+  }
+}
