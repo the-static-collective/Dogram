@@ -1,0 +1,17 @@
+{
+  "cycle_6": {
+    "edges": [[0,1],[1,2],[2,3],[3,4],[4,5],[0,5]],
+    "vertex_count": 6,
+    "degree": 2,
+    "component_count": 1,
+    "triangle_count": 0
+  },
+  "two_triangles": {
+    "edges": [[0,1],[1,2],[0,2],[3,4],[4,5],[3,5]],
+    "vertex_count": 6,
+    "degree": 2,
+    "component_count": 2,
+    "triangle_count": 2
+  },
+  "fractional_witness_entry": "1/6"
+}
