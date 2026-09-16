@@ -48,6 +48,13 @@ class DeltaAsCarrierTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             continue_from_delta({"specimen": "broken"}, triangular)
 
+    def test_missing_parent_specimen_is_rejected(self):
+        parent = triangulator_001_receipt()
+        parent.pop("specimen")
+
+        with self.assertRaises(ValueError):
+            continue_from_delta(parent, triangular)
+
 
 if __name__ == "__main__":
     unittest.main()
