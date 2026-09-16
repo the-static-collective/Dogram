@@ -1,0 +1,14 @@
+{
+  "declared_failure": [0, 1],
+  "fragile": ["0000", "0011", "0101", "1001"],
+  "fragile_collisions_after_declared_failure": [[0, 3]],
+  "minimum_distance": {
+    "fragile": 2,
+    "resilient": 2
+  },
+  "resilient": ["0000", "0011", "0101", "0110"],
+  "survives_declared_failure": {
+    "fragile": false,
+    "resilient": true
+  }
+}
