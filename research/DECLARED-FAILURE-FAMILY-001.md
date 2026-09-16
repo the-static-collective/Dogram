@@ -22,13 +22,18 @@ Declare one admissible correlated erasure: coordinates `{0,1}` fail together.
 After deleting coordinates 0 and 1:
 
 - resilient projects to `00, 11, 01, 10`, still four distinct states;
-- fragile projects to `00, 11, 01, 01`, collapsing states 0 and 3.
+- fragile projects to `00, 11, 01, 01`, collapsing states 2 and 3.
 
 Therefore
 
 `SAME MINIMUM DISTANCE != SAME RESILIENCE TO A DECLARED FAILURE FAMILY.`
 
-The fragile carrier also survives erasure `{2,3}`, proving that the distinction is not the number of erased coordinates alone; placement matters.
+Failure cardinality alone also does not determine resilience. Hold the resilient carrier fixed and compare two erasures of the same cardinality:
+
+- erase `{0,1}`: projections remain `00, 11, 01, 10`, so separation survives;
+- erase `{2,3}`: projections become `00, 00, 01, 01`, collapsing pairs `(0,1)` and `(2,3)`.
+
+Thus two two-coordinate failures can behave differently solely because their support differs.
 
 ## Documented mathematics
 
@@ -45,6 +50,7 @@ An erased coordinate set `F` collapses that pair exactly when `D(x,y) subseteq F
 ## Seals
 
 - SAME REDUNDANCY COUNT != SAME FAILURE RESILIENCE.
+- SAME FAILURE CARDINALITY != SAME FAILURE RESILIENCE.
 - RECEIPT WHICH DISTINCTIONS CAN FAIL TOGETHER.
 - MINIMUM DISTANCE IS A CARDINALITY SUMMARY; A DECLARED FAILURE FAMILY CAN REQUIRE THE SUPPORT RECEIPT.
 
