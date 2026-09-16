@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import unittest
 
+from dogram.canonical import sha256_json
 from dogram.contribution_field import (
     ContributionFieldInputError,
     ablate_event,
@@ -129,6 +130,42 @@ class ContributionDeltaTests(unittest.TestCase):
         self.assertEqual(receipt["lost_root_entity_reachability"], [])
         self.assertNotIn("importance", receipt)
         self.assertNotIn("merit", receipt)
+
+
+class ContributionReceiptIntegrityTests(unittest.TestCase):
+    def test_tampered_field_digest_is_rejected_before_measurement(self) -> None:
+        field = build_cut(EVENTS, 1, DECLARED)
+        tampered = {**field, "field_digest": "sha256:tampered"}
+        with self.assertRaises(ContributionFieldInputError) as caught:
+            measure_workmark(tampered, _workmark())
+        self.assertEqual(caught.exception.reason_code, "FIELD_DIGEST_MISMATCH")
+
+    def test_tampered_workmark_id_is_rejected(self) -> None:
+        mark = {**_workmark(), "workmark_id": "sha256:tampered"}
+        with self.assertRaises(ContributionFieldInputError) as caught:
+            measure_workmark(build_cut(EVENTS, 1, DECLARED), mark)
+        self.assertEqual(caught.exception.reason_code, "WORKMARK_DIGEST_MISMATCH")
+
+    def test_self_consistent_wrong_workmark_address_is_rejected(self) -> None:
+        mark = _workmark()
+        body = {key: value for key, value in mark.items() if key != "workmark_id"}
+        body["graph_address"] = "entity:Y"
+        wrong = {**body, "workmark_id": sha256_json(body)}
+        with self.assertRaises(ContributionFieldInputError) as caught:
+            measure_workmark(build_cut(EVENTS, 1, DECLARED), wrong)
+        self.assertEqual(caught.exception.reason_code, "WORKMARK_ADDRESS_MISMATCH")
+
+    def test_tampered_measurement_receipt_is_rejected_before_delta(self) -> None:
+        mark = _workmark()
+        before = measure_workmark(build_cut(EVENTS, 0, DECLARED), mark)
+        after = measure_workmark(build_cut(EVENTS, 1, DECLARED), mark)
+        tampered_after = {
+            **after,
+            "measurements": {**after["measurements"], "descendant_count": 99},
+        }
+        with self.assertRaises(ContributionFieldInputError) as caught:
+            compare_measurements(before, tampered_after)
+        self.assertEqual(caught.exception.reason_code, "MEASUREMENT_RECEIPT_DIGEST_MISMATCH")
 
 
 if __name__ == "__main__":
