@@ -1,0 +1,23 @@
+{
+  "ancestry": {
+    "parent_carrier": 5,
+    "parent_classification": "nonzero_structured",
+    "parent_delta": 100,
+    "parent_operators": {
+      "first": "square",
+      "second": "triangular"
+    },
+    "parent_paths": {
+      "first_after_second": 225,
+      "second_after_first": 325,
+      "square_after_triangular": 225,
+      "triangular_after_square": 325
+    },
+    "parent_specimen": "TRIANGULATOR-001"
+  },
+  "carrier": 100,
+  "carrier_origin": "parent_delta",
+  "operator": "triangular",
+  "projection": 5050,
+  "specimen": "DELTA-AS-CARRIER-001"
+}
