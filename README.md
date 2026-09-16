@@ -63,4 +63,6 @@ The internal transverse/Productive-Desync research kernel also carries typed quo
 
 `DELTA-AS-CARRIER-001` tests one explicit continuation move: reuse a receipted delta as a new carrier while snapshotting the parent carrier, operator order, paths, delta, and classification. The frozen continuation takes `100` from `TRIANGULATOR-001`, applies `T(100)=5050`, and preserves the parent crossing so the derived carrier cannot impersonate an origin. It adds no public operator or continuation authority. See `research/DELTA-AS-CARRIER-001.md`.
 
+`LINEAGE-SPINE-001` extends that continuation across multiple generations without recursively copying the entire past into each child. Fixed-shape capsules retain a root address plus content-addressed parent/crossing links; a separate ledger keeps the referenced receipts, and verification distinguishes `complete`, `incomplete`, and `invalid` so missing witness material is not silently promoted into a proven severance. The frozen line is `5 -> 100 -> 24,502,500`. It adds no public operator or causal authority. See `research/LINEAGE-SPINE-001.md`.
+
 See `docs/superpowers/specs/2026-08-28-dogram-metaoscillatory-runtime-design.md`.

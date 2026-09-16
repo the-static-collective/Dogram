@@ -1,0 +1,100 @@
+{
+  "head_digest": "3bc4813da9b1451f2fb4d20196e3230259b63aaeda0cbeec1dc9d08557dce5c8",
+  "ledger": {
+    "capsules": {
+      "3bc4813da9b1451f2fb4d20196e3230259b63aaeda0cbeec1dc9d08557dce5c8": {
+        "carrier": 24502500,
+        "carrier_origin": "parent_crossing_delta",
+        "crossing_digest": "4525b9a61b4c27d89370dbdbf59355490fbdea9917eab6b05f75bdb98fb21933",
+        "generation": 2,
+        "parent_digest": "c1b47ecb3cc3394a72f5bc3c12b8d15836e0bcc0d8abebf82d0f73bde126e1d2",
+        "root_digest": "441be7baed513575c2829341c63c5219cad3c5041d9b8fa7955bb56b5e1f5a72",
+        "schema": "dogram.lineage-capsule/v0",
+        "specimen": "LINEAGE-SPINE-001"
+      },
+      "4949b85dfaaa0de98e422cf04409c36bb0ff22dae64e3f6f3b105e6056fc339f": {
+        "carrier": 5,
+        "carrier_origin": "declared_root",
+        "crossing_digest": null,
+        "generation": 0,
+        "parent_digest": null,
+        "root_digest": "441be7baed513575c2829341c63c5219cad3c5041d9b8fa7955bb56b5e1f5a72",
+        "schema": "dogram.lineage-capsule/v0",
+        "specimen": "LINEAGE-SPINE-001"
+      },
+      "c1b47ecb3cc3394a72f5bc3c12b8d15836e0bcc0d8abebf82d0f73bde126e1d2": {
+        "carrier": 100,
+        "carrier_origin": "parent_crossing_delta",
+        "crossing_digest": "04ea254ec08308c6ec89b453273c834774dfe19811c0018365e253178cf24316",
+        "generation": 1,
+        "parent_digest": "4949b85dfaaa0de98e422cf04409c36bb0ff22dae64e3f6f3b105e6056fc339f",
+        "root_digest": "441be7baed513575c2829341c63c5219cad3c5041d9b8fa7955bb56b5e1f5a72",
+        "schema": "dogram.lineage-capsule/v0",
+        "specimen": "LINEAGE-SPINE-001"
+      }
+    },
+    "receipts": {
+      "04ea254ec08308c6ec89b453273c834774dfe19811c0018365e253178cf24316": {
+        "anchors": {
+          "022100_base3": 225,
+          "325-243": 82,
+          "3^4+1": 82,
+          "3^5": 243,
+          "T_(5^2)": 325,
+          "T_5^2": 225
+        },
+        "carrier": 5,
+        "classification": "nonzero_structured",
+        "delta": 100,
+        "operators": {
+          "first": "square",
+          "second": "triangular"
+        },
+        "paths": {
+          "first_after_second": 225,
+          "second_after_first": 325,
+          "square_after_triangular": 225,
+          "triangular_after_square": 325
+        },
+        "specimen": "TRIANGULATOR-001",
+        "structure": {
+          "declared": true,
+          "expected_delta": 100,
+          "label": "delta == triangular(carrier - 1)^2",
+          "passed": true
+        }
+      },
+      "4525b9a61b4c27d89370dbdbf59355490fbdea9917eab6b05f75bdb98fb21933": {
+        "carrier": 100,
+        "classification": "nonzero_structured",
+        "delta": 24502500,
+        "operators": {
+          "first": "square",
+          "second": "triangular"
+        },
+        "paths": {
+          "first_after_second": 25502500,
+          "second_after_first": 50005000
+        },
+        "structure": {
+          "declared": true,
+          "label": "delta == triangular(carrier - 1)^2",
+          "passed": true
+        }
+      }
+    },
+    "schema": "dogram.lineage-ledger/v0"
+  },
+  "root_digest": "4949b85dfaaa0de98e422cf04409c36bb0ff22dae64e3f6f3b105e6056fc339f",
+  "verification": {
+    "capsule_digests": [
+      "4949b85dfaaa0de98e422cf04409c36bb0ff22dae64e3f6f3b105e6056fc339f",
+      "c1b47ecb3cc3394a72f5bc3c12b8d15836e0bcc0d8abebf82d0f73bde126e1d2",
+      "3bc4813da9b1451f2fb4d20196e3230259b63aaeda0cbeec1dc9d08557dce5c8"
+    ],
+    "carriers": [5, 100, 24502500],
+    "generations": [0, 1, 2],
+    "reason": null,
+    "status": "complete"
+  }
+}
