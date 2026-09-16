@@ -4,7 +4,9 @@ import unittest
 
 from dogram.contribution_field import (
     ContributionFieldInputError,
+    ablate_event,
     build_cut,
+    compare_measurements,
     measure_workmark,
     mint_workmark,
 )
@@ -102,6 +104,31 @@ class ContributionWorkmarkTests(unittest.TestCase):
         receipt = measure_workmark(build_cut(EVENTS, 1, DECLARED), _workmark())
         forbidden = {"value", "merit", "price", "score", "rank", "human_worth"}
         self.assertTrue(forbidden.isdisjoint(receipt["measurements"]))
+
+
+class ContributionDeltaTests(unittest.TestCase):
+    def test_delta_reports_change_without_grading_it(self) -> None:
+        mark = _workmark()
+        before = measure_workmark(build_cut(EVENTS, 0, DECLARED), mark)
+        after = measure_workmark(build_cut(EVENTS, 1, DECLARED), mark)
+        delta = compare_measurements(before, after)
+        self.assertEqual(delta["descendant_count_delta"], 2)
+        self.assertEqual(delta["added_reachable_descendants"], ["Y", "Z"])
+        self.assertNotIn("improved", delta)
+        self.assertNotIn("value", delta)
+
+    def test_ablating_enable_event_loses_y_and_z_reachability(self) -> None:
+        field = build_cut(EVENTS, 1, DECLARED)
+        receipt = ablate_event(field, _workmark(), "e-enable-y")
+        self.assertEqual(receipt["lost_root_entity_reachability"], ["Y", "Z"])
+        self.assertEqual(receipt["gained_root_entity_reachability"], [])
+
+    def test_zero_reachability_loss_is_not_called_zero_contribution(self) -> None:
+        field = build_cut(EVENTS, 1, DECLARED)
+        receipt = ablate_event(field, _workmark(), "e-repair-x")
+        self.assertEqual(receipt["lost_root_entity_reachability"], [])
+        self.assertNotIn("importance", receipt)
+        self.assertNotIn("merit", receipt)
 
 
 if __name__ == "__main__":
