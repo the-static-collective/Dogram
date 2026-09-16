@@ -13,7 +13,18 @@ from dogram.lineage_spine import canonical_digest
 
 SPECIMEN = "LINEAGE-BRAID-001"
 PARENT_SET_SCHEMA = "dogram.lineage-parent-set/v0"
+MERGE_RECEIPT_SCHEMA = "dogram.lineage-merge-receipt/v0"
+BRAID_CAPSULE_SCHEMA = "dogram.lineage-braid-capsule/v0"
 PARENT_DESCRIPTOR_KEYS = {"head_digest", "root_digest", "carrier"}
+BRAID_CAPSULE_KEYS = {
+    "schema",
+    "specimen",
+    "carrier",
+    "carrier_origin",
+    "parent_set_digest",
+    "merge_receipt_digest",
+    "root_set_digest",
+}
 
 
 def _validate_parent_descriptor(parent: dict[str, object]) -> None:
@@ -66,3 +77,55 @@ def root_set_digest(parent_set: dict[str, object]) -> str:
         _validate_parent_descriptor(parent)
         roots.add(parent["root_digest"])
     return canonical_digest({"roots": sorted(roots)})
+
+
+def make_sum_merge(parent_set: dict[str, object]) -> dict[str, object]:
+    parents = parent_set.get("parents")
+    if parent_set.get("schema") != PARENT_SET_SCHEMA or parent_set.get("specimen") != SPECIMEN:
+        raise ValueError("invalid parent set")
+    if not isinstance(parents, list) or len(parents) < 2:
+        raise ValueError("parent set requires at least two parents")
+
+    inputs: list[int] = []
+    for parent in parents:
+        if not isinstance(parent, dict):
+            raise ValueError("parent descriptor must be a mapping")
+        _validate_parent_descriptor(parent)
+        carrier = parent["carrier"]
+        assert isinstance(carrier, int) and not isinstance(carrier, bool)
+        inputs.append(carrier)
+
+    return {
+        "schema": MERGE_RECEIPT_SCHEMA,
+        "specimen": SPECIMEN,
+        "operator": "sum",
+        "parent_set_digest": canonical_digest(parent_set),
+        "inputs": inputs,
+        "output": sum(inputs),
+    }
+
+
+def make_braid_capsule(
+    parent_set: dict[str, object],
+    merge_receipt: dict[str, object],
+) -> dict[str, object]:
+    parent_digest = canonical_digest(parent_set)
+    if merge_receipt.get("schema") != MERGE_RECEIPT_SCHEMA or merge_receipt.get("specimen") != SPECIMEN:
+        raise ValueError("invalid merge receipt")
+    if merge_receipt.get("operator") != "sum":
+        raise ValueError("unsupported merge operator")
+    if merge_receipt.get("parent_set_digest") != parent_digest:
+        raise ValueError("merge parent set digest mismatch")
+    output = merge_receipt.get("output")
+    if isinstance(output, bool) or not isinstance(output, int):
+        raise ValueError("merge output must be an integer")
+
+    return {
+        "schema": BRAID_CAPSULE_SCHEMA,
+        "specimen": SPECIMEN,
+        "carrier": output,
+        "carrier_origin": "parent_set_merge",
+        "parent_set_digest": parent_digest,
+        "merge_receipt_digest": canonical_digest(merge_receipt),
+        "root_set_digest": root_set_digest(parent_set),
+    }
