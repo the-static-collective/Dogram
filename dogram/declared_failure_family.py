@@ -34,6 +34,7 @@ def specimen() -> dict[str, object]:
     resilient = ("0000", "0011", "0101", "0110")
     fragile = ("0000", "0011", "0101", "1001")
     declared_failure = frozenset({0, 1})
+    alternate_same_cardinality_failure = frozenset({2, 3})
     return {
         "resilient": resilient,
         "fragile": fragile,
@@ -47,4 +48,8 @@ def specimen() -> dict[str, object]:
             "fragile": survives_erasure(fragile, declared_failure),
         },
         "fragile_collisions": collapsed_pairs(fragile, declared_failure),
+        "alternate_same_cardinality_failure": sorted(alternate_same_cardinality_failure),
+        "resilient_collisions_after_alternate_failure": collapsed_pairs(
+            resilient, alternate_same_cardinality_failure
+        ),
     }
