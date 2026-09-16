@@ -65,4 +65,6 @@ The internal transverse/Productive-Desync research kernel also carries typed quo
 
 `LINEAGE-SPINE-001` extends that continuation across multiple generations without recursively copying the entire past into each child. Fixed-shape capsules retain a root address plus content-addressed parent/crossing links; a separate ledger keeps the referenced receipts, and verification distinguishes `complete`, `incomplete`, and `invalid` so missing witness material is not silently promoted into a proven severance. The frozen line is `5 -> 100 -> 24,502,500`. It adds no public operator or causal authority. See `research/LINEAGE-SPINE-001.md`.
 
+`LINEAGE-BRAID-001` extends bounded lineage from one parent line to attributable multi-parent convergence without widening the spine capsule. A canonical content-addressed parent set references verified spine heads, a narrow sum receipt receipts the local merge, and the braid child stays fixed-shape. The frozen specimen converges `5 -> 100` and `3 -> 9` into `9 + 100 = 109`; verification preserves `complete / incomplete / invalid`, so a missing parent witness remains incomplete rather than a proven severance. It adds no public operator, causal semantics, identity claim, or authority. See `research/LINEAGE-BRAID-001.md`.
+
 See `docs/superpowers/specs/2026-08-28-dogram-metaoscillatory-runtime-design.md`.
