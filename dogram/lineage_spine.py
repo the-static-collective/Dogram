@@ -16,6 +16,16 @@ from typing import Any
 CAPSULE_SCHEMA = "dogram.lineage-capsule/v0"
 LEDGER_SCHEMA = "dogram.lineage-ledger/v0"
 SPECIMEN = "LINEAGE-SPINE-001"
+CAPSULE_KEYS = {
+    "schema",
+    "specimen",
+    "generation",
+    "carrier",
+    "carrier_origin",
+    "root_digest",
+    "parent_digest",
+    "crossing_digest",
+}
 
 
 def canonical_digest(value: Any) -> str:
@@ -148,6 +158,8 @@ def verify_lineage(head_digest: str, ledger: dict[str, object]) -> dict[str, obj
 
         if canonical_digest(capsule) != current_digest:
             return _result("invalid", "capsule_digest_mismatch", chain)
+        if set(capsule) != CAPSULE_KEYS:
+            return _result("invalid", "capsule_shape_mismatch", chain)
         if capsule.get("schema") != CAPSULE_SCHEMA or capsule.get("specimen") != SPECIMEN:
             return _result("invalid", "capsule_schema_mismatch", chain)
 
@@ -177,6 +189,8 @@ def verify_lineage(head_digest: str, ledger: dict[str, object]) -> dict[str, obj
                 return _result("invalid", "root_anchor_mismatch", chain)
             return _result("complete", None, chain)
 
+        if capsule.get("carrier_origin") != "parent_crossing_delta":
+            return _result("invalid", "derived_origin_mismatch", chain)
         parent_digest = capsule.get("parent_digest")
         crossing_digest = capsule.get("crossing_digest")
         if not isinstance(parent_digest, str) or not parent_digest:
