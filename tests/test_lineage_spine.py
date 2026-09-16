@@ -99,6 +99,24 @@ class LineageSpineTests(unittest.TestCase):
         self.assertEqual(verified["reason"], "capsule_digest_mismatch")
         self.assertIn(root_digest, ledger["capsules"])
 
+    def test_rehashed_capsule_with_recursive_ancestry_is_invalid(self):
+        ledger = make_ledger()
+        root = make_root(5)
+        store_capsule(ledger, root)
+        crossing0 = triangulator_001_receipt()
+        store_receipt(ledger, crossing0)
+        child1 = append_from_crossing(root, crossing0)
+
+        polluted = copy.deepcopy(child1)
+        polluted["ancestry"] = {"recursive": copy.deepcopy(root)}
+        polluted_digest = canonical_digest(polluted)
+        ledger["capsules"][polluted_digest] = polluted
+
+        verified = verify_lineage(polluted_digest, ledger)
+
+        self.assertEqual(verified["status"], "invalid")
+        self.assertEqual(verified["reason"], "capsule_shape_mismatch")
+
 
 if __name__ == "__main__":
     unittest.main()
