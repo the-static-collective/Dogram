@@ -93,21 +93,22 @@ braid
 - `head_digest` points into the existing spine ledger;
 - verification delegates to `verify_lineage(...)`;
 - `carrier` must match the referenced spine head;
-- `root_set_digest` is normalized from that spine head's single `root_digest` as a one-element root set.
+- the underlying single `root_digest` is normalized into a `LINEAGE-WEAVE-001` root-set object before comparing `root_set_digest`.
 
 ### `braid` parent
 
 - `head_digest` points into the existing braid ledger;
 - verification delegates to `verify_braid(...)`;
 - `carrier` must match the referenced braid head;
-- `root_set_digest` must equal the braid capsule's existing `root_set_digest`.
+- the underlying braid parent-set is inspected only after `verify_braid(...)` succeeds, its represented root digests are recovered, and those roots are normalized into a `LINEAGE-WEAVE-001` root-set object before comparing `root_set_digest`.
 
-The relation kind is part of the content-addressed parent descriptor. A head digest is not allowed to float free of its verifier type.
+The weave parent therefore does **not** reuse the braid capsule's existing `root_set_digest` bytes as though the two schemas were identical. It preserves the frozen braid contract and normalizes root identity at the weave boundary.
 
-Working law:
+Working laws:
 
 ```text
 HEAD ADDRESS != RELATION TYPE
+ROOT IDENTITY != ROOT-SET SERIALIZATION FORMAT
 ```
 
 ## Typed parent-set
@@ -215,7 +216,7 @@ weave ledger = typed composition across spine and braid heads
 - exact weave capsule shape;
 - parent-set, merge receipt, and root-set present and correctly addressed;
 - all typed parents verify under the verifier declared by `kind`;
-- parent carrier and root-set claims match referenced heads;
+- parent carrier and weave-normalized root-set claims match referenced heads;
 - merge inputs/output recompute correctly;
 - child carrier equals verified merge output;
 - child root-set digest equals the verified union root-set digest.
@@ -276,6 +277,7 @@ Declared weave:
 ```text
 TYPED EDGE != CAUSAL EDGE
 HEAD ADDRESS != RELATION TYPE
+ROOT IDENTITY != ROOT-SET SERIALIZATION FORMAT
 VERIFIER DISPATCH != ONTOLOGY
 WEAVE RECEIPT != IDENTITY
 WEAVE RECEIPT != AUTHORITY
