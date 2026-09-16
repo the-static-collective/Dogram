@@ -1,0 +1,34 @@
+{
+  "specimen": "PETRI-INCIDENCE-CONCURRENCY-001",
+  "places": ["guard", "pa", "qa", "pb", "qb"],
+  "transitions": ["a", "b"],
+  "initial_marking": [1, 1, 0, 1, 0],
+  "final_marking": [1, 0, 1, 0, 1],
+  "shared_incidence": {
+    "guard": {"a": 0, "b": 0},
+    "pa": {"a": -1, "b": 0},
+    "qa": {"a": 1, "b": 0},
+    "pb": {"a": 0, "b": -1},
+    "qb": {"a": 0, "b": 1}
+  },
+  "shared_sequential_reachability_edges": [
+    [[1, 0, 1, 1, 0], "b", [1, 0, 1, 0, 1]],
+    [[1, 1, 0, 0, 1], "a", [1, 0, 1, 0, 1]],
+    [[1, 1, 0, 1, 0], "a", [1, 0, 1, 1, 0]],
+    [[1, 1, 0, 1, 0], "b", [1, 1, 0, 0, 1]]
+  ],
+  "joint_step_ab_enabled": {
+    "parallel": true,
+    "mutex": false
+  },
+  "delta": {
+    "parallel_guard_demand_for_ab": 0,
+    "mutex_guard_demand_for_ab": 2,
+    "available_guard_tokens": 1
+  },
+  "seals": [
+    "SAME INCIDENCE + SAME SEQUENTIAL REACHABILITY != SAME CONCURRENCY STRUCTURE.",
+    "A ZERO INCIDENCE DELTA CAN STILL HIDE AN ENABLING CONSTRAINT.",
+    "POST - PRE IS A QUOTIENT OF THE ARC CONTRACT, NOT A RECONSTRUCTION OF IT."
+  ]
+}
