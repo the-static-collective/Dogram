@@ -13,6 +13,7 @@ from dogram.lineage_braid import (
 )
 from dogram.lineage_spine import (
     append_from_crossing,
+    canonical_digest,
     make_ledger as make_spine_ledger,
     make_root,
     store_capsule as store_spine_capsule,
@@ -100,9 +101,9 @@ def build_specimen() -> dict[str, object]:
     weave_head = store_weave_capsule(weave_ledger, weave_capsule)
 
     return {
-        "spine_ledger": spine_ledger,
-        "braid_ledger": braid_ledger,
-        "weave_ledger": weave_ledger,
+        "spine_ledger_digest": canonical_digest(spine_ledger),
+        "braid_ledger_digest": canonical_digest(braid_ledger),
+        "weave_ledger_digest": canonical_digest(weave_ledger),
         "braid_parent_set_digest": braid_parent_set_digest,
         "braid_merge_digest": braid_merge_digest,
         "braid_head": braid_head,
