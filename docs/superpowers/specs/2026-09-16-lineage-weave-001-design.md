@@ -224,17 +224,21 @@ weave ledger = typed composition across spine and braid heads
 
 Required witness material is absent, including a referenced typed parent whose underlying verifier returns `incomplete`.
 
+A declared head absent from its typed ledger and absent from the opposite typed ledger is `incomplete`, because the current witness set cannot establish whether the declaration is wrong or merely unavailable.
+
 ### `invalid`
 
 Present material contradicts the declared weave, including wrong type, invalid underlying parent, carrier mismatch, root-set mismatch, merge arithmetic mismatch, noncanonical parent-set, or shape pollution.
 
+For kind substitution specifically: if a parent is declared `spine` but the same head digest is present as a braid capsule (or declared `braid` but present as a spine capsule), that is positive contradictory material and returns `invalid / parent_kind_mismatch`. The verifier does not infer a kind contradiction merely from absence.
+
 ## Hostile controls
 
 1. **Kind erasure:** removing `kind` from a typed parent descriptor must be invalid.
-2. **Kind substitution:** relabeling a valid braid head as `spine` and re-hashing every dependent object must still be invalid because verification dispatches to the wrong lawful verifier.
+2. **Kind substitution:** relabeling a valid braid head as `spine` and re-hashing every dependent object must still be invalid because the opposite typed ledger positively identifies that head as braid material.
 3. **Wrong merge output:** re-hashed `109 + 36 = 146` must be invalid via independent arithmetic recomputation.
 4. **Recursive ancestry smuggling:** re-hashed child with an `ancestry` field must be invalid via exact shape enforcement.
-5. **Missing typed parent witness:** must return `incomplete`, not severed/false.
+5. **Missing typed parent witness:** a head absent from both typed ledgers must return `incomplete`, not severed/false.
 6. **Root-union tamper:** a self-consistent but incorrect root-set object must be invalid because roots are re-derived from the verified parent heads.
 7. **No layer mutation:** tests must demonstrate no change to spine or braid capsule schemas.
 
