@@ -1,0 +1,24 @@
+{
+  "specimen_id": "CROSSED-MODULE-FACE-LIFT-001",
+  "noninjective_specimen": {
+    "h_modulus": 4,
+    "g_modulus": 2,
+    "boundary_multiplier": 1,
+    "boundary_value": 0,
+    "expected_kernel": [0, 2],
+    "expected_face_lifts": [0, 2],
+    "expected_boundary_images": [0, 0],
+    "expected_lift_deltas": [2],
+    "expected_boundary_forgets_higher_lift": true
+  },
+  "injective_control": {
+    "h_modulus": 2,
+    "g_modulus": 2,
+    "boundary_multiplier": 1,
+    "boundary_value": 0,
+    "expected_kernel": [0],
+    "expected_face_lifts": [0],
+    "expected_lift_deltas": [],
+    "expected_boundary_forgets_higher_lift": false
+  }
+}
