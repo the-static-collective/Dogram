@@ -143,6 +143,46 @@ def rebuild_weave(
     return ledger, head
 
 
+def build_zero_one_weave() -> dict[str, object]:
+    spine_ledger = make_spine_ledger()
+    parents: list[dict[str, object]] = []
+    for source in (1, 2):
+        root = make_root(source)
+        store_spine_capsule(spine_ledger, root)
+        crossing = crossing_at(source)
+        store_spine_receipt(spine_ledger, crossing)
+        child = append_from_crossing(root, crossing)
+        head = store_spine_capsule(spine_ledger, child)
+        parents.append(
+            make_typed_parent(
+                "spine",
+                head,
+                child["carrier"],
+                [child["root_digest"]],
+            )
+        )
+
+    parent_set = make_parent_set(parents)
+    root_sets = []
+    for parent in parents:
+        head = parent["head_digest"]
+        root_sets.append(spine_ledger["capsules"][head]["root_digest"])
+    root_set = make_root_set(root_sets)
+    merge = make_sum_merge(parent_set)
+    capsule = make_weave_capsule(parent_set, root_set, merge)
+    weave_ledger = make_weave_ledger()
+    store_parent_set(weave_ledger, parent_set)
+    store_root_set(weave_ledger, root_set)
+    store_merge_receipt(weave_ledger, merge)
+    weave_head = store_weave_capsule(weave_ledger, capsule)
+    return {
+        "spine_ledger": spine_ledger,
+        "braid_ledger": make_braid_ledger(),
+        "weave_ledger": weave_ledger,
+        "weave_head": weave_head,
+    }
+
+
 class LineageWeaveParentTests(unittest.TestCase):
     def test_root_set_canonicalizes_sorted_unique_roots(self):
         left = make_root_set(["root-b", "root-a", "root-b"])
@@ -276,10 +316,7 @@ class LineageWeaveVerificationTests(unittest.TestCase):
         graph = build_complete_graph()
 
         result = verify_weave(
-            graph["weave_head"],
-            graph["weave_ledger"],
-            graph["braid_ledger"],
-            graph["spine_ledger"],
+            graph["weave_head"], graph["weave_ledger"], graph["braid_ledger"], graph["spine_ledger"]
         )
 
         self.assertEqual(result["status"], "complete")
@@ -291,28 +328,14 @@ class LineageWeaveVerificationTests(unittest.TestCase):
         graph = build_complete_graph()
         spine_parent = next(p for p in graph["weave_parent_set"]["parents"] if p["kind"] == "spine")
         del graph["spine_ledger"]["capsules"][spine_parent["head_digest"]]
-
-        result = verify_weave(
-            graph["weave_head"],
-            graph["weave_ledger"],
-            graph["braid_ledger"],
-            graph["spine_ledger"],
-        )
-
+        result = verify_weave(graph["weave_head"], graph["weave_ledger"], graph["braid_ledger"], graph["spine_ledger"])
         self.assertEqual(result["status"], "incomplete")
         self.assertEqual(result["reason"], "parent_spine_incomplete")
 
     def test_missing_braid_parent_witness_is_incomplete(self):
         graph = build_complete_graph()
         del graph["braid_ledger"]["capsules"][graph["braid_head"]]
-
-        result = verify_weave(
-            graph["weave_head"],
-            graph["weave_ledger"],
-            graph["braid_ledger"],
-            graph["spine_ledger"],
-        )
-
+        result = verify_weave(graph["weave_head"], graph["weave_ledger"], graph["braid_ledger"], graph["spine_ledger"])
         self.assertEqual(result["status"], "incomplete")
         self.assertEqual(result["reason"], "parent_braid_incomplete")
 
@@ -322,14 +345,7 @@ class LineageWeaveVerificationTests(unittest.TestCase):
         bad = copy.deepcopy(graph["spine_ledger"]["capsules"][spine_parent["head_digest"]])
         bad["carrier"] += 1
         graph["spine_ledger"]["capsules"][spine_parent["head_digest"]] = bad
-
-        result = verify_weave(
-            graph["weave_head"],
-            graph["weave_ledger"],
-            graph["braid_ledger"],
-            graph["spine_ledger"],
-        )
-
+        result = verify_weave(graph["weave_head"], graph["weave_ledger"], graph["braid_ledger"], graph["spine_ledger"])
         self.assertEqual(result["status"], "invalid")
         self.assertEqual(result["reason"], "parent_spine_invalid")
 
@@ -338,14 +354,7 @@ class LineageWeaveVerificationTests(unittest.TestCase):
         bad = copy.deepcopy(graph["braid_ledger"]["capsules"][graph["braid_head"]])
         bad["carrier"] += 1
         graph["braid_ledger"]["capsules"][graph["braid_head"]] = bad
-
-        result = verify_weave(
-            graph["weave_head"],
-            graph["weave_ledger"],
-            graph["braid_ledger"],
-            graph["spine_ledger"],
-        )
-
+        result = verify_weave(graph["weave_head"], graph["weave_ledger"], graph["braid_ledger"], graph["spine_ledger"])
         self.assertEqual(result["status"], "invalid")
         self.assertEqual(result["reason"], "parent_braid_invalid")
 
@@ -355,9 +364,7 @@ class LineageWeaveVerificationTests(unittest.TestCase):
         polluted["parents"][0]["carrier"] += 1
         polluted = make_parent_set(polluted["parents"])
         weave_ledger, weave_head = rebuild_weave(graph, polluted)
-
         result = verify_weave(weave_head, weave_ledger, graph["braid_ledger"], graph["spine_ledger"])
-
         self.assertEqual(result["status"], "invalid")
         self.assertEqual(result["reason"], "parent_carrier_mismatch")
 
@@ -367,11 +374,122 @@ class LineageWeaveVerificationTests(unittest.TestCase):
         polluted["parents"][0]["root_set_digest"] = canonical_digest(make_root_set(["wrong-root"]))
         polluted = make_parent_set(polluted["parents"])
         weave_ledger, weave_head = rebuild_weave(graph, polluted)
-
         result = verify_weave(weave_head, weave_ledger, graph["braid_ledger"], graph["spine_ledger"])
-
         self.assertEqual(result["status"], "invalid")
         self.assertEqual(result["reason"], "parent_root_set_mismatch")
+
+    def test_rehashed_kind_substitution_is_invalid(self):
+        graph = build_complete_graph()
+        polluted = copy.deepcopy(graph["weave_parent_set"])
+        braid_parent = next(p for p in polluted["parents"] if p["kind"] == "braid")
+        braid_parent["kind"] = "spine"
+        polluted = make_parent_set(polluted["parents"])
+        weave_ledger, weave_head = rebuild_weave(graph, polluted)
+        result = verify_weave(weave_head, weave_ledger, graph["braid_ledger"], graph["spine_ledger"])
+        self.assertEqual(result["status"], "invalid")
+        self.assertEqual(result["reason"], "parent_kind_mismatch")
+
+    def test_rehashed_parent_without_kind_is_invalid(self):
+        graph = build_complete_graph()
+        parent_set = copy.deepcopy(graph["weave_parent_set"])
+        del parent_set["parents"][0]["kind"]
+        parent_digest = canonical_digest(parent_set)
+        merge = {
+            "schema": "dogram.lineage-weave-merge-receipt/v0",
+            "specimen": "LINEAGE-WEAVE-001",
+            "operator": "sum",
+            "parent_set_digest": parent_digest,
+            "inputs": [109, 36],
+            "output": 145,
+        }
+        root_set = graph["weave_root_set"]
+        capsule = {
+            "schema": "dogram.lineage-weave-capsule/v0",
+            "specimen": "LINEAGE-WEAVE-001",
+            "carrier": 145,
+            "carrier_origin": "typed_parent_set_merge",
+            "parent_set_digest": parent_digest,
+            "merge_receipt_digest": canonical_digest(merge),
+            "root_set_digest": canonical_digest(root_set),
+        }
+        ledger = make_weave_ledger()
+        ledger["parent_sets"][parent_digest] = parent_set
+        store_root_set(ledger, root_set)
+        store_merge_receipt(ledger, merge)
+        head = store_weave_capsule(ledger, capsule)
+        result = verify_weave(head, ledger, graph["braid_ledger"], graph["spine_ledger"])
+        self.assertEqual(result["status"], "invalid")
+        self.assertEqual(result["reason"], "parent_descriptor_shape_mismatch")
+
+    def test_rehashed_wrong_sum_is_invalid(self):
+        graph = build_complete_graph()
+        ledger = copy.deepcopy(graph["weave_ledger"])
+        capsule = copy.deepcopy(ledger["capsules"][graph["weave_head"]])
+        merge = copy.deepcopy(ledger["merge_receipts"][capsule["merge_receipt_digest"]])
+        merge["output"] = 146
+        merge_digest = canonical_digest(merge)
+        ledger["merge_receipts"][merge_digest] = merge
+        capsule["carrier"] = 146
+        capsule["merge_receipt_digest"] = merge_digest
+        head = canonical_digest(capsule)
+        ledger["capsules"][head] = capsule
+        result = verify_weave(head, ledger, graph["braid_ledger"], graph["spine_ledger"])
+        self.assertEqual(result["status"], "invalid")
+        self.assertEqual(result["reason"], "merge_output_mismatch")
+
+    def test_rehashed_capsule_cannot_smuggle_ancestry(self):
+        graph = build_complete_graph()
+        ledger = copy.deepcopy(graph["weave_ledger"])
+        capsule = copy.deepcopy(ledger["capsules"][graph["weave_head"]])
+        capsule["ancestry"] = {"recursive": True}
+        head = canonical_digest(capsule)
+        ledger["capsules"][head] = capsule
+        result = verify_weave(head, ledger, graph["braid_ledger"], graph["spine_ledger"])
+        self.assertEqual(result["status"], "invalid")
+        self.assertEqual(result["reason"], "capsule_shape_mismatch")
+
+    def test_rehashed_wrong_root_union_is_invalid(self):
+        graph = build_complete_graph()
+        parent_set = graph["weave_parent_set"]
+        wrong_root_set = make_root_set(["wrong-root"])
+        merge = make_sum_merge(parent_set)
+        capsule = make_weave_capsule(parent_set, wrong_root_set, merge)
+        ledger = make_weave_ledger()
+        store_parent_set(ledger, parent_set)
+        store_root_set(ledger, wrong_root_set)
+        store_merge_receipt(ledger, merge)
+        head = store_weave_capsule(ledger, capsule)
+        result = verify_weave(head, ledger, graph["braid_ledger"], graph["spine_ledger"])
+        self.assertEqual(result["status"], "invalid")
+        self.assertEqual(result["reason"], "root_union_mismatch")
+
+    def test_bool_carrier_alias_cannot_impersonate_integer_one(self):
+        graph = build_zero_one_weave()
+        ledger = copy.deepcopy(graph["weave_ledger"])
+        capsule = copy.deepcopy(ledger["capsules"][graph["weave_head"]])
+        self.assertEqual(capsule["carrier"], 1)
+        capsule["carrier"] = True
+        head = canonical_digest(capsule)
+        ledger["capsules"][head] = capsule
+        result = verify_weave(head, ledger, graph["braid_ledger"], graph["spine_ledger"])
+        self.assertEqual(result["status"], "invalid")
+        self.assertEqual(result["reason"], "invalid_weave_carrier")
+
+    def test_bool_merge_inputs_cannot_impersonate_zero_and_one(self):
+        graph = build_zero_one_weave()
+        ledger = copy.deepcopy(graph["weave_ledger"])
+        capsule = copy.deepcopy(ledger["capsules"][graph["weave_head"]])
+        merge = copy.deepcopy(ledger["merge_receipts"][capsule["merge_receipt_digest"]])
+        self.assertEqual(merge["inputs"], [0, 1])
+        merge["inputs"] = [False, True]
+        merge_digest = canonical_digest(merge)
+        ledger["merge_receipts"][merge_digest] = merge
+        capsule["merge_receipt_digest"] = merge_digest
+        head = canonical_digest(capsule)
+        ledger["capsules"][head] = capsule
+        result = verify_weave(head, ledger, graph["braid_ledger"], graph["spine_ledger"])
+        self.assertEqual(result["status"], "invalid")
+        self.assertEqual(result["reason"], "merge_inputs_mismatch")
 
 
 if __name__ == "__main__":
