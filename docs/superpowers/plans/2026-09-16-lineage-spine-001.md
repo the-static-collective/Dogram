@@ -6,7 +6,7 @@
 
 **Architecture:** Add a stdlib-only content-addressed lineage layer beside `triangulator.py`. Each lineage capsule is constant-shape and stores only its generation, carrier, root digest, parent capsule digest, and the digest of the local crossing receipt that produced it. A separate ledger stores capsules and crossing receipts by digest; verification walks links and distinguishes `complete`, `incomplete`, and `invalid`, because a missing receipt is not proof that the underlying line was severed.
 
-**Tech Stack:** Python 3.12 stdlib (`dataclasses`, `hashlib`, `json`), unittest, existing Dogram CI.
+**Tech Stack:** Python 3.12 stdlib (`copy`, `hashlib`, `json`), unittest, existing Dogram CI.
 
 **Spec:** `research/LINEAGE-SPINE-001.md`
 
@@ -16,6 +16,7 @@
 - `receipt != road`; missing witness material must not be labeled a proven severance.
 - Canonical digests are content addresses / integrity witnesses only; digest equality does not mint causal, semantic, historical, or evidentiary authority.
 - Local capsule shape must stay bounded across generations; cumulative history may grow only in the external ledger.
+- The verifier must reject capsules that add recursive or undeclared local ancestry fields, even when those capsules are re-hashed consistently.
 - Preserve deterministic, offline, dependency-free Dogram behavior.
 
 ---
@@ -27,7 +28,7 @@
 - Create: `tests/test_lineage_spine.py`
 
 **Interfaces:**
-- Produces: `canonical_digest(value) -> str`, `make_root(carrier, source_receipt) -> dict`, `append_from_crossing(parent_capsule, crossing_receipt) -> dict`.
+- Produces: `canonical_digest(value) -> str`, `make_root(carrier) -> dict`, `append_from_crossing(parent_capsule, crossing_receipt) -> dict`.
 
 - [ ] **Step 1: Write failing tests** for deterministic digesting, a generation-0 root, a generation-1 child, and a generation-2 child whose capsule has the same key shape as generation 1.
 - [ ] **Step 2: Run CI / unit tests and verify RED** because `dogram.lineage_spine` does not exist.
@@ -44,9 +45,9 @@
 **Interfaces:**
 - Produces: `store_capsule(ledger, capsule) -> str`, `store_receipt(ledger, receipt) -> str`, `verify_lineage(head_digest, ledger) -> dict`.
 
-- [ ] **Step 1: Write failing tests** for a complete 3-generation line, an intentionally missing parent/receipt yielding `incomplete`, and a tampered digest/generation yielding `invalid`.
+- [ ] **Step 1: Write failing tests** for a complete 3-generation line, an intentionally missing parent/receipt yielding `incomplete`, a tampered digest/generation yielding `invalid`, and a re-hashed capsule with undeclared recursive ancestry yielding `capsule_shape_mismatch`.
 - [ ] **Step 2: Verify RED.**
-- [ ] **Step 3: Implement the minimal ledger + verifier.** The verifier follows parent digests to root, checks content digests, generation decrement, stable root digest, carrier equality with the local crossing delta, and local crossing receipt presence.
+- [ ] **Step 3: Implement the minimal ledger + verifier.** The verifier follows parent digests to root, checks exact capsule shape, content digests, generation decrement, stable root digest, declared carrier origin, carrier equality with the local crossing delta, and local crossing receipt presence.
 - [ ] **Step 4: Verify GREEN.**
 - [ ] **Step 5: Commit.**
 
