@@ -11,7 +11,7 @@ class OperationReachabilityReceipt:
     collapse_classes: tuple[tuple[str, ...], ...]
     exact_factorization: bool
     ambiguous_classes: tuple[tuple[str, ...], ...]
-    lost_operation_questions: tuple[tuple[str, str, bool, bool], ...]
+    lost_operation_questions: tuple[tuple[str, str, str, bool, bool], ...]
 
 
 def analyze_operation_reachability(
@@ -40,7 +40,7 @@ def analyze_operation_reachability(
     fibers: list[tuple[str, ...]] = []
     fiber_indices: list[tuple[int, ...]] = []
     seen: list[Hashable] = []
-    for i, value in enumerate(collapsed_projection):
+    for value in collapsed_projection:
         if any(value == prior for prior in seen):
             continue
         seen.append(value)
@@ -49,7 +49,7 @@ def analyze_operation_reachability(
         fibers.append(tuple(states[j] for j in idx))
 
     ambiguous: list[tuple[str, ...]] = []
-    lost: list[tuple[str, str, bool, bool]] = []
+    lost: list[tuple[str, str, str, bool, bool]] = []
     for fiber, idx in zip(fibers, fiber_indices):
         fiber_ambiguous = False
         for op_index, operation in enumerate(operations):
@@ -59,7 +59,7 @@ def analyze_operation_reachability(
                 for left_pos, left in enumerate(idx):
                     for right in idx[left_pos + 1 :]:
                         if enabled[left][op_index] != enabled[right][op_index]:
-                            lost.append((states[left], states[right], enabled[left][op_index], enabled[right][op_index]))
+                            lost.append((states[left], states[right], operation, enabled[left][op_index], enabled[right][op_index]))
         if fiber_ambiguous:
             ambiguous.append(fiber)
 
