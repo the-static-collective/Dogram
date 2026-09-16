@@ -20,6 +20,7 @@
 - Typed parent identity is the pair `(kind, head_digest)`; canonical sort is by that pair.
 - Weave child never embeds parent capsules or recursive ancestry.
 - The verifier independently dispatches each parent to `verify_lineage(...)` or `verify_braid(...)` according to `kind`.
+- If the declared typed ledger lacks a head but the opposite typed ledger contains the same digest, return `invalid / parent_kind_mismatch`; if both typed ledgers lack it, return `incomplete`.
 - `incomplete` remains distinct from `invalid`.
 - Hash consistency never substitutes for verifier validity or arithmetic recomputation.
 - Frozen merge operator is integer `sum` only.
@@ -41,14 +42,14 @@
 Representative tests:
 
 ```python
-def test_parent_order_does_not_change_identity():
+def test_parent_order_does_not_change_identity(self):
     a = make_typed_parent("braid", "b-head", 109, ["r1", "r2"])
     b = make_typed_parent("spine", "s-head", 36, ["r3"])
-    assert make_parent_set([a, b]) == make_parent_set([b, a])
+    self.assertEqual(make_parent_set([a, b]), make_parent_set([b, a]))
 
 
-def test_kind_is_required_and_closed():
-    with pytest.raises(ValueError):
+def test_kind_is_required_and_closed(self):
+    with self.assertRaises(ValueError):
         make_typed_parent("unknown", "head", 1, ["r"])
 ```
 
@@ -91,9 +92,10 @@ def test_kind_is_required_and_closed():
 - [ ] **Step 2: Write failing verification tests** for complete typed weave, missing spine witness => `incomplete`, missing braid witness => `incomplete`, invalid spine parent => `invalid`, invalid braid parent => `invalid`, parent carrier mismatch => `invalid`, and parent root-set mismatch => `invalid`.
 - [ ] **Step 3: Run focused tests and verify RED.**
 - [ ] **Step 4: Implement verifier dispatch.** For `spine`, call `verify_lineage(...)`, inspect the referenced spine head, and normalize its single root. For `braid`, call `verify_braid(...)`, inspect the braid capsule and its referenced braid parent-set, and derive the sorted unique root digests represented by that braid. Compare those re-derived roots with the typed parent's `root_set_digest`.
-- [ ] **Step 5: Verify merge inputs/output and child root union independently** rather than trusting stored content.
-- [ ] **Step 6: Run focused tests and full CI checks to verify GREEN.**
-- [ ] **Step 7: Commit.**
+- [ ] **Step 5: Implement kind-contradiction handling.** If the declared kind's ledger lacks the head but the opposite typed ledger contains the same digest, return `invalid / parent_kind_mismatch`; if neither typed ledger contains the head, preserve `incomplete`.
+- [ ] **Step 6: Verify merge inputs/output and child root union independently** rather than trusting stored content.
+- [ ] **Step 7: Run focused tests and full CI checks to verify GREEN.**
+- [ ] **Step 8: Commit.**
 
 ### Task 4: Hostile type-preservation controls
 
@@ -105,7 +107,7 @@ def test_kind_is_required_and_closed():
 - Consumes: `verify_weave(...)`.
 - Produces: verified relation-kind preservation and fixed-shape boundedness.
 
-- [ ] **Step 1: Add RED hostile test:** take the valid braid-parent descriptor, change `kind` from `braid` to `spine`, re-hash the parent set, merge receipt, root set, and child so all content addresses are internally self-consistent. Expected result: `invalid / parent_kind_mismatch` or equivalent wrong-verifier failure.
+- [ ] **Step 1: Add RED hostile test:** take the valid braid-parent descriptor, change `kind` from `braid` to `spine`, re-hash the parent set, merge receipt, root set, and child so all content addresses are internally self-consistent. Expected result: `invalid / parent_kind_mismatch`.
 - [ ] **Step 2: Add RED hostile test:** remove `kind` from a typed parent descriptor and re-hash dependents. Expected: `invalid / parent_descriptor_shape_mismatch`.
 - [ ] **Step 3: Add RED hostile test:** re-hash merge receipt and child around false `109 + 36 = 146`. Expected: `invalid / merge_output_mismatch`.
 - [ ] **Step 4: Add RED hostile test:** add nested `ancestry` to weave capsule and re-hash. Expected: `invalid / capsule_shape_mismatch`.
