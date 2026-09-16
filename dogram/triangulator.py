@@ -109,13 +109,13 @@ def continue_from_delta(
     if isinstance(delta, bool) or not isinstance(delta, int):
         raise ValueError("parent receipt must contain an integer delta")
 
-    required = ("carrier", "operators", "paths", "classification")
+    required = ("specimen", "carrier", "operators", "paths", "classification")
     missing = [key for key in required if key not in parent_receipt]
     if missing:
         raise ValueError(f"parent receipt is missing ancestry fields: {', '.join(missing)}")
 
     ancestry = {
-        "parent_specimen": parent_receipt.get("specimen"),
+        "parent_specimen": deepcopy(parent_receipt["specimen"]),
         "parent_carrier": deepcopy(parent_receipt["carrier"]),
         "parent_operators": deepcopy(parent_receipt["operators"]),
         "parent_paths": deepcopy(parent_receipt["paths"]),
