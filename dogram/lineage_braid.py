@@ -8,14 +8,24 @@ from __future__ import annotations
 
 import copy
 
-from dogram.lineage_spine import canonical_digest
+from dogram.lineage_spine import canonical_digest, verify_lineage
 
 
 SPECIMEN = "LINEAGE-BRAID-001"
 PARENT_SET_SCHEMA = "dogram.lineage-parent-set/v0"
 MERGE_RECEIPT_SCHEMA = "dogram.lineage-merge-receipt/v0"
 BRAID_CAPSULE_SCHEMA = "dogram.lineage-braid-capsule/v0"
+BRAID_LEDGER_SCHEMA = "dogram.lineage-braid-ledger/v0"
 PARENT_DESCRIPTOR_KEYS = {"head_digest", "root_digest", "carrier"}
+PARENT_SET_KEYS = {"schema", "specimen", "parents"}
+MERGE_RECEIPT_KEYS = {
+    "schema",
+    "specimen",
+    "operator",
+    "parent_set_digest",
+    "inputs",
+    "output",
+}
 BRAID_CAPSULE_KEYS = {
     "schema",
     "specimen",
@@ -75,7 +85,9 @@ def root_set_digest(parent_set: dict[str, object]) -> str:
         if not isinstance(parent, dict):
             raise ValueError("parent descriptor must be a mapping")
         _validate_parent_descriptor(parent)
-        roots.add(parent["root_digest"])
+        root_digest = parent["root_digest"]
+        assert isinstance(root_digest, str)
+        roots.add(root_digest)
     return canonical_digest({"roots": sorted(roots)})
 
 
@@ -129,3 +141,191 @@ def make_braid_capsule(
         "merge_receipt_digest": canonical_digest(merge_receipt),
         "root_set_digest": root_set_digest(parent_set),
     }
+
+
+def make_braid_ledger() -> dict[str, object]:
+    return {
+        "schema": BRAID_LEDGER_SCHEMA,
+        "capsules": {},
+        "parent_sets": {},
+        "merge_receipts": {},
+    }
+
+
+def _bucket(ledger: dict[str, object], name: str) -> dict[str, object]:
+    bucket = ledger.get(name)
+    if not isinstance(bucket, dict):
+        raise ValueError(f"braid ledger {name} bucket must be a mapping")
+    return bucket
+
+
+def _store(ledger: dict[str, object], bucket: str, value: dict[str, object]) -> str:
+    digest = canonical_digest(value)
+    _bucket(ledger, bucket)[digest] = copy.deepcopy(value)
+    return digest
+
+
+def store_parent_set(ledger: dict[str, object], parent_set: dict[str, object]) -> str:
+    return _store(ledger, "parent_sets", parent_set)
+
+
+def store_merge_receipt(ledger: dict[str, object], receipt: dict[str, object]) -> str:
+    return _store(ledger, "merge_receipts", receipt)
+
+
+def store_braid_capsule(ledger: dict[str, object], capsule: dict[str, object]) -> str:
+    return _store(ledger, "capsules", capsule)
+
+
+def _verification_result(
+    status: str,
+    reason: str | None,
+    *,
+    capsule: dict[str, object] | None = None,
+    parents: list[dict[str, object]] | None = None,
+    parent_head: str | None = None,
+) -> dict[str, object]:
+    parent_heads = [] if parents is None else [parent["head_digest"] for parent in parents]
+    return {
+        "status": status,
+        "reason": reason,
+        "carrier": None if capsule is None else capsule.get("carrier"),
+        "parent_count": len(parent_heads),
+        "parent_heads": parent_heads,
+        "parent_head": parent_head,
+    }
+
+
+def verify_braid(
+    head_digest: str,
+    braid_ledger: dict[str, object],
+    spine_ledger: dict[str, object],
+) -> dict[str, object]:
+    """Verify declared derivation convergence without promoting it to causality."""
+    capsules = _bucket(braid_ledger, "capsules")
+    parent_sets = _bucket(braid_ledger, "parent_sets")
+    merge_receipts = _bucket(braid_ledger, "merge_receipts")
+
+    raw_capsule = capsules.get(head_digest)
+    if raw_capsule is None:
+        return _verification_result("incomplete", "missing_braid_head")
+    if not isinstance(raw_capsule, dict):
+        return _verification_result("invalid", "capsule_not_mapping")
+    capsule = raw_capsule
+    if canonical_digest(capsule) != head_digest:
+        return _verification_result("invalid", "capsule_digest_mismatch", capsule=capsule)
+    if capsule.get("schema") != BRAID_CAPSULE_SCHEMA or capsule.get("specimen") != SPECIMEN:
+        return _verification_result("invalid", "capsule_schema_mismatch", capsule=capsule)
+    if capsule.get("carrier_origin") != "parent_set_merge":
+        return _verification_result("invalid", "carrier_origin_mismatch", capsule=capsule)
+
+    parent_set_digest = capsule.get("parent_set_digest")
+    if not isinstance(parent_set_digest, str) or not parent_set_digest:
+        return _verification_result("invalid", "invalid_parent_set_digest", capsule=capsule)
+    raw_parent_set = parent_sets.get(parent_set_digest)
+    if raw_parent_set is None:
+        return _verification_result("incomplete", "missing_parent_set", capsule=capsule)
+    if not isinstance(raw_parent_set, dict):
+        return _verification_result("invalid", "parent_set_not_mapping", capsule=capsule)
+    parent_set = raw_parent_set
+    if canonical_digest(parent_set) != parent_set_digest:
+        return _verification_result("invalid", "parent_set_digest_mismatch", capsule=capsule)
+    if set(parent_set) != PARENT_SET_KEYS:
+        return _verification_result("invalid", "parent_set_shape_mismatch", capsule=capsule)
+    if parent_set.get("schema") != PARENT_SET_SCHEMA or parent_set.get("specimen") != SPECIMEN:
+        return _verification_result("invalid", "parent_set_schema_mismatch", capsule=capsule)
+
+    parents = parent_set.get("parents")
+    if not isinstance(parents, list) or len(parents) < 2:
+        return _verification_result("invalid", "insufficient_parents", capsule=capsule)
+    try:
+        canonical_parent_set = make_parent_set(parents)
+    except ValueError:
+        return _verification_result("invalid", "invalid_parent_descriptor", capsule=capsule)
+    if canonical_parent_set != parent_set:
+        return _verification_result("invalid", "parent_set_not_canonical", capsule=capsule)
+
+    merge_digest = capsule.get("merge_receipt_digest")
+    if not isinstance(merge_digest, str) or not merge_digest:
+        return _verification_result("invalid", "invalid_merge_receipt_digest", capsule=capsule, parents=parents)
+    raw_merge = merge_receipts.get(merge_digest)
+    if raw_merge is None:
+        return _verification_result("incomplete", "missing_merge_receipt", capsule=capsule, parents=parents)
+    if not isinstance(raw_merge, dict):
+        return _verification_result("invalid", "merge_receipt_not_mapping", capsule=capsule, parents=parents)
+    merge = raw_merge
+    if canonical_digest(merge) != merge_digest:
+        return _verification_result("invalid", "merge_receipt_digest_mismatch", capsule=capsule, parents=parents)
+    if set(merge) != MERGE_RECEIPT_KEYS:
+        return _verification_result("invalid", "merge_receipt_shape_mismatch", capsule=capsule, parents=parents)
+    if merge.get("schema") != MERGE_RECEIPT_SCHEMA or merge.get("specimen") != SPECIMEN:
+        return _verification_result("invalid", "merge_receipt_schema_mismatch", capsule=capsule, parents=parents)
+    if merge.get("operator") != "sum":
+        return _verification_result("invalid", "merge_operator_mismatch", capsule=capsule, parents=parents)
+    if merge.get("parent_set_digest") != parent_set_digest:
+        return _verification_result("invalid", "merge_parent_set_mismatch", capsule=capsule, parents=parents)
+
+    spine_capsules = spine_ledger.get("capsules")
+    if not isinstance(spine_capsules, dict):
+        return _verification_result("invalid", "spine_capsules_not_mapping", capsule=capsule, parents=parents)
+
+    for parent in parents:
+        head = parent["head_digest"]
+        assert isinstance(head, str)
+        lineage = verify_lineage(head, spine_ledger)
+        if lineage.get("status") == "incomplete":
+            return _verification_result(
+                "incomplete",
+                "parent_line_incomplete",
+                capsule=capsule,
+                parents=parents,
+                parent_head=head,
+            )
+        if lineage.get("status") != "complete":
+            return _verification_result(
+                "invalid",
+                "parent_line_invalid",
+                capsule=capsule,
+                parents=parents,
+                parent_head=head,
+            )
+
+        raw_parent_head = spine_capsules.get(head)
+        if not isinstance(raw_parent_head, dict):
+            return _verification_result(
+                "incomplete",
+                "parent_line_incomplete",
+                capsule=capsule,
+                parents=parents,
+                parent_head=head,
+            )
+        if raw_parent_head.get("carrier") != parent.get("carrier"):
+            return _verification_result(
+                "invalid",
+                "parent_carrier_mismatch",
+                capsule=capsule,
+                parents=parents,
+                parent_head=head,
+            )
+        if raw_parent_head.get("root_digest") != parent.get("root_digest"):
+            return _verification_result(
+                "invalid",
+                "parent_root_mismatch",
+                capsule=capsule,
+                parents=parents,
+                parent_head=head,
+            )
+
+    expected_inputs = [parent["carrier"] for parent in parents]
+    if merge.get("inputs") != expected_inputs:
+        return _verification_result("invalid", "merge_inputs_mismatch", capsule=capsule, parents=parents)
+    if capsule.get("carrier") != merge.get("output"):
+        return _verification_result("invalid", "braid_carrier_mismatch", capsule=capsule, parents=parents)
+    try:
+        expected_root_set_digest = root_set_digest(parent_set)
+    except ValueError:
+        return _verification_result("invalid", "invalid_root_set", capsule=capsule, parents=parents)
+    if capsule.get("root_set_digest") != expected_root_set_digest:
+        return _verification_result("invalid", "root_set_digest_mismatch", capsule=capsule, parents=parents)
+
+    return _verification_result("complete", None, capsule=capsule, parents=parents)
