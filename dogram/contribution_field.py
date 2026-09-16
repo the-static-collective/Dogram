@@ -11,6 +11,15 @@ RECEIPT_SCHEMA = "dogram.contribution-field-receipt/v0-experimental"
 DELTA_SCHEMA = "dogram.contribution-field-delta/v0-experimental"
 EVENT_KEYS = {"event_id", "relation_kind", "source_ref", "subject_ref", "evidence_ref", "evidence_status", "available_from"}
 EVIDENCE_STATUSES = {"complete", "incomplete", "invalid"}
+WORKMARK_KEYS = {
+    "schema",
+    "workmark_id",
+    "contribution_root",
+    "birth_cut",
+    "birth_event_id",
+    "birth_event_digest",
+    "graph_address",
+}
 
 
 @dataclass
@@ -107,6 +116,83 @@ def build_cut(
     return {**body, "field_digest": sha256_json(body)}
 
 
+def _event_by_id(events: list[dict[str, object]], event_id: str) -> dict[str, object]:
+    matches = [event for event in events if event.get("event_id") == event_id]
+    if len(matches) != 1:
+        raise ContributionFieldInputError("BIRTH_EVENT_NOT_UNIQUE", event_id)
+    return matches[0]
+
+
+def mint_workmark(
+    events: list[dict[str, object]],
+    event_id: str,
+    birth_cut: int,
+    declared_relation_kinds: tuple[str, ...],
+) -> dict[str, object]:
+    field = build_cut(events, birth_cut, declared_relation_kinds)
+    birth = _event_by_id(field["events"], event_id)
+    root = str(birth["subject_ref"])
+    body = {
+        "schema": WORKMARK_SCHEMA,
+        "contribution_root": root,
+        "birth_cut": birth_cut,
+        "birth_event_id": event_id,
+        "birth_event_digest": sha256_json(birth),
+        "graph_address": f"entity:{root}",
+    }
+    return {**body, "workmark_id": sha256_json(body)}
+
+
+def _verify_workmark_birth(field: dict[str, object], workmark: dict[str, object]) -> None:
+    if not isinstance(workmark, dict) or set(workmark) != WORKMARK_KEYS:
+        raise ContributionFieldInputError("WORKMARK_SHAPE_MISMATCH", "invalid workmark shape")
+    events = field.get("events")
+    if not isinstance(events, list):
+        raise ContributionFieldInputError("INVALID_FIELD", "events missing")
+    birth = _event_by_id(events, str(workmark["birth_event_id"]))
+    if sha256_json(birth) != workmark["birth_event_digest"]:
+        raise ContributionFieldInputError("BIRTH_EVENT_DIGEST_MISMATCH", "birth event changed")
+    if birth["subject_ref"] != workmark["contribution_root"]:
+        raise ContributionFieldInputError("BIRTH_ROOT_MISMATCH", "birth root changed")
+
+
+def measure_workmark(field: dict[str, object], workmark: dict[str, object]) -> dict[str, object]:
+    _verify_workmark_birth(field, workmark)
+    graph = DirectedGraph.from_spec(field["graph"])
+    root_node = str(workmark["graph_address"])
+    descendants = sorted(
+        node.removeprefix("entity:")
+        for node in graph.nodes
+        if node.startswith("entity:")
+        and node != root_node
+        and graph.reachable(root_node, node)
+    )
+    closure = {str(workmark["contribution_root"]), *descendants}
+    counts: dict[str, int] = {}
+    for event in field["events"]:
+        if event["source_ref"] in closure or event["subject_ref"] in closure:
+            kind = str(event["relation_kind"])
+            counts[kind] = counts.get(kind, 0) + 1
+    measurements = {
+        "descendant_count": len(descendants),
+        "relation_kind_counts": {key: counts[key] for key in sorted(counts)},
+        "reachable_descendant_set": descendants,
+    }
+    body = {
+        "schema": RECEIPT_SCHEMA,
+        "authority": "none",
+        "workmark": workmark,
+        "cut": field["cut"],
+        "field_digest": field["field_digest"],
+        "measurement_version": "CONTRIBUTION-FIELD-001/v0",
+        "measurements": measurements,
+        "incomplete_events": field["incomplete_events"],
+        "invalid_events": field["invalid_events"],
+        "source_event_ids": [event["event_id"] for event in field["events"]],
+    }
+    return {**body, "receipt_digest": sha256_json(body)}
+
+
 __all__ = [
     "ContributionFieldInputError",
     "DELTA_SCHEMA",
@@ -114,4 +200,6 @@ __all__ = [
     "RECEIPT_SCHEMA",
     "WORKMARK_SCHEMA",
     "build_cut",
+    "measure_workmark",
+    "mint_workmark",
 ]
