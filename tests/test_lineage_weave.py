@@ -258,9 +258,7 @@ class LineageWeaveParentTests(unittest.TestCase):
 class LineageWeaveMergeTests(unittest.TestCase):
     def test_sum_merge_uses_canonical_parent_order_and_outputs_145(self):
         parent_set = sample_parent_set()
-
         receipt = make_sum_merge(parent_set)
-
         self.assertEqual(receipt["operator"], "sum")
         self.assertEqual(receipt["inputs"], [109, 36])
         self.assertEqual(receipt["output"], 145)
@@ -270,9 +268,7 @@ class LineageWeaveMergeTests(unittest.TestCase):
         parent_set = sample_parent_set()
         root_set = make_root_set(["root-a", "root-b", "root-c"])
         receipt = make_sum_merge(parent_set)
-
         capsule = make_weave_capsule(parent_set, root_set, receipt)
-
         self.assertEqual(
             set(capsule),
             {
@@ -299,12 +295,10 @@ class LineageWeaveMergeTests(unittest.TestCase):
         receipt = make_sum_merge(parent_set)
         capsule = make_weave_capsule(parent_set, root_set, receipt)
         ledger = make_weave_ledger()
-
         parent_digest = store_parent_set(ledger, parent_set)
         root_digest = store_root_set(ledger, root_set)
         receipt_digest = store_merge_receipt(ledger, receipt)
         head_digest = store_weave_capsule(ledger, capsule)
-
         self.assertEqual(ledger["parent_sets"][parent_digest], parent_set)
         self.assertEqual(ledger["root_sets"][root_digest], root_set)
         self.assertEqual(ledger["merge_receipts"][receipt_digest], receipt)
@@ -314,11 +308,9 @@ class LineageWeaveMergeTests(unittest.TestCase):
 class LineageWeaveVerificationTests(unittest.TestCase):
     def test_complete_weave_dispatches_braid_and_spine_parents(self):
         graph = build_complete_graph()
-
         result = verify_weave(
             graph["weave_head"], graph["weave_ledger"], graph["braid_ledger"], graph["spine_ledger"]
         )
-
         self.assertEqual(result["status"], "complete")
         self.assertEqual(result["carrier"], 145)
         self.assertEqual(result["parent_count"], 2)
@@ -480,8 +472,8 @@ class LineageWeaveVerificationTests(unittest.TestCase):
         ledger = copy.deepcopy(graph["weave_ledger"])
         capsule = copy.deepcopy(ledger["capsules"][graph["weave_head"]])
         merge = copy.deepcopy(ledger["merge_receipts"][capsule["merge_receipt_digest"]])
-        self.assertEqual(merge["inputs"], [0, 1])
-        merge["inputs"] = [False, True]
+        self.assertEqual(merge["inputs"], [1, 0])
+        merge["inputs"] = [True, False]
         merge_digest = canonical_digest(merge)
         ledger["merge_receipts"][merge_digest] = merge
         capsule["merge_receipt_digest"] = merge_digest
