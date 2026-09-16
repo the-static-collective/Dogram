@@ -299,6 +299,9 @@ def verify_weave(
         return _result("invalid", "capsule_schema_mismatch", capsule=capsule)
     if capsule.get("carrier_origin") != "typed_parent_set_merge":
         return _result("invalid", "carrier_origin_mismatch", capsule=capsule)
+    carrier = capsule.get("carrier")
+    if isinstance(carrier, bool) or not isinstance(carrier, int):
+        return _result("invalid", "invalid_weave_carrier", capsule=capsule)
 
     parent_set_digest = capsule.get("parent_set_digest")
     if not isinstance(parent_set_digest, str) or not parent_set_digest:
@@ -454,14 +457,19 @@ def verify_weave(
         represented_roots.extend(parent_roots)
 
     expected_inputs = [parent["carrier"] for parent in parents]
-    if merge.get("inputs") != expected_inputs:
+    merge_inputs = merge.get("inputs")
+    if not isinstance(merge_inputs, list) or any(
+        isinstance(value, bool) or not isinstance(value, int) for value in merge_inputs
+    ):
+        return _result("invalid", "merge_inputs_mismatch", capsule=capsule, parents=parents)
+    if merge_inputs != expected_inputs:
         return _result("invalid", "merge_inputs_mismatch", capsule=capsule, parents=parents)
     merge_output = merge.get("output")
     if isinstance(merge_output, bool) or not isinstance(merge_output, int):
         return _result("invalid", "merge_output_mismatch", capsule=capsule, parents=parents)
     if merge_output != sum(expected_inputs):
         return _result("invalid", "merge_output_mismatch", capsule=capsule, parents=parents)
-    if capsule.get("carrier") != merge_output:
+    if carrier != merge_output:
         return _result("invalid", "weave_carrier_mismatch", capsule=capsule, parents=parents)
 
     expected_root_set = make_root_set(represented_roots)
