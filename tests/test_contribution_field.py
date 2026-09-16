@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import unittest
 
-from dogram.contribution_field import ContributionFieldInputError, build_cut
+from dogram.contribution_field import (
+    ContributionFieldInputError,
+    build_cut,
+    measure_workmark,
+    mint_workmark,
+)
 
 
 DECLARED = ("CREATED", "REPAIRED", "ENABLED", "CHALLENGED", "CARRIED")
@@ -54,6 +59,49 @@ class ContributionFieldTests(unittest.TestCase):
     def test_bool_is_not_an_integer_cut(self) -> None:
         with self.assertRaises(ContributionFieldInputError):
             build_cut(EVENTS, True, DECLARED)
+
+
+def _workmark() -> dict[str, object]:
+    return mint_workmark(EVENTS, "e-create-x", 0, DECLARED)
+
+
+class ContributionWorkmarkTests(unittest.TestCase):
+    def test_birth_stays_identical_while_history_grows(self) -> None:
+        mark = _workmark()
+        r0 = measure_workmark(build_cut(EVENTS, 0, DECLARED), mark)
+        r1 = measure_workmark(build_cut(EVENTS, 1, DECLARED), mark)
+        self.assertEqual(r0["workmark"], r1["workmark"])
+        self.assertEqual(r0["measurements"]["reachable_descendant_set"], [])
+        self.assertEqual(r1["measurements"]["reachable_descendant_set"], ["Y", "Z"])
+        self.assertEqual(r1["measurements"]["descendant_count"], 2)
+
+    def test_relation_counts_preserve_typed_history_touching_root_closure(self) -> None:
+        receipt = measure_workmark(build_cut(EVENTS, 1, DECLARED), _workmark())
+        self.assertEqual(
+            receipt["measurements"]["relation_kind_counts"],
+            {"CARRIED": 1, "CHALLENGED": 1, "CREATED": 1, "ENABLED": 1, "REPAIRED": 1},
+        )
+
+    def test_rewritten_birth_is_invalid(self) -> None:
+        mark = _workmark()
+        rewritten = [
+            ({**event, "evidence_ref": "receipt:rewritten"} if event["event_id"] == "e-create-x" else event)
+            for event in EVENTS
+        ]
+        with self.assertRaises(ContributionFieldInputError) as caught:
+            measure_workmark(build_cut(rewritten, 1, DECLARED), mark)
+        self.assertEqual(caught.exception.reason_code, "BIRTH_EVENT_DIGEST_MISMATCH")
+
+    def test_incomplete_source_status_survives_measurement_without_edge_promotion(self) -> None:
+        events = [EVENTS[0], {**EVENTS[2], "evidence_status": "incomplete"}]
+        receipt = measure_workmark(build_cut(events, 1, DECLARED), _workmark())
+        self.assertEqual(receipt["incomplete_events"], ["e-enable-y"])
+        self.assertEqual(receipt["measurements"]["reachable_descendant_set"], [])
+
+    def test_measurements_have_no_valuation_fields(self) -> None:
+        receipt = measure_workmark(build_cut(EVENTS, 1, DECLARED), _workmark())
+        forbidden = {"value", "merit", "price", "score", "rank", "human_worth"}
+        self.assertTrue(forbidden.isdisjoint(receipt["measurements"]))
 
 
 if __name__ == "__main__":
