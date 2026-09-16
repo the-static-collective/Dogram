@@ -239,6 +239,37 @@ class LineageBraidVerificationTests(unittest.TestCase):
         self.assertEqual(result["status"], "incomplete")
         self.assertEqual(result["reason"], "missing_merge_receipt")
 
+    def test_rehashed_capsule_cannot_smuggle_recursive_ancestry(self):
+        spine_ledger, braid_ledger, head_digest, _ = build_complete_braid()
+        capsule = copy.deepcopy(braid_ledger["capsules"][head_digest])
+        capsule["ancestry"] = {"recursive": {"past": "embedded"}}
+        polluted_head = canonical_digest(capsule)
+        braid_ledger["capsules"][polluted_head] = capsule
+
+        result = verify_braid(polluted_head, braid_ledger, spine_ledger)
+
+        self.assertEqual(result["status"], "invalid")
+        self.assertEqual(result["reason"], "capsule_shape_mismatch")
+
+    def test_rehashed_wrong_sum_is_invalid_even_when_capsule_agrees(self):
+        spine_ledger, braid_ledger, head_digest, _ = build_complete_braid()
+        capsule = copy.deepcopy(braid_ledger["capsules"][head_digest])
+        old_merge_digest = capsule["merge_receipt_digest"]
+        merge = copy.deepcopy(braid_ledger["merge_receipts"][old_merge_digest])
+        merge["output"] = 110
+        wrong_merge_digest = canonical_digest(merge)
+        braid_ledger["merge_receipts"][wrong_merge_digest] = merge
+
+        capsule["carrier"] = 110
+        capsule["merge_receipt_digest"] = wrong_merge_digest
+        wrong_head = canonical_digest(capsule)
+        braid_ledger["capsules"][wrong_head] = capsule
+
+        result = verify_braid(wrong_head, braid_ledger, spine_ledger)
+
+        self.assertEqual(result["status"], "invalid")
+        self.assertEqual(result["reason"], "merge_output_mismatch")
+
 
 if __name__ == "__main__":
     unittest.main()
