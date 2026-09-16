@@ -61,4 +61,6 @@ The internal transverse/Productive-Desync research kernel also carries typed quo
 
 `TRIANGULATOR-001` adds a bounded internal order-comparison kernel for named integer operators. It receipts both composition paths, their signed delta, and an optional predeclared structure test; the frozen square/triangular specimen at carrier `5` gives `325 - 225 = 100 = T_4^2`, while a commuting addition control gives zero delta. It adds no public operator and makes no semantic or metaphysical inference from structured residue. See `research/TRIANGULATOR-001.md`.
 
+`DELTA-AS-CARRIER-001` tests one explicit continuation move: reuse a receipted delta as a new carrier while snapshotting the parent carrier, operator order, paths, delta, and classification. The frozen continuation takes `100` from `TRIANGULATOR-001`, applies `T(100)=5050`, and preserves the parent crossing so the derived carrier cannot impersonate an origin. It adds no public operator or continuation authority. See `research/DELTA-AS-CARRIER-001.md`.
+
 See `docs/superpowers/specs/2026-08-28-dogram-metaoscillatory-runtime-design.md`.
