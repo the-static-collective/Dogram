@@ -5,6 +5,7 @@ explicit integer operators compose in two orders and classifies the resulting
 delta only under a declared structure test.
 """
 
+from copy import deepcopy
 from dataclasses import dataclass
 from typing import Callable
 
@@ -96,6 +97,39 @@ def compare_order(
         "delta": delta,
         "classification": classification,
         "structure": structure,
+    }
+
+
+def continue_from_delta(
+    parent_receipt: dict[str, object],
+    operator: Operator,
+) -> dict[str, object]:
+    """Reuse a parent delta as a new carrier while retaining parent ancestry."""
+    delta = parent_receipt.get("delta")
+    if isinstance(delta, bool) or not isinstance(delta, int):
+        raise ValueError("parent receipt must contain an integer delta")
+
+    required = ("specimen", "carrier", "operators", "paths", "classification")
+    missing = [key for key in required if key not in parent_receipt]
+    if missing:
+        raise ValueError(f"parent receipt is missing ancestry fields: {', '.join(missing)}")
+
+    ancestry = {
+        "parent_specimen": deepcopy(parent_receipt["specimen"]),
+        "parent_carrier": deepcopy(parent_receipt["carrier"]),
+        "parent_operators": deepcopy(parent_receipt["operators"]),
+        "parent_paths": deepcopy(parent_receipt["paths"]),
+        "parent_delta": delta,
+        "parent_classification": deepcopy(parent_receipt["classification"]),
+    }
+
+    return {
+        "specimen": "DELTA-AS-CARRIER-001",
+        "carrier": delta,
+        "carrier_origin": "parent_delta",
+        "operator": operator.name,
+        "projection": operator(delta),
+        "ancestry": ancestry,
     }
 
 
