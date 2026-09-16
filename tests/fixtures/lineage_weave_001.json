@@ -1,0 +1,28 @@
+{
+  "braid_head": "05fd5e2d0fdf496b999ec3e472e0973440990cb97a0e1f83c4206c000a5e35bc",
+  "braid_ledger_digest": "9f2401e370d13eb603eddc4e1e1a53564f20dfbafed4cf68ee938087b797f567",
+  "braid_merge_digest": "0d38d94fdaa5bc0854cdf4ffe6222b61731a749e83b4f50cbbe66f7b0a92d750",
+  "braid_parent_set_digest": "0c611afb186b80c77b271b8a096c0f7f56e6d21ef447dbc326348c46d02afbb5",
+  "spine_ledger_digest": "427eb2cc20487e72cd54712ef1e35f39e4907d063afe9087b41525d05b90df86",
+  "verification": {
+    "carrier": 145,
+    "parent_count": 2,
+    "parent_head": null,
+    "parent_heads": [
+      "05fd5e2d0fdf496b999ec3e472e0973440990cb97a0e1f83c4206c000a5e35bc",
+      "6e935f3c13fb7cfab279d2d97eed5f666dc00df3d94e1406d55078ef905ce976"
+    ],
+    "parent_kind": null,
+    "parent_kinds": [
+      "braid",
+      "spine"
+    ],
+    "reason": null,
+    "status": "complete"
+  },
+  "weave_head": "01ec1ddfa06c9c2fdc65d60fe7d2e0490ad9efb54c4ea5fb588ab25a052d32d2",
+  "weave_ledger_digest": "71a6185e6695ec56f4bfadf27a94a8e5e0b85761278246b18bc8f04ef9ca7f6e",
+  "weave_merge_digest": "a57b4afb3b8fd2101e6375e9364bacb894663db51ec4a8793d87e143ffc11b09",
+  "weave_parent_set_digest": "dbf7609e8081cf53a1177699c35d1c20ff51cba8efa4f3f5c169ca11fe478ea6",
+  "weave_root_set_digest": "c47591ede95808ed884898984fe0e7077f2e65fff8fa3c3df6eb310b197bdf6c"
+}
