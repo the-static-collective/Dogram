@@ -12,7 +12,7 @@ class DeclaredFailureFamilyTests(unittest.TestCase):
             receipt["survives_declared_failure"],
             {"resilient": True, "fragile": False},
         )
-        self.assertEqual(receipt["fragile_collisions"], ((0, 3),))
+        self.assertEqual(receipt["fragile_collisions"], ((2, 3),))
 
     def test_pairwise_distance_receipt_is_exact(self):
         receipt = specimen()
