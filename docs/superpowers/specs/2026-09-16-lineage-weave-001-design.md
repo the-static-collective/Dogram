@@ -5,7 +5,7 @@
 
 ## Purpose
 
-Compose the existing `LINEAGE-SPINE-001` and `LINEAGE-BRAID-001` derivation layers without modifying either frozen contract.
+Compose the frozen `LINEAGE-SPINE-001` and `LINEAGE-BRAID-001` derivation layers without modifying either contract.
 
 The experiment asks:
 
@@ -13,9 +13,9 @@ The experiment asks:
 
 ## Non-goals
 
-This is not a general DAG runtime, ontology, causal graph, biological genealogy model, evidence graph, or authority system. It does not rewrite `LINEAGE-SPINE-001` or `LINEAGE-BRAID-001`. It does not add a public Dogram operator or bootstrap-registry entry.
+This is not a general DAG runtime, ontology, causal graph, biological genealogy model, evidence graph, or authority system. It does not rewrite spine or braid, and it adds no public Dogram operator or bootstrap-registry entry.
 
-## Existing law retained
+## Existing laws retained
 
 ```text
 RECEIPT != ROAD
@@ -30,21 +30,11 @@ HASH CONSISTENCY != GRAMMAR VALIDITY
 
 ## Why a new layer
 
-`LINEAGE-SPINE-001` verifies one-parent descent through crossing receipts.
+`LINEAGE-SPINE-001` verifies one-parent descent through crossing receipts. `LINEAGE-BRAID-001` verifies multi-parent convergence, but every braid parent currently points to a spine head.
 
-`LINEAGE-BRAID-001` verifies multi-parent convergence, but every parent descriptor currently points to a spine head and delegates to `verify_lineage(...)`.
+A braid child cannot become a later parent without either erasing its braid relation by pretending it is a spine root, coupling the braid verifier to every future lineage type, or replacing both frozen layers with a universal DAG runtime. `LINEAGE-WEAVE-001` instead adds a thin typed-composition layer above both existing verifiers.
 
-A braid child cannot therefore become a later braid parent without either:
-
-1. pretending the braid is a spine root, which erases relation kind;
-2. teaching the braid verifier to recursively know every future lineage type, which couples frozen layers;
-3. replacing both layers with a universal DAG runtime, which is too broad for the current evidence.
-
-`LINEAGE-WEAVE-001` chooses a thin typed-composition layer above both existing verifiers.
-
-## Topology
-
-Frozen specimen:
+## Frozen topology
 
 ```text
 5 -> 100 --\
@@ -54,9 +44,9 @@ Frozen specimen:
 4 ->  36 ---------------/
 ```
 
-The first convergence (`100 + 9 = 109`) is a verified `LINEAGE-BRAID-001` head.
+The first convergence is the verified braid `9 + 100 = 109`.
 
-The second parent (`4 -> 36`) is a verified `LINEAGE-SPINE-001` head because:
+The independent spine parent is exact because:
 
 ```text
 T(4^2) - T(4)^2 = T(16) - 10^2 = 136 - 100 = 36 = T(3)^2.
@@ -68,7 +58,7 @@ The weave merge is deliberately boring:
 109 + 36 = 145.
 ```
 
-The experiment is about relation-type preservation, not the arithmetic interest of `145`.
+`145` has no semantic privilege. It is an inspectable typed-composition specimen.
 
 ## Typed parent reference
 
@@ -81,30 +71,18 @@ carrier
 root_set_digest
 ```
 
-where `kind` is one of:
+Supported kinds are exactly:
 
 ```text
 spine
 braid
 ```
 
-### `spine` parent
+For `spine`, the head must verify through `verify_lineage(...)`. Its carrier must match the referenced spine head, and its single underlying root is normalized into a weave root-set object.
 
-- `head_digest` points into the existing spine ledger;
-- verification delegates to `verify_lineage(...)`;
-- `carrier` must match the referenced spine head;
-- the underlying single `root_digest` is normalized into a `LINEAGE-WEAVE-001` root-set object before comparing `root_set_digest`.
+For `braid`, the head must verify through `verify_braid(...)`. Its carrier must match the referenced braid head. After braid verification succeeds, the weave recovers the root digests represented by the braid parent-set and normalizes them into the weave root-set grammar.
 
-### `braid` parent
-
-- `head_digest` points into the existing braid ledger;
-- verification delegates to `verify_braid(...)`;
-- `carrier` must match the referenced braid head;
-- the underlying braid parent-set is inspected only after `verify_braid(...)` succeeds, its represented root digests are recovered, and those roots are normalized into a `LINEAGE-WEAVE-001` root-set object before comparing `root_set_digest`.
-
-The weave parent therefore does **not** reuse the braid capsule's existing `root_set_digest` bytes as though the two schemas were identical. It preserves the frozen braid contract and normalizes root identity at the weave boundary.
-
-Working laws:
+The weave deliberately does not reuse the braid capsule's root-set digest bytes as though the schemas were identical.
 
 ```text
 HEAD ADDRESS != RELATION TYPE
@@ -115,15 +93,30 @@ ROOT IDENTITY != ROOT-SET SERIALIZATION FORMAT
 
 Schema: `dogram.lineage-weave-parent-set/v0`
 
-The parent-set contains at least two unique `(kind, head_digest)` pairs and is canonically sorted by `(kind, head_digest)`.
+The set contains at least two unique `(kind, head_digest)` pairs and is canonically sorted by that pair. Canonical ordering is serialization identity only; it does not imply temporal, causal, semantic, or authority priority.
 
-Canonical ordering is serialization identity only. It does not imply causal, historical, semantic, or temporal priority.
+## Root-set object
+
+Schema: `dogram.lineage-weave-root-set/v0`
+
+```text
+schema
+specimen
+roots[]
+```
+
+`roots` are sorted unique non-empty root digests. A spine parent contributes one underlying root; a braid parent may represent several. The weave child carries the digest of the verified union.
+
+```text
+PARENT KIND != ROOT IDENTITY
+MULTIPLE EDGE KINDS != MULTIPLE ROOTS
+```
 
 ## Merge receipt
 
 Schema: `dogram.lineage-weave-merge-receipt/v0`
 
-The first specimen uses only integer `sum`:
+The first specimen supports only integer sum:
 
 ```text
 schema
@@ -134,13 +127,13 @@ inputs[]
 output
 ```
 
-`inputs` are parent carriers in canonical typed-parent order. The verifier recomputes `sum(inputs)` independently.
+Inputs are parent carriers in canonical typed-parent order. Verification recomputes the sum independently.
 
 ## Weave capsule
 
 Schema: `dogram.lineage-weave-capsule/v0`
 
-Fixed local shape:
+Every child has exactly:
 
 ```text
 schema
@@ -158,32 +151,7 @@ with:
 carrier_origin = "typed_parent_set_merge"
 ```
 
-The child does not embed parent capsules, parent histories, braid ledgers, spine ledgers, or recursive ancestry.
-
-## Root-set preservation
-
-The weave child computes a root-set digest from the union of root identities represented by all parents.
-
-A spine parent contributes one root. A braid parent may already represent several roots. The weave layer unions those roots without flattening parent relation type.
-
-Therefore:
-
-```text
-PARENT KIND != ROOT IDENTITY
-MULTIPLE EDGE KINDS != MULTIPLE ROOTS
-```
-
-To make this verifiable, the weave ledger stores a content-addressed root-set object rather than only an opaque recomputed digest.
-
-Root-set schema: `dogram.lineage-weave-root-set/v0`
-
-```text
-schema
-specimen
-roots[]
-```
-
-with sorted unique root digests.
+The child never embeds parent capsules, parent histories, spine ledgers, braid ledgers, or recursive ancestry.
 
 ## Weave ledger
 
@@ -194,82 +162,81 @@ Buckets:
 ```text
 capsules
 parent_sets
-merge_receipts
 root_sets
+merge_receipts
 ```
 
-The actual lineage and braid histories remain in their existing ledgers.
+Layer boundary:
 
 ```text
 spine ledger = one-parent crossing derivations
-braid ledger = homogeneous multi-parent convergence from spine heads
-weave ledger = typed composition across spine and braid heads
+braid ledger = multi-parent convergence from verified spine heads
+weave ledger = typed composition across verified spine and braid heads
 ```
 
 ## Verification
 
-`verify_weave(head_digest, weave_ledger, braid_ledger, spine_ledger)` returns:
+`verify_weave(head_digest, weave_ledger, braid_ledger, spine_ledger)` preserves three states.
 
 ### `complete`
 
-- weave capsule present and correctly addressed;
-- exact weave capsule shape;
-- parent-set, merge receipt, and root-set present and correctly addressed;
-- all typed parents verify under the verifier declared by `kind`;
-- parent carrier and weave-normalized root-set claims match referenced heads;
-- merge inputs/output recompute correctly;
-- child carrier equals verified merge output;
-- child root-set digest equals the verified union root-set digest.
+The weave capsule, typed parent-set, root-set, and merge receipt are present, exactly shaped, correctly content-addressed, and internally consistent; every parent verifies under its declared kind; carriers and normalized roots agree with the underlying verified heads; merge arithmetic and root union recompute exactly.
 
 ### `incomplete`
 
-Required witness material is absent, including a referenced typed parent whose underlying verifier returns `incomplete`.
-
-A declared head absent from its typed ledger and absent from the opposite typed ledger is `incomplete`, because the current witness set cannot establish whether the declaration is wrong or merely unavailable.
+Required witness material is absent. A declared head absent from both typed ledgers remains `incomplete`; absence alone does not establish a type contradiction or severance.
 
 ### `invalid`
 
-Present material contradicts the declared weave, including wrong type, invalid underlying parent, carrier mismatch, root-set mismatch, merge arithmetic mismatch, noncanonical parent-set, or shape pollution.
+Present material contradicts the declaration: wrong type, invalid underlying parent, carrier/root mismatch, noncanonical parent-set, shape pollution, bad arithmetic, bad root union, or invalid numeric carrier/input type.
 
-For kind substitution specifically: if a parent is declared `spine` but the same head digest is present as a braid capsule (or declared `braid` but present as a spine capsule), that is positive contradictory material and returns `invalid / parent_kind_mismatch`. The verifier does not infer a kind contradiction merely from absence.
+For kind substitution, if a parent is declared `spine` but its exact head exists as a braid capsule—or vice versa—that positive opposite-type witness yields:
+
+```text
+invalid / parent_kind_mismatch
+```
+
+```text
+MISSING TYPED WITNESS != PROVEN TYPE ERROR
+PRESENT OPPOSITE-TYPE WITNESS = DECLARED TYPE CONTRADICTION
+```
 
 ## Hostile controls
 
-1. **Kind erasure:** removing `kind` from a typed parent descriptor must be invalid.
-2. **Kind substitution:** relabeling a valid braid head as `spine` and re-hashing every dependent object must still be invalid because the opposite typed ledger positively identifies that head as braid material.
-3. **Wrong merge output:** re-hashed `109 + 36 = 146` must be invalid via independent arithmetic recomputation.
-4. **Recursive ancestry smuggling:** re-hashed child with an `ancestry` field must be invalid via exact shape enforcement.
-5. **Missing typed parent witness:** a head absent from both typed ledgers must return `incomplete`, not severed/false.
-6. **Root-union tamper:** a self-consistent but incorrect root-set object must be invalid because roots are re-derived from the verified parent heads.
-7. **No layer mutation:** tests must demonstrate no change to spine or braid capsule schemas.
+1. **Kind erasure:** remove `kind`, re-hash dependents; reject as invalid descriptor shape.
+2. **Kind substitution:** relabel the valid braid head as `spine`, re-hash dependents; reject as `parent_kind_mismatch`.
+3. **Wrong merge output:** re-hash `109 + 36 = 146`; reject by independent arithmetic recomputation.
+4. **Recursive ancestry smuggling:** add nested `ancestry` to a re-hashed child; reject by exact capsule shape.
+5. **Missing typed parent witness:** if the declared head is absent from both typed ledgers, return `incomplete`, not severed/false.
+6. **Root-union tamper:** store and re-hash a wrong but well-formed root set; reject by re-deriving roots from verified parents.
+7. **Boolean/integer alias:** re-hash `carrier=True` where the valid carrier is integer `1`, and re-hash boolean merge inputs such as `[True, False]` where integer inputs compare numerically equal. Reject both by requiring non-boolean integer type before numeric equality.
+8. **No layer mutation:** spine and braid capsule/verifier contracts remain untouched.
 
-## Frozen exact specimen
-
-First braid:
+The boolean control records a Python-specific but general grammar lesson:
 
 ```text
-5 -> 100
-3 -> 9
-9 + 100 = 109
+NUMERIC EQUALITY != TYPE IDENTITY
+BOOLEAN NUMERIC EQUALITY != INTEGER CARRIER IDENTITY
 ```
 
-Independent spine:
+## Frozen fixture
+
+`tests/fixtures/lineage_weave_001.json` freezes the exact specimen using canonical SHA-256 digests of the complete spine, braid, and weave ledgers, plus the critical parent-set, root-set, merge, and head addresses and final verification result.
+
+This locks the complete serialized graph contents without duplicating all ledger objects into the fixture.
+
+Frozen weave head:
 
 ```text
-4 -> 36
+01ec1ddfa06c9c2fdc65d60fe7d2e0490ad9efb54c4ea5fb588ab25a052d32d2
 ```
 
-Typed weave parents:
+Frozen verification:
 
 ```text
-(kind=braid, carrier=109)
-(kind=spine, carrier=36)
-```
-
-Declared weave:
-
-```text
-109 + 36 = 145
+status = complete
+carrier = 145
+parent_kinds = [braid, spine]
 ```
 
 ## Explicit refusals
@@ -279,6 +246,7 @@ TYPED EDGE != CAUSAL EDGE
 HEAD ADDRESS != RELATION TYPE
 ROOT IDENTITY != ROOT-SET SERIALIZATION FORMAT
 VERIFIER DISPATCH != ONTOLOGY
+NUMERIC EQUALITY != TYPE IDENTITY
 WEAVE RECEIPT != IDENTITY
 WEAVE RECEIPT != AUTHORITY
 WEAVE RECEIPT != HISTORICAL PROOF
@@ -298,6 +266,6 @@ RECONSTRUCTION != CREATION
 
 ## Strongest next frontier
 
-Do not generalize this specimen into arbitrary edge kinds yet.
+Do not generalize arbitrary edge kinds merely because this two-kind specimen works.
 
-If `LINEAGE-WEAVE-001` survives hostile testing, the next pressure is whether a typed weave child can itself participate in later typed composition without hard-coding an ever-growing dispatch table. That would motivate a verifier registry or algebra of relation kinds. It is explicitly out of scope here.
+The next real pressure is whether a verified weave head can itself become a parent without hard-coding `weave` into another growing dispatcher. That is the point where a bounded verifier registry or algebra of relation kinds may become justified; it remains out of scope here.
