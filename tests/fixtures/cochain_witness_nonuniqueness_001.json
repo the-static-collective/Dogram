@@ -1,0 +1,14 @@
+{
+  "group": "Z/3Z",
+  "coefficients": "Z/3Z",
+  "action": "trivial",
+  "beta_one_support": [[1, 1, 1]],
+  "beta_two_support": [[1, 1, 1], [1, 2, 1], [2, 1, 1], [2, 2, 1]],
+  "witness_difference_support": [[1, 2, 1], [2, 1, 1], [2, 2, 1]],
+  "delta_beta_support": [[1, 1, 2, 2], [1, 2, 2, 1], [2, 1, 1, 1], [2, 2, 1, 2]],
+  "same_endpoint_delta": true,
+  "witnesses_distinct": true,
+  "difference_is_two_cocycle": true,
+  "difference_is_one_coboundary": false,
+  "normalized_one_cochains_exhausted": 9
+}
