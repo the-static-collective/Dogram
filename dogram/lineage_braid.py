@@ -214,6 +214,8 @@ def verify_braid(
     capsule = raw_capsule
     if canonical_digest(capsule) != head_digest:
         return _verification_result("invalid", "capsule_digest_mismatch", capsule=capsule)
+    if set(capsule) != BRAID_CAPSULE_KEYS:
+        return _verification_result("invalid", "capsule_shape_mismatch", capsule=capsule)
     if capsule.get("schema") != BRAID_CAPSULE_SCHEMA or capsule.get("specimen") != SPECIMEN:
         return _verification_result("invalid", "capsule_schema_mismatch", capsule=capsule)
     if capsule.get("carrier_origin") != "parent_set_merge":
@@ -319,7 +321,12 @@ def verify_braid(
     expected_inputs = [parent["carrier"] for parent in parents]
     if merge.get("inputs") != expected_inputs:
         return _verification_result("invalid", "merge_inputs_mismatch", capsule=capsule, parents=parents)
-    if capsule.get("carrier") != merge.get("output"):
+    merge_output = merge.get("output")
+    if isinstance(merge_output, bool) or not isinstance(merge_output, int):
+        return _verification_result("invalid", "merge_output_mismatch", capsule=capsule, parents=parents)
+    if merge_output != sum(expected_inputs):
+        return _verification_result("invalid", "merge_output_mismatch", capsule=capsule, parents=parents)
+    if capsule.get("carrier") != merge_output:
         return _verification_result("invalid", "braid_carrier_mismatch", capsule=capsule, parents=parents)
     try:
         expected_root_set_digest = root_set_digest(parent_set)
