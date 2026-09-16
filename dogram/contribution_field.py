@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from .ablate import evaluate_ablate
 from .canonical import sha256_json
 from .graph import DirectedGraph
 
@@ -9,6 +10,7 @@ FIELD_SCHEMA = "dogram.contribution-field/v0-experimental"
 WORKMARK_SCHEMA = "dogram.workmark/v0-experimental"
 RECEIPT_SCHEMA = "dogram.contribution-field-receipt/v0-experimental"
 DELTA_SCHEMA = "dogram.contribution-field-delta/v0-experimental"
+ABLATION_SCHEMA = "dogram.contribution-field-ablation/v0-experimental"
 EVENT_KEYS = {"event_id", "relation_kind", "source_ref", "subject_ref", "evidence_ref", "evidence_status", "available_from"}
 EVIDENCE_STATUSES = {"complete", "incomplete", "invalid"}
 WORKMARK_KEYS = {
@@ -193,13 +195,107 @@ def measure_workmark(field: dict[str, object], workmark: dict[str, object]) -> d
     return {**body, "receipt_digest": sha256_json(body)}
 
 
+def compare_measurements(
+    before: dict[str, object],
+    after: dict[str, object],
+) -> dict[str, object]:
+    before_mark = before.get("workmark")
+    after_mark = after.get("workmark")
+    if not isinstance(before_mark, dict) or not isinstance(after_mark, dict):
+        raise ContributionFieldInputError("INVALID_MEASUREMENT_RECEIPT", "workmark missing")
+    if before_mark.get("workmark_id") != after_mark.get("workmark_id"):
+        raise ContributionFieldInputError("WORKMARK_MISMATCH", "measurement receipts address different workmarks")
+
+    before_measurements = before.get("measurements")
+    after_measurements = after.get("measurements")
+    if not isinstance(before_measurements, dict) or not isinstance(after_measurements, dict):
+        raise ContributionFieldInputError("INVALID_MEASUREMENT_RECEIPT", "measurements missing")
+
+    before_descendants = set(before_measurements.get("reachable_descendant_set", []))
+    after_descendants = set(after_measurements.get("reachable_descendant_set", []))
+    body = {
+        "schema": DELTA_SCHEMA,
+        "authority": "none",
+        "workmark_id": before_mark["workmark_id"],
+        "before_receipt_digest": before.get("receipt_digest"),
+        "after_receipt_digest": after.get("receipt_digest"),
+        "descendant_count_delta": int(after_measurements["descendant_count"]) - int(before_measurements["descendant_count"]),
+        "added_reachable_descendants": sorted(after_descendants - before_descendants),
+        "removed_reachable_descendants": sorted(before_descendants - after_descendants),
+        "relation_kind_counts_before": before_measurements["relation_kind_counts"],
+        "relation_kind_counts_after": after_measurements["relation_kind_counts"],
+        "incomplete_events_before": before.get("incomplete_events", []),
+        "incomplete_events_after": after.get("incomplete_events", []),
+        "invalid_events_before": before.get("invalid_events", []),
+        "invalid_events_after": after.get("invalid_events", []),
+    }
+    return {**body, "delta_digest": sha256_json(body)}
+
+
+def ablate_event(
+    field: dict[str, object],
+    workmark: dict[str, object],
+    event_id: str,
+) -> dict[str, object]:
+    _verify_workmark_birth(field, workmark)
+    events = field.get("events")
+    if not isinstance(events, list):
+        raise ContributionFieldInputError("INVALID_FIELD", "events missing")
+    matches = [event for event in events if event.get("event_id") == event_id]
+    if len(matches) != 1:
+        raise ContributionFieldInputError("ABLATION_EVENT_NOT_UNIQUE", event_id)
+    event = matches[0]
+
+    graph = DirectedGraph.from_spec(field["graph"])
+    root = str(workmark["graph_address"])
+    event_node = f"event:{event_id}"
+    targets = sorted(
+        node
+        for node in graph.nodes
+        if node.startswith("entity:") and node != root
+    )
+    result, _ = evaluate_ablate(
+        {
+            "graph": graph.to_spec(),
+            "target": {"kind": "node", "node": event_node},
+            "requested_targets": [[root, target] for target in targets],
+        }
+    )
+    reports = result["requested_targets"]
+    lost = sorted(
+        report["target"].removeprefix("entity:")
+        for report in reports
+        if report["reachable_before"] and not report["reachable_after"]
+    )
+    gained = sorted(
+        report["target"].removeprefix("entity:")
+        for report in reports
+        if not report["reachable_before"] and report["reachable_after"]
+    )
+    body = {
+        "schema": ABLATION_SCHEMA,
+        "authority": "none",
+        "workmark_id": workmark["workmark_id"],
+        "field_digest": field["field_digest"],
+        "removed_event_id": event_id,
+        "removed_relation_kind": event["relation_kind"],
+        "lost_root_entity_reachability": lost,
+        "gained_root_entity_reachability": gained,
+        "ablate_receipt": result,
+    }
+    return {**body, "receipt_digest": sha256_json(body)}
+
+
 __all__ = [
+    "ABLATION_SCHEMA",
     "ContributionFieldInputError",
     "DELTA_SCHEMA",
     "FIELD_SCHEMA",
     "RECEIPT_SCHEMA",
     "WORKMARK_SCHEMA",
+    "ablate_event",
     "build_cut",
+    "compare_measurements",
     "measure_workmark",
     "mint_workmark",
 ]
