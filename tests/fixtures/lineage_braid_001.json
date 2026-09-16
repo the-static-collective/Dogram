@@ -1,0 +1,157 @@
+{
+  "braid_ledger": {
+    "capsules": {
+      "05fd5e2d0fdf496b999ec3e472e0973440990cb97a0e1f83c4206c000a5e35bc": {
+        "carrier": 109,
+        "carrier_origin": "parent_set_merge",
+        "merge_receipt_digest": "0d38d94fdaa5bc0854cdf4ffe6222b61731a749e83b4f50cbbe66f7b0a92d750",
+        "parent_set_digest": "0c611afb186b80c77b271b8a096c0f7f56e6d21ef447dbc326348c46d02afbb5",
+        "root_set_digest": "0498fb692d82a2c82b1c842e3e46f25357fbf9477c5932cb27d0a3fc592b1a57",
+        "schema": "dogram.lineage-braid-capsule/v0",
+        "specimen": "LINEAGE-BRAID-001"
+      }
+    },
+    "merge_receipts": {
+      "0d38d94fdaa5bc0854cdf4ffe6222b61731a749e83b4f50cbbe66f7b0a92d750": {
+        "inputs": [
+          9,
+          100
+        ],
+        "operator": "sum",
+        "output": 109,
+        "parent_set_digest": "0c611afb186b80c77b271b8a096c0f7f56e6d21ef447dbc326348c46d02afbb5",
+        "schema": "dogram.lineage-merge-receipt/v0",
+        "specimen": "LINEAGE-BRAID-001"
+      }
+    },
+    "parent_sets": {
+      "0c611afb186b80c77b271b8a096c0f7f56e6d21ef447dbc326348c46d02afbb5": {
+        "parents": [
+          {
+            "carrier": 9,
+            "head_digest": "897c91136637aac724a773e367b32f0ff90f2b61f8760e1a838fdd3e131271ff",
+            "root_digest": "7d180fdc3919666d8ffdb5b4b35c0fc36f210f15dd92502b10ab6a8ba66958ed"
+          },
+          {
+            "carrier": 100,
+            "head_digest": "c1b47ecb3cc3394a72f5bc3c12b8d15836e0bcc0d8abebf82d0f73bde126e1d2",
+            "root_digest": "441be7baed513575c2829341c63c5219cad3c5041d9b8fa7955bb56b5e1f5a72"
+          }
+        ],
+        "schema": "dogram.lineage-parent-set/v0",
+        "specimen": "LINEAGE-BRAID-001"
+      }
+    },
+    "schema": "dogram.lineage-braid-ledger/v0"
+  },
+  "head_digest": "05fd5e2d0fdf496b999ec3e472e0973440990cb97a0e1f83c4206c000a5e35bc",
+  "merge_receipt_digest": "0d38d94fdaa5bc0854cdf4ffe6222b61731a749e83b4f50cbbe66f7b0a92d750",
+  "parent_set_digest": "0c611afb186b80c77b271b8a096c0f7f56e6d21ef447dbc326348c46d02afbb5",
+  "spine_ledger": {
+    "capsules": {
+      "0542ffb9fccc4142ea03b1962447bf042c9f717d2134e323b5151b790be40b80": {
+        "carrier": 3,
+        "carrier_origin": "declared_root",
+        "crossing_digest": null,
+        "generation": 0,
+        "parent_digest": null,
+        "root_digest": "7d180fdc3919666d8ffdb5b4b35c0fc36f210f15dd92502b10ab6a8ba66958ed",
+        "schema": "dogram.lineage-capsule/v0",
+        "specimen": "LINEAGE-SPINE-001"
+      },
+      "4949b85dfaaa0de98e422cf04409c36bb0ff22dae64e3f6f3b105e6056fc339f": {
+        "carrier": 5,
+        "carrier_origin": "declared_root",
+        "crossing_digest": null,
+        "generation": 0,
+        "parent_digest": null,
+        "root_digest": "441be7baed513575c2829341c63c5219cad3c5041d9b8fa7955bb56b5e1f5a72",
+        "schema": "dogram.lineage-capsule/v0",
+        "specimen": "LINEAGE-SPINE-001"
+      },
+      "897c91136637aac724a773e367b32f0ff90f2b61f8760e1a838fdd3e131271ff": {
+        "carrier": 9,
+        "carrier_origin": "parent_crossing_delta",
+        "crossing_digest": "000c3223a6e6346b9615b651e2b6e376709de51e3952195cfa5b8ddcecdc5eaa",
+        "generation": 1,
+        "parent_digest": "0542ffb9fccc4142ea03b1962447bf042c9f717d2134e323b5151b790be40b80",
+        "root_digest": "7d180fdc3919666d8ffdb5b4b35c0fc36f210f15dd92502b10ab6a8ba66958ed",
+        "schema": "dogram.lineage-capsule/v0",
+        "specimen": "LINEAGE-SPINE-001"
+      },
+      "c1b47ecb3cc3394a72f5bc3c12b8d15836e0bcc0d8abebf82d0f73bde126e1d2": {
+        "carrier": 100,
+        "carrier_origin": "parent_crossing_delta",
+        "crossing_digest": "04ea254ec08308c6ec89b453273c834774dfe19811c0018365e253178cf24316",
+        "generation": 1,
+        "parent_digest": "4949b85dfaaa0de98e422cf04409c36bb0ff22dae64e3f6f3b105e6056fc339f",
+        "root_digest": "441be7baed513575c2829341c63c5219cad3c5041d9b8fa7955bb56b5e1f5a72",
+        "schema": "dogram.lineage-capsule/v0",
+        "specimen": "LINEAGE-SPINE-001"
+      }
+    },
+    "receipts": {
+      "000c3223a6e6346b9615b651e2b6e376709de51e3952195cfa5b8ddcecdc5eaa": {
+        "carrier": 3,
+        "classification": "nonzero_structured",
+        "delta": 9,
+        "operators": {
+          "first": "square",
+          "second": "triangular"
+        },
+        "paths": {
+          "first_after_second": 36,
+          "second_after_first": 45
+        },
+        "specimen": "TRIANGULATOR-001",
+        "structure": {
+          "declared": true,
+          "label": "delta == triangular(carrier - 1)^2",
+          "passed": true
+        }
+      },
+      "04ea254ec08308c6ec89b453273c834774dfe19811c0018365e253178cf24316": {
+        "anchors": {
+          "022100_base3": 225,
+          "325-243": 82,
+          "3^4+1": 82,
+          "3^5": 243,
+          "T_(5^2)": 325,
+          "T_5^2": 225
+        },
+        "carrier": 5,
+        "classification": "nonzero_structured",
+        "delta": 100,
+        "operators": {
+          "first": "square",
+          "second": "triangular"
+        },
+        "paths": {
+          "first_after_second": 225,
+          "second_after_first": 325,
+          "square_after_triangular": 225,
+          "triangular_after_square": 325
+        },
+        "specimen": "TRIANGULATOR-001",
+        "structure": {
+          "declared": true,
+          "expected_delta": 100,
+          "label": "delta == triangular(carrier - 1)^2",
+          "passed": true
+        }
+      }
+    },
+    "schema": "dogram.lineage-ledger/v0"
+  },
+  "verification": {
+    "carrier": 109,
+    "parent_count": 2,
+    "parent_head": null,
+    "parent_heads": [
+      "897c91136637aac724a773e367b32f0ff90f2b61f8760e1a838fdd3e131271ff",
+      "c1b47ecb3cc3394a72f5bc3c12b8d15836e0bcc0d8abebf82d0f73bde126e1d2"
+    ],
+    "reason": null,
+    "status": "complete"
+  }
+}
