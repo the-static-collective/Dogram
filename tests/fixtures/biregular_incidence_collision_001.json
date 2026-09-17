@@ -1,0 +1,21 @@
+{
+  "id": "BIREGULAR-INCIDENCE-COLLISION-001",
+  "left": {
+    "family": [["a","b"],["b","c"],["c","d"],["d","a"]],
+    "shape": "C8",
+    "component_sizes": [8]
+  },
+  "right": {
+    "family": [["a","b"],["a","b"],["c","d"],["c","d"]],
+    "shape": "K2,2 + K2,2",
+    "component_sizes": [4,4]
+  },
+  "shared": {
+    "may_union": ["a","b","c","d"],
+    "must_intersection": [],
+    "row_degree_multiset": [2,2,2,2],
+    "column_degree_multiset": [2,2,2,2],
+    "edge_count": 8
+  },
+  "seal": "SAME MODAL EXTREMA + SAME LOADS ON BOTH SIDES != SAME INCIDENCE WIRING"
+}
