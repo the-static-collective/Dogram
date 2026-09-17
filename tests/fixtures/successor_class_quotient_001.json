@@ -1,0 +1,12 @@
+{
+  "specimen": "SUCCESSOR-CLASS-QUOTIENT-001",
+  "collapsed_class": "pending",
+  "members": ["blocked", "ready"],
+  "enabled_label": "advance",
+  "enabled_factors": true,
+  "ready_successor_class": "green",
+  "blocked_successor_class": "hold",
+  "successor_factors_advance": false,
+  "exact_one_step_factors": false,
+  "seal": "SAME ENABLED OPERATIONS != SAME EXECUTABLE FUTURES"
+}
