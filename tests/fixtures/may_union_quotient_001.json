@@ -1,0 +1,18 @@
+{
+  "specimen": "MAY-UNION-QUOTIENT-001",
+  "quotient": {
+    "left": "pending",
+    "right": "pending",
+    "green": "green",
+    "hold": "hold"
+  },
+  "action": "advance",
+  "representative_successor_classes": {
+    "left": ["green"],
+    "right": ["hold"]
+  },
+  "may_union": ["green", "hold"],
+  "must_intersection": [],
+  "exact_successor_factorization": false,
+  "seal": "THE SAME AGGREGATE MENU OF POSSIBLE FUTURES DOES NOT MEAN EVERY COLLAPSED REPRESENTATIVE HAD THE SAME MENU."
+}
