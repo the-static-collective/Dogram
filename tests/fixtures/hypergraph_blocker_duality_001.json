@@ -1,0 +1,15 @@
+{
+  "specimen": "HYPERGRAPH-BLOCKER-DUALITY-001",
+  "vertices": [0, 1, 2, 3],
+  "distinction_supports": [[0, 1], [1, 2], [2, 3]],
+  "minimal_retained_view_sets": [[0, 2], [1, 2], [1, 3]],
+  "double_blocker": [[0, 1], [1, 2], [2, 3]],
+  "involution_holds": true,
+  "refusals": [
+    "TRANSVERSAL != COMPLETE HISTORY",
+    "HYPEREDGE != CAUSAL GROUP",
+    "MINIMAL HITTING SET != MINIMUM TRUTH",
+    "BLOCKER DUALITY != EVIDENCE DUALITY",
+    "DISTINCTION SUPPORT != INDEPENDENT WITNESS SET"
+  ]
+}
