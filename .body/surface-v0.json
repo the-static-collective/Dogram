@@ -1,0 +1,76 @@
+{
+  "schema": "body.surface/v0",
+  "organ": "dogram",
+  "owner": "the-static-collective/Dogram",
+  "publication": {
+    "status": "owner-published",
+    "standard": "static-collective/body-surface/v0",
+    "scope": "interface-declaration"
+  },
+  "provides": [
+    {
+      "kind": "calculation-receipt",
+      "protocol": "dogram.receipt",
+      "version": "v0"
+    }
+  ],
+  "needs": [
+    {
+      "kind": "calculation-specimen",
+      "protocol": "dogram.specimen",
+      "version": "v0"
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "specimen-in",
+      "direction": "accept",
+      "kind": "calculation-specimen",
+      "protocol": "dogram.specimen",
+      "version": "v0"
+    },
+    {
+      "name": "receipt-out",
+      "direction": "emit",
+      "kind": "calculation-receipt",
+      "protocol": "dogram.receipt",
+      "version": "v0"
+    }
+  ],
+  "measure": {
+    "declared": [
+      {
+        "dimension": "public-operator-count",
+        "value": 4,
+        "unit": "operators"
+      },
+      {
+        "dimension": "authority-mode",
+        "value": "calculation-only",
+        "unit": "state"
+      }
+    ],
+    "observed": []
+  },
+  "receipts": [
+    {
+      "kind": "owner-contract",
+      "coordinate": "README.md"
+    }
+  ],
+  "residual_fog": [
+    "Dogram does not currently publish a current-organ manifest; pulse-time occurrence binding must use attributable repository state."
+  ],
+  "non_authorities": [
+    "calculation != meaning",
+    "receipt != evidence",
+    "overlap != experiment authority"
+  ],
+  "evidence": [
+    {
+      "kind": "owner-readme",
+      "coordinate": "README.md"
+    }
+  ],
+  "authority": "none"
+}
