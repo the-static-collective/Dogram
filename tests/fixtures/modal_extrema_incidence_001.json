@@ -1,0 +1,12 @@
+{
+  "specimen": "MODAL-EXTREMA-INCIDENCE-001",
+  "universe": ["a", "b", "c"],
+  "left_family": [["a", "b"], ["a", "c"]],
+  "right_family": [["a"], ["a", "b", "c"]],
+  "shared_may_union": ["a", "b", "c"],
+  "shared_must_intersection": ["a"],
+  "left_member_sizes": [2, 2],
+  "right_member_sizes": [1, 3],
+  "exact_families_equal": false,
+  "seal": "SAME MAY UNION + SAME MUST INTERSECTION != SAME REPRESENTATIVE SUCCESSOR FAMILY"
+}
