@@ -21,6 +21,11 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Compile
         run: python -m compileall -q dogram tests scripts
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Local Toaster adapter controls
+        run: node --test tests/toaster-experiment.test.cjs
       - name: Constitutional floor
         run: |
           python - <<'PY'

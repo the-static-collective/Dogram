@@ -1,0 +1,459 @@
+{
+  "comparisons": {
+    "duplicate_fraction": {
+      "receipt": {
+        "consumed_inputs": [
+          "inputs.axis_a",
+          "inputs.axis_b",
+          "inputs.cells.00",
+          "inputs.cells.01",
+          "inputs.cells.10",
+          "inputs.cells.11"
+        ],
+        "input_digest": "sha256:7a04416e0c9ed81e06626601aaf6af5511fe53c3183b2f27c28d5fa72494c5fc",
+        "operator": "rectangle",
+        "operator_version": 1,
+        "residuals": [],
+        "result": {
+          "interaction_detected": false,
+          "mixed_delta": {
+            "kind": "integer",
+            "value": 0
+          },
+          "mode": "numeric"
+        },
+        "schema": "dogram.receipt/v0",
+        "specimen_id": "dogram-toaster-pair-001:duplicate_fraction",
+        "status": "OK",
+        "warnings": []
+      },
+      "specimen": {
+        "assumptions": [
+          "Finite sampled-pixel comparison only; no artistic or causal verdict."
+        ],
+        "inputs": {
+          "axis_a": "motion.grammar",
+          "axis_b": "camera.grammar",
+          "cells": {
+            "00": {
+              "kind": "integer",
+              "value": 0
+            },
+            "01": {
+              "kind": "integer",
+              "value": 0
+            },
+            "10": {
+              "kind": "integer",
+              "value": 0
+            },
+            "11": {
+              "kind": "integer",
+              "value": 0
+            }
+          }
+        },
+        "metadata": {
+          "adapter": "toaster-paired-render/v0",
+          "metric": "duplicate_fraction"
+        },
+        "operator": "rectangle",
+        "operator_version": 1,
+        "schema": "dogram.specimen/v0",
+        "specimen_id": "dogram-toaster-pair-001:duplicate_fraction"
+      }
+    },
+    "split_luma_coverage": {
+      "receipt": {
+        "consumed_inputs": [
+          "inputs.axis_a",
+          "inputs.axis_b",
+          "inputs.cells.00",
+          "inputs.cells.01",
+          "inputs.cells.10",
+          "inputs.cells.11"
+        ],
+        "input_digest": "sha256:c6d95d72839aea6b02b74956637792e4cd83a8bea302982a85cf1ba8c470c048",
+        "operator": "rectangle",
+        "operator_version": 1,
+        "residuals": [],
+        "result": {
+          "interaction_detected": true,
+          "mixed_delta": {
+            "denominator": 256,
+            "kind": "rational",
+            "numerator": 1
+          },
+          "mode": "numeric"
+        },
+        "schema": "dogram.receipt/v0",
+        "specimen_id": "dogram-toaster-pair-001:split_luma_coverage",
+        "status": "OK",
+        "warnings": []
+      },
+      "specimen": {
+        "assumptions": [
+          "Finite sampled-pixel comparison only; no artistic or causal verdict."
+        ],
+        "inputs": {
+          "axis_a": "motion.grammar",
+          "axis_b": "camera.grammar",
+          "cells": {
+            "00": {
+              "denominator": 256,
+              "kind": "rational",
+              "numerator": 3
+            },
+            "01": {
+              "denominator": 128,
+              "kind": "rational",
+              "numerator": 1
+            },
+            "10": {
+              "denominator": 128,
+              "kind": "rational",
+              "numerator": 1
+            },
+            "11": {
+              "denominator": 128,
+              "kind": "rational",
+              "numerator": 1
+            }
+          }
+        },
+        "metadata": {
+          "adapter": "toaster-paired-render/v0",
+          "metric": "split_luma_coverage"
+        },
+        "operator": "rectangle",
+        "operator_version": 1,
+        "schema": "dogram.specimen/v0",
+        "specimen_id": "dogram-toaster-pair-001:split_luma_coverage"
+      }
+    },
+    "temporal_change": {
+      "receipt": {
+        "consumed_inputs": [
+          "inputs.axis_a",
+          "inputs.axis_b",
+          "inputs.cells.00",
+          "inputs.cells.01",
+          "inputs.cells.10",
+          "inputs.cells.11"
+        ],
+        "input_digest": "sha256:add2cf83f4fc87b5cc9689d4734275cf566a8e2ef368d1d96ea462eb8ac7eb62",
+        "operator": "rectangle",
+        "operator_version": 1,
+        "residuals": [],
+        "result": {
+          "interaction_detected": true,
+          "mixed_delta": {
+            "denominator": 3378240,
+            "kind": "rational",
+            "numerator": 113
+          },
+          "mode": "numeric"
+        },
+        "schema": "dogram.receipt/v0",
+        "specimen_id": "dogram-toaster-pair-001:temporal_change",
+        "status": "OK",
+        "warnings": []
+      },
+      "specimen": {
+        "assumptions": [
+          "Finite sampled-pixel comparison only; no artistic or causal verdict."
+        ],
+        "inputs": {
+          "axis_a": "motion.grammar",
+          "axis_b": "camera.grammar",
+          "cells": {
+            "00": {
+              "denominator": 1689120,
+              "kind": "rational",
+              "numerator": 14999
+            },
+            "01": {
+              "denominator": 3378240,
+              "kind": "rational",
+              "numerator": 33739
+            },
+            "10": {
+              "denominator": 1689120,
+              "kind": "rational",
+              "numerator": 17203
+            },
+            "11": {
+              "denominator": 168912,
+              "kind": "rational",
+              "numerator": 1913
+            }
+          }
+        },
+        "metadata": {
+          "adapter": "toaster-paired-render/v0",
+          "metric": "temporal_change"
+        },
+        "operator": "rectangle",
+        "operator_version": 1,
+        "schema": "dogram.specimen/v0",
+        "specimen_id": "dogram-toaster-pair-001:temporal_change"
+      }
+    }
+  },
+  "observations": {
+    "00": {
+      "duplicate_fraction": {
+        "kind": "integer",
+        "value": 0
+      },
+      "frame_count": 24,
+      "height": 18,
+      "quantization_step": 16,
+      "quantized_frame_sha256": [
+        "c7acf6f8dfe4d47e55c3c92e50bc3820c53de801cead7a14d1389b0dca2d9100",
+        "0e2dd08aaa6e58d19377154fb8c6529eec3d1a8931cfa436666bb1dfb6aed5a5",
+        "42fec864a939186212f721cfa113ae842aaab8019c4fc5db3d95493bdc081011",
+        "83a638aebc28c482361b9928c1b93adffbe4073b77524682b5c3c7f07af727d7",
+        "5d5399c3f96bd9530bc4ea4c103d29574556647795ab26902f154cfa63415fe7",
+        "aeeaa9ec4f75f7c5f054a82213ab444524046612f57427a670cfb522bd612a8e",
+        "1f1d4edd2aa0bf4aaaf77fd1267f06476b737cb4d7f4bf0588b4a7945cf37677",
+        "78d92fed3893966863aed2289cacc27fd66692d224181f60b6a7d35d9962dfe1",
+        "bb7070ee0818d8414a0f2e31646a7f2ffaa67a3fc0f60549b6ea99e008db5f32",
+        "7a373100c6753093e659133a03b7bca8a8314988233f12fac14d4c2ae4b06913",
+        "8efa43f25cf84ce8c404eb620fe84759ec95b59147b96837a756382f75bc6b62",
+        "5de88e699021c47552a7790c0045f40011d072725d6ca1a5a891af74c32b0609",
+        "8acf0261c92a9dcef371d8621cb043cf0b34dd1a801c3e8df4a418997fdf5383",
+        "87254f65c9b459971ac091daa9c16c9e1b90b6bd1eca8f8ef448eaf12c91c44f",
+        "15ffc96efa4b6ef7f84e51a8b3e2300743c6007613563e327fe71d7b1b97de21",
+        "9546bdd923d9b90d4584b7a18f21e6aa1e333cd36aa5d716caf27b82c2878b39",
+        "87fb7cc2e44c276c3797e167433316001da65a67a36d6be63c096e89c67cc915",
+        "6a69da7f026d56ade26da9663d22149e1fa6e5fda5624f10bf4b7e98a3b60189",
+        "787f703e83128505b3dad5ca1d90e64564bf5403510b88dea4261e9aca5fe840",
+        "928ba101f42bff05aea040e4d1c21f8e8cea151fd5355659bc43a65c4568dfdb",
+        "e9d0e30d6abe3391a28c93e585c9cac2763e72214700e5155b8787492543321b",
+        "940e934cb8f9ba0f5be0c6266e0c0e94a77e06a34473ecf8ca9b0cf38331179c",
+        "3b210ba036cd203d2a2243f53d71ce1a7e58bcf9248fc50a845798313bf1a950",
+        "289eb786559bb2d76a0ccb987efb518279cf1bec91fb457068a0c959b36b33ad"
+      ],
+      "smallest_sampled_period": null,
+      "split_luma_coverage": {
+        "denominator": 256,
+        "kind": "rational",
+        "numerator": 3
+      },
+      "split_luma_state_capacity": 256,
+      "temporal_change": {
+        "denominator": 1689120,
+        "kind": "rational",
+        "numerator": 14999
+      },
+      "unique_quantized_frames": 24,
+      "visited_split_luma_states": [
+        [
+          3,
+          6
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "width": 32
+    },
+    "01": {
+      "duplicate_fraction": {
+        "kind": "integer",
+        "value": 0
+      },
+      "frame_count": 24,
+      "height": 18,
+      "quantization_step": 16,
+      "quantized_frame_sha256": [
+        "7aa8ba5ae17fef8d5adc18c14a2c3f9f628205efaf58d0f75999427d53895e87",
+        "5f2998cd2c5ae28cfb0ee0552e98ff1917eb9e7ae906dbfeb40584a1bce038c7",
+        "a24088d6e753de3ab93d3abad1146245a3a73160672f1b180c981c358c066020",
+        "f5220cf5489b419bf28306bb40bfda61682dd551d2f5838ffb18e189f82ddb6f",
+        "a2b5044a8c6df4f870f2d85660cb31717d2b94525899a4f83de450e365526f08",
+        "7a762da1ef823b1934ed1af65c933a187b82f95b4777907224c9636080a6c79d",
+        "3f7f41b556d2c84ab5efcde168644bfd2daa62c8b928c4a64f64d88624661b8b",
+        "9f8e624093295dab593c993903abd6d6e1b14d2ae7e876587bebbd116a2f81b2",
+        "6d31e3a2cbb19378d67d58fc3335ef0b49a48fa21035418f7f6921aa3b09bca1",
+        "68b805a43870d0fb7bd5f197734545aac095a8dc1502f6c4a95e077d54501540",
+        "51adb78e7690ca00ef70dbafe76c9fca44220832215e8992b93dc24883c40f54",
+        "0f6f660e7b2310fc35ec1f9614d54e2476dfae5b58254dd2a575e78978a8b440",
+        "53cb6960e86f19a03c57d40c0d01945ed24b2516e15105adceb9a6f29d61c6b0",
+        "6791b1eefe195ccdee33e952ee38f317c37fbdb59e9dd01905e4c7d8733cbdc5",
+        "6f3c3ef89b9a9c5e8df9812420d2d146aeb0b7957434497a1289b87e176a9f99",
+        "09d6eca2168e7e40b05cb8f2585da7ec15fb652aa41952beb3548fee3fd09216",
+        "24ff7c233f17781182d9cd61bfe28ca7c229cdda82127e7211ebfdcaaa99bfa4",
+        "0626e542ecf0c508b2f0b10b5d81dbde521b293c08a672ca36a044d033e23a6a",
+        "11d2bb0d15f7123bba04783cbf5d5bee05b70eb928412f7bd95e0ab5164199d6",
+        "c71ca729192f9bf2c2cf1e007d78ba6e49b583fdf3022422b0d61bf229b7cb1d",
+        "d37a30559473628442b1a7dc30dd2c51aa7ce58bf8d5cb4f813184bd9c66e6a2",
+        "517e90cc19c225798863465f2120ab2711ef3b2aac17dbaf7c98de1844c23db0",
+        "73f353f6480078795942c33c10889853b1221d9b07a18afd9bab9da18134c5f0",
+        "bd9fa721620c093db3b0588a6824933b75b4cf356a9ce0f01a747bb430427e42"
+      ],
+      "smallest_sampled_period": null,
+      "split_luma_coverage": {
+        "denominator": 128,
+        "kind": "rational",
+        "numerator": 1
+      },
+      "split_luma_state_capacity": 256,
+      "temporal_change": {
+        "denominator": 3378240,
+        "kind": "rational",
+        "numerator": 33739
+      },
+      "unique_quantized_frames": 24,
+      "visited_split_luma_states": [
+        [
+          3,
+          5
+        ],
+        [
+          3,
+          6
+        ]
+      ],
+      "width": 32
+    },
+    "10": {
+      "duplicate_fraction": {
+        "kind": "integer",
+        "value": 0
+      },
+      "frame_count": 24,
+      "height": 18,
+      "quantization_step": 16,
+      "quantized_frame_sha256": [
+        "38e4f9b3c55b9bfcf8b270721904f77cf3225d3e0cbf5b012210342e5084985b",
+        "a806b215fe571bbae64eaa67a1a5076985a7caa1f64d5f3a86079d9d76c1a048",
+        "33bfb365d832453d90eb27ac4023e618feb0ca211e012dd77db7782b7e7e8a3c",
+        "ab069d68cffd688846ad298e6e4af993e714c247713361cef1c9716c0701135c",
+        "b85215a96f8225876efa55510673ed0c17b73a29aa6c738cc6303f4113b248aa",
+        "38bd419260c24e489e8ba977399810541ea66aa0bd5fbaa58bb57679310f1030",
+        "11c9a751c745a687d0cdda9bfd578aba90fd90c34552e7f3b503bc96f7a1fcc0",
+        "459509ef1773302bfa4f6cfbe8808307a1930092259f83a020685cea58e964fc",
+        "e0960eb9cb06ea236c2b7c05886d73612e391343a0a1f530e3ad73fbe5bd95aa",
+        "47430efb589bb5f616bf8b3bbbee2800f90b52ce5403e63b655deaf02170c04d",
+        "afd82d6326d6a9b339be2840acabd8b1649d97bd33cd9a60545d376acd0155f3",
+        "a33f5d741c3c5c0a37fdd74025388a878e94790fbdad97305abd48ddf58369b6",
+        "bc619b6029647f6caf6567b5258b4a1b93abfb04608de3a909bbb0b10b1e25be",
+        "7a4cd6f836e71f0ff4ad84217cd8a2b46366216cad1e104705d50cfbb2aae5d0",
+        "5be813202295744e0d0955ee0dace5bf79798a8bbd83dc4b4a72cea1feccf63a",
+        "5b249d7984dc0e3cd7d7695797644fdee82579e0de4029ccc7cda493744cc8bf",
+        "8a31db21a0806ac1d55851c6cd28e15b16cf1d269b7d24bff88d4cbba3604bbe",
+        "e9cd231784c726ede54de64ebffa8144679241ff4fc51cfad16d0cc9038c6203",
+        "01bb3ca4b9ea5656ea5764f441910a04a37d6c68ea4e115e2d979f7a70baf4c7",
+        "1444da9620ae34dfd3238bb4213e26e6ff263d200b37b9c2d1fe6dee84ba5025",
+        "6a1a89cdb6b4fe15ff6b5e0ef8c130d7930575b176cd07cf2f82736c6432316d",
+        "fbfb27193630e07387880c8e18d818dc83412fd15ed3bb0cb04e469324fa7414",
+        "deb6fab0d2b70c82ba3f219e72946b4e6abeaddd157a8052f3e594d4a7ea5091",
+        "224b46e2230d19e42bb0cc6310dc40160d6dbf2e797558d6307279c19d7afd87"
+      ],
+      "smallest_sampled_period": null,
+      "split_luma_coverage": {
+        "denominator": 128,
+        "kind": "rational",
+        "numerator": 1
+      },
+      "split_luma_state_capacity": 256,
+      "temporal_change": {
+        "denominator": 1689120,
+        "kind": "rational",
+        "numerator": 17203
+      },
+      "unique_quantized_frames": 24,
+      "visited_split_luma_states": [
+        [
+          3,
+          5
+        ],
+        [
+          3,
+          6
+        ]
+      ],
+      "width": 32
+    },
+    "11": {
+      "duplicate_fraction": {
+        "kind": "integer",
+        "value": 0
+      },
+      "frame_count": 24,
+      "height": 18,
+      "quantization_step": 16,
+      "quantized_frame_sha256": [
+        "3512daf38cd439a229594744c1eb406e818f383ff2686f667775fcf586c660ed",
+        "adaa1552bfa1656e406031b902afaf37400ce7598ac1a45ffc92bc3759f83d79",
+        "511c9796ddb98041c3d1505c5d05db43cc53edafb06364386ca7f5a7d4a6bf1c",
+        "20dfa93576eb364294afc779d0b90e2d81bf2af8299f28ed30ecd9c96de5c914",
+        "96c49c2f72d4225797f84d8d983e62395642921a1f707ad741703187480ea26a",
+        "6e78ea42acc942e09bf49b3447be8fdb29bc94dca731fb43cf82d12d557ba482",
+        "d70a62ceccd9d90a55e8ecbc01f3932666f113bd885563748365a2d2f2b80fbe",
+        "9d143ccfc9bf755711f3e7b36cf34752ac7a91a739a27a49bf30c6d9b5be9f28",
+        "cdda821594d9429cc6fe82503ada74027307c62ba2625b6adcdcf32c262c8a6d",
+        "b87959ac671d224692ceb4bacb272ae2c9888b588b27e671d880379bdc3a147a",
+        "061aed4a0025afd6ba4b900362be50750d815c19bead6f0a1540124bcdb8b62e",
+        "21f0c5d95a753704332193538ca6d69771bf19004b98eaca17e8af3caea10317",
+        "be719a36475cc5708dbfec417f87642f2287cc545635cef6d92a559bcbaa1fe1",
+        "9bff4933304e91acd9d2ea5e30760ec5cfcedbce5d44ead2c8a980edb6b0ec2b",
+        "8ff9a6ab4f79db500342847f96918877ffc08d761a1e3a28485d7fb4c2266ed4",
+        "392cc64350681449423d120e0ddb5999c27d0c50638bc0f1df1c43dcb5be4cec",
+        "014012eeea2696ceddfbba05e4b2a488a2252d6860f5fae467fabe1f2dd2a61d",
+        "658028f6f4b12f0dd6631cb403678fe6f2ccc3b83d0e9ff4ae35d5a2899f59fb",
+        "69a8367a38a8db0a42df39c192f82d36d908bd3cbf587c7c6ad6946873076afb",
+        "3073f866e683de1df5227ce7a7d51fe2fdc2ca97e84a144e4464b54a97c5503f",
+        "40e5b7584dc71875fe123a38ec9a57aa9e8b60d01cc44d43945995dda372ae37",
+        "56a9ad0133fc46b7c5423cfc0fab4c34f87989ad1c45a47c94abac2ed245583c",
+        "99ca9b1fac9817bb3a99bdbfc9070b623424513abce4ecf764f283732bac1e11",
+        "17b6750465f14d718e74a5a0042a9c4a1c2ccdf709302e153fa2dc7f54ccbbee"
+      ],
+      "smallest_sampled_period": null,
+      "split_luma_coverage": {
+        "denominator": 128,
+        "kind": "rational",
+        "numerator": 1
+      },
+      "split_luma_state_capacity": 256,
+      "temporal_change": {
+        "denominator": 168912,
+        "kind": "rational",
+        "numerator": 1913
+      },
+      "unique_quantized_frames": 24,
+      "visited_split_luma_states": [
+        [
+          3,
+          5
+        ],
+        [
+          3,
+          6
+        ]
+      ],
+      "width": 32
+    }
+  },
+  "provenance": {
+    "manifest_sha256": "191f2d097515803e0fbc7e3f2e01acd636d33de19c8131cece2aaba58bdc9491",
+    "plan_sha256": "d88a08abb36c339bb8e11c0da2546d015ff9729718f1ff6d528267ff1f9b918d",
+    "source_kind": "synthetic-sine-control",
+    "toaster_commit": "e8e8fb0fa3c13c98aae8c3ca5e98cb4de9f19031"
+  },
+  "schema": "dogram.toaster-measured-fixture/v0",
+  "scope": "Measured synthetic production-render specimen, not an artistic or causal verdict.",
+  "video_sha256": {
+    "00": "c0869e246000ceba13018bce786c1474c00012d8ba8b1f7b880cfeb6972a48cb",
+    "01": "f3672457d627599d13c8cb83a5a962caa37088ff3bee9be92e00ffabfe5f4342",
+    "10": "f2109538cef951f69e9e23b7d5d7035e9d1049efa3b92e851960c5485661dc10",
+    "11": "68b245b14395d4f9457c73d667f7f7b992c01a040c0c7d6ea549b45cfdcdb6ca"
+  }
+}
