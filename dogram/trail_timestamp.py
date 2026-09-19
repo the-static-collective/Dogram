@@ -16,9 +16,9 @@ from typing import Any
 
 MODEL_VERSION = "TRAIL-TIMESTAMP-001/v1"
 TIME_MODEL = "UTC_as_UT1_GMST_approx_mean_equinox_of_date"
-RA_PATTERN = re.compile(r"^(\\d{2}):(\\d{2}):(\\d{2})$")
+RA_PATTERN = re.compile(r"^(\d{2}):(\d{2}):(\d{2})$")
 UTC_PATTERN = re.compile(
-    r"^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"
+    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$"
 )
 
 
