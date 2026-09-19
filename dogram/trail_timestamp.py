@@ -207,17 +207,50 @@ def create_trail(specimen: dict[str, Any]) -> dict[str, Any]:
         raise TrailTimestampError("INVALID_SPECIMEN", "events must be a nonempty array")
     ids: set[str] = set()
     receipts = []
-    for event in events:
-        receipt = create_trail_receipt(event, specimen.get("observer"),
-                                       specimen.get("target"), specimen.get("decoder"))
+    previous_entry_hash: str | None = None
+    previous_utc: datetime | None = None
+    for index, event in enumerate(events):
+        receipt = create_trail_receipt(
+            event, specimen.get("observer"), specimen.get("target"), specimen.get("decoder")
+        )
         event_id = receipt["event"]["event_id"]
         if event_id in ids:
             raise TrailTimestampError("DUPLICATE_EVENT_ID", event_id)
         ids.add(event_id)
+        instant = _utc(receipt["event"]["utc"])
+        if previous_utc is None:
+            elapsed_microseconds = None
+        else:
+            elapsed = instant - previous_utc
+            elapsed_microseconds = (
+                elapsed.days * 86_400_000_000
+                + elapsed.seconds * 1_000_000
+                + elapsed.microseconds
+            )
+            if elapsed_microseconds < 0:
+                raise TrailTimestampError(
+                    "NON_CHRONOLOGICAL_TRAIL",
+                    "events must be supplied in nondecreasing UTC order",
+                )
+        link = {
+            "sequence": index,
+            "previous_entry_sha256": previous_entry_hash,
+            "receipt_sha256": receipt["receipt_sha256"],
+        }
+        serialized = json.dumps(link, sort_keys=True, separators=(",", ":"))
+        entry_hash = sha256(serialized.encode("utf-8")).hexdigest()
+        receipt["trail_link"] = {
+            **link,
+            "microseconds_since_previous_event": elapsed_microseconds,
+            "entry_sha256": entry_hash,
+        }
         receipts.append(receipt)
+        previous_utc = instant
+        previous_entry_hash = entry_hash
     return {
         "trail_version": MODEL_VERSION,
         "receipt_count": len(receipts),
+        "trail_sha256": previous_entry_hash,
         "receipts": receipts,
     }
 
