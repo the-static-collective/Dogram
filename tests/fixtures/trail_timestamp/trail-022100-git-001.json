@@ -1,0 +1,46 @@
+{
+  "specimen": "TRAIL-TIMESTAMP-001-022100",
+  "decoder": "EXPLORATORY_POST_HOC: 022|100 -> +22deg latitude,+100deg east longitude; 022100 -> RA 02:21:00; declination +22deg independently assumed equal to latitude for demonstration only",
+  "observer": {
+    "latitude_deg": 22,
+    "longitude_deg": 100,
+    "location_basis": "HYPOTHETICAL_POINT_FROM_GLYPH_NOT_USER_LOCATION"
+  },
+  "target": {
+    "ra_hms": "02:21:00",
+    "declination_deg": 22,
+    "declination_basis": "ASSUMED_EQUAL_TO_LATITUDE_FOR_DEMO_NOT_INDEPENDENT_SKY_EVIDENCE"
+  },
+  "events": [
+    {
+      "event_id": "DOGRAM-PR49-MERGE",
+      "source_kind": "GITHUB_PR_MERGED_AT",
+      "source_url": "https://github.com/the-static-collective/Dogram/pull/49",
+      "utc": "2026-08-31T22:39:16Z"
+    },
+    {
+      "event_id": "DOGRAM-PR50-MERGE",
+      "source_kind": "GITHUB_PR_MERGED_AT",
+      "source_url": "https://github.com/the-static-collective/Dogram/pull/50",
+      "utc": "2026-08-31T22:39:59Z"
+    },
+    {
+      "event_id": "BANANASPORK-PR11-MERGE",
+      "source_kind": "GITHUB_PR_MERGED_AT",
+      "source_url": "https://github.com/the-static-collective/BananaSpork/pull/11",
+      "utc": "2026-09-19T04:12:25Z"
+    },
+    {
+      "event_id": "JUBILEE-VM-PR6-MERGE",
+      "source_kind": "GITHUB_PR_MERGED_AT",
+      "source_url": "https://github.com/the-static-collective/Jubilee-Engine-VM/pull/6",
+      "utc": "2026-09-19T04:51:52Z"
+    },
+    {
+      "event_id": "JUBILEE-VM-PR8-MERGE",
+      "source_kind": "GITHUB_PR_MERGED_AT",
+      "source_url": "https://github.com/the-static-collective/Jubilee-Engine-VM/pull/8",
+      "utc": "2026-09-19T05:07:34Z"
+    }
+  ]
+}
