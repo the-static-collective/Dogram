@@ -28,6 +28,10 @@ class TrailTimestampTests(unittest.TestCase):
         second = create_trail(self.specimen)
         self.assertEqual(first, second)
         self.assertEqual(first["receipt_count"], 5)
+        self.assertEqual(first["trail_sha256"], first["receipts"][-1]["trail_link"]["entry_sha256"])
+        self.assertIsNone(first["receipts"][0]["trail_link"]["previous_entry_sha256"])
+        self.assertEqual(first["receipts"][1]["trail_link"]["previous_entry_sha256"], first["receipts"][0]["trail_link"]["entry_sha256"])
+        self.assertEqual(first["receipts"][1]["trail_link"]["microseconds_since_previous_event"], 43_000_000)
         self.assertEqual(
             [r["event"]["utc"] for r in first["receipts"]],
             [e["utc"] for e in self.specimen["events"]],
@@ -82,6 +86,13 @@ class TrailTimestampTests(unittest.TestCase):
         second = create_trail(modified)["receipts"][0]
         self.assertEqual(first["projection"], second["projection"])
         self.assertNotEqual(first["receipt_sha256"], second["receipt_sha256"])
+
+    def test_trail_refuses_backwards_time(self) -> None:
+        backwards = deepcopy(self.specimen)
+        backwards["events"][0], backwards["events"][1] = backwards["events"][1], backwards["events"][0]
+        with self.assertRaises(TrailTimestampError) as caught:
+            create_trail(backwards)
+        self.assertEqual(caught.exception.reason_code, "NON_CHRONOLOGICAL_TRAIL")
 
     def test_rejects_invalid_coordinates_and_time(self) -> None:
         scenarios = [
