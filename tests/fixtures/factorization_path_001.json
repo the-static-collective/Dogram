@@ -1,0 +1,15 @@
+{
+  "id": "FACTORIZATION-PATH-001",
+  "carrier": "S3 acting by conjugation on its order-2 subgroups",
+  "source": "< (01) >",
+  "path_a": ["(012)", "(021)"],
+  "path_b": ["(021)", "(012)"],
+  "composite_a": "e",
+  "composite_b": "e",
+  "intermediate_a": "(012)<(01)>(021)",
+  "intermediate_b": "(021)<(01)>(012)",
+  "intermediates_distinct": true,
+  "seal": "SAME COMPOSITE TRANSPORT != SAME FACTORIZATION HISTORY.",
+  "authority": "none",
+  "promotion": "none"
+}
