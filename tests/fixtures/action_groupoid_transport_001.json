@@ -1,0 +1,16 @@
+{
+  "group": "S3",
+  "object": "H=< (01) >",
+  "source": "H",
+  "target": "H",
+  "transporter_size": 2,
+  "normalizer_size": 2,
+  "endpoint_pair_determines_arrow": false,
+  "seal": "SAME SOURCE + SAME TARGET != SAME TRANSPORT ARROW.",
+  "boundary": [
+    "GROUP ACTION ARROW != OCCURRENCE",
+    "SAME ENDPOINT != SAME HISTORY",
+    "TRANSPORTER ELEMENT != EVIDENCE",
+    "GROUPOID COMPOSITION != CAUSAL COMPOSITION"
+  ]
+}
