@@ -58,13 +58,15 @@ Run from the repo root:
 python -m scripts.trail_timestamp tests/fixtures/trail_timestamp/trail-022100-git-001.json
 ~~~
 
+The trail enforces nondecreasing UTC order. Each entry carries the previous entry digest and the exact microsecond interval from the previous event; `trail_sha256` identifies the ordered chain. Reordering, dropping, or altering an earlier event changes downstream entry digests. Equal event times are permitted when separately attributed. This is an integrity checksum, not a trusted timestamp or proof of chronology beyond supplied metadata.
+
 Each receipt includes:
 
 - exact UTC string and event provenance label / source URL;
 - observer coordinates, decoder, RA, optional dec and its assumption;
 - GMST, LST, signed hour angle, optional ideal altitude/azimuth;
 - explicit mean/UTC/geometric limitations;
-- SHA-256 over a canonical sorted JSON representation (excluding its own digest).
+- SHA-256 over a canonical sorted JSON representation (excluding its own digest); and an ordered trail-link hash that incorporates the previous entry hash.
 
 Content hash changes when input provenance or decoder changes even if geometric outputs stay fixed. It is not a digital signature or authenticated timestamp.
 
