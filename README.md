@@ -24,6 +24,24 @@ Dogram v0 exposes four versioned calculation operators:
 
 All public specimens use `dogram.specimen/v0`. Calculation receipts use `dogram.receipt/v0`.
 
+## Put Dogram to work with a local Toaster checkout
+
+The opt-in [paired-render experiment](docs/toaster-paired-render.md) renders four
+accepted Toaster scores, measures a fixed decoded-pixel observation, and lowers
+three comparisons to `rectangle@1`. It retains the videos, score/timeline
+sidecars, render receipts, sampled frames, and an exact calculation report.
+
+With Python 3.12+, Node 24+, FFmpeg/ffprobe, and a clean Haunted Toaster checkout:
+
+```bash
+python -m scripts.toaster_report ../toaster-run-001 --toaster ../the-haunted-toaster
+```
+
+The default uses a four-second synthetic audio control. To use a local 1–30
+second audio excerpt, add `--audio PATH`. The output directory must be new.
+This is an experimental local adapter, not a public operator or an automatic
+creative decision. It makes no network calls or changes to the Toaster checkout.
+
 ## MutatedMathal lowering
 
 ```text
