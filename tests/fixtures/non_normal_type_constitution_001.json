@@ -1,0 +1,13 @@
+{
+  "group": "S3",
+  "group_order": 6,
+  "declared_subgroup": [[0, 1, 2], [1, 0, 2]],
+  "declared_subgroup_order": 2,
+  "index": 3,
+  "transport": [1, 2, 0],
+  "conjugate_subgroup": [[0, 1, 2], [0, 2, 1]],
+  "left_coset": [[1, 2, 0], [2, 1, 0]],
+  "right_coset": [[0, 2, 1], [1, 2, 0]],
+  "subgroup_is_normal": false,
+  "seal": "CONJUGATE CONSTITUTION != DECLARED CONSTITUTION WHEN THE ADMISSIBLE SUBGROUP IS NON-NORMAL."
+}
