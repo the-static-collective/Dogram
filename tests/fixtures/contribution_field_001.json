@@ -1,0 +1,229 @@
+{
+  "workmark": {
+    "schema": "dogram.workmark/v0-experimental",
+    "contribution_root": "X",
+    "birth_cut": 0,
+    "birth_event_id": "e-create-x",
+    "birth_event_digest": "sha256:e2d4ea5d051c3983aeb84886c2dc6c26a3c842c8633de216ba28fb39031f065a",
+    "graph_address": "entity:X",
+    "workmark_id": "sha256:5ae02620badca78daa720284814f2303a6fde107c58c05ca1299152a19024e66"
+  },
+  "t0": {
+    "schema": "dogram.contribution-field-receipt/v0-experimental",
+    "authority": "none",
+    "workmark": {
+      "schema": "dogram.workmark/v0-experimental",
+      "contribution_root": "X",
+      "birth_cut": 0,
+      "birth_event_id": "e-create-x",
+      "birth_event_digest": "sha256:e2d4ea5d051c3983aeb84886c2dc6c26a3c842c8633de216ba28fb39031f065a",
+      "graph_address": "entity:X",
+      "workmark_id": "sha256:5ae02620badca78daa720284814f2303a6fde107c58c05ca1299152a19024e66"
+    },
+    "cut": 0,
+    "field_digest": "sha256:4ea238843b993df30c1e6d80329065c995a4ead0fc209168feb76e1770e9d306",
+    "measurement_version": "CONTRIBUTION-FIELD-001/v0",
+    "measurements": {
+      "descendant_count": 0,
+      "relation_kind_counts": {
+        "CREATED": 1
+      },
+      "reachable_descendant_set": []
+    },
+    "incomplete_events": [],
+    "invalid_events": [],
+    "source_event_ids": [
+      "e-create-x"
+    ],
+    "receipt_digest": "sha256:e202074fd05441b1c64153b12964047d046d1fa4c255762ecf7ca50aebfd0338"
+  },
+  "t1": {
+    "schema": "dogram.contribution-field-receipt/v0-experimental",
+    "authority": "none",
+    "workmark": {
+      "schema": "dogram.workmark/v0-experimental",
+      "contribution_root": "X",
+      "birth_cut": 0,
+      "birth_event_id": "e-create-x",
+      "birth_event_digest": "sha256:e2d4ea5d051c3983aeb84886c2dc6c26a3c842c8633de216ba28fb39031f065a",
+      "graph_address": "entity:X",
+      "workmark_id": "sha256:5ae02620badca78daa720284814f2303a6fde107c58c05ca1299152a19024e66"
+    },
+    "cut": 1,
+    "field_digest": "sha256:c620ca16f1f3cc363e70c3c84d663459f76a2b3009fc069cc5c7975c7610b46c",
+    "measurement_version": "CONTRIBUTION-FIELD-001/v0",
+    "measurements": {
+      "descendant_count": 2,
+      "relation_kind_counts": {
+        "CARRIED": 1,
+        "CHALLENGED": 1,
+        "CREATED": 1,
+        "ENABLED": 1,
+        "REPAIRED": 1
+      },
+      "reachable_descendant_set": [
+        "Y",
+        "Z"
+      ]
+    },
+    "incomplete_events": [],
+    "invalid_events": [],
+    "source_event_ids": [
+      "e-carry-z",
+      "e-challenge-x",
+      "e-create-x",
+      "e-enable-y",
+      "e-repair-x"
+    ],
+    "receipt_digest": "sha256:81e29f390778ff783e625c5c92d1c87d370863059e23deea68ff2373e608c642"
+  },
+  "delta": {
+    "schema": "dogram.contribution-field-delta/v0-experimental",
+    "authority": "none",
+    "workmark_id": "sha256:5ae02620badca78daa720284814f2303a6fde107c58c05ca1299152a19024e66",
+    "before_receipt_digest": "sha256:e202074fd05441b1c64153b12964047d046d1fa4c255762ecf7ca50aebfd0338",
+    "after_receipt_digest": "sha256:81e29f390778ff783e625c5c92d1c87d370863059e23deea68ff2373e608c642",
+    "descendant_count_delta": 2,
+    "added_reachable_descendants": [
+      "Y",
+      "Z"
+    ],
+    "removed_reachable_descendants": [],
+    "relation_kind_counts_before": {
+      "CREATED": 1
+    },
+    "relation_kind_counts_after": {
+      "CARRIED": 1,
+      "CHALLENGED": 1,
+      "CREATED": 1,
+      "ENABLED": 1,
+      "REPAIRED": 1
+    },
+    "incomplete_events_before": [],
+    "incomplete_events_after": [],
+    "invalid_events_before": [],
+    "invalid_events_after": [],
+    "delta_digest": "sha256:6dca2f97fb26b9ff8d1407f1efbdc152dd1100329019e541ae90ddc6bc604705"
+  },
+  "ablation_enable_y": {
+    "schema": "dogram.contribution-field-ablation/v0-experimental",
+    "authority": "none",
+    "workmark_id": "sha256:5ae02620badca78daa720284814f2303a6fde107c58c05ca1299152a19024e66",
+    "field_digest": "sha256:c620ca16f1f3cc363e70c3c84d663459f76a2b3009fc069cc5c7975c7610b46c",
+    "removed_event_id": "e-enable-y",
+    "removed_relation_kind": "ENABLED",
+    "lost_root_entity_reachability": [
+      "Y",
+      "Z"
+    ],
+    "gained_root_entity_reachability": [],
+    "ablate_receipt": {
+      "removed_component": {
+        "kind": "node",
+        "node": "event:e-enable-y"
+      },
+      "graph_before_digest": "sha256:915cf88785201885405d90aba13c2d07f6cab7a09aedd8124290e27da42a81c1",
+      "graph_after_digest": "sha256:5383edf57fbc9703dda5056d0ed2e523e9398067b182b847058c8a4a5cef646e",
+      "lost_reachability": [
+        ["entity:A", "entity:Y"],
+        ["entity:A", "entity:Z"],
+        ["entity:A", "event:e-carry-z"],
+        ["entity:A", "event:e-enable-y"],
+        ["entity:B", "entity:Y"],
+        ["entity:B", "entity:Z"],
+        ["entity:B", "event:e-carry-z"],
+        ["entity:B", "event:e-enable-y"],
+        ["entity:C", "entity:Y"],
+        ["entity:C", "entity:Z"],
+        ["entity:C", "event:e-carry-z"],
+        ["entity:C", "event:e-enable-y"],
+        ["entity:X", "entity:Y"],
+        ["entity:X", "entity:Z"],
+        ["entity:X", "event:e-carry-z"],
+        ["entity:X", "event:e-enable-y"],
+        ["event:e-challenge-x", "entity:Y"],
+        ["event:e-challenge-x", "entity:Z"],
+        ["event:e-challenge-x", "event:e-carry-z"],
+        ["event:e-challenge-x", "event:e-enable-y"],
+        ["event:e-create-x", "entity:Y"],
+        ["event:e-create-x", "entity:Z"],
+        ["event:e-create-x", "event:e-carry-z"],
+        ["event:e-create-x", "event:e-enable-y"],
+        ["event:e-enable-y", "entity:Y"],
+        ["event:e-enable-y", "entity:Z"],
+        ["event:e-enable-y", "event:e-carry-z"],
+        ["event:e-repair-x", "entity:Y"],
+        ["event:e-repair-x", "entity:Z"],
+        ["event:e-repair-x", "event:e-carry-z"],
+        ["event:e-repair-x", "event:e-enable-y"]
+      ],
+      "gained_reachability": [],
+      "requested_targets": [
+        {"source": "entity:X", "target": "entity:A", "reachable_before": false, "reachable_after": false},
+        {"source": "entity:X", "target": "entity:B", "reachable_before": false, "reachable_after": false},
+        {"source": "entity:X", "target": "entity:C", "reachable_before": false, "reachable_after": false},
+        {"source": "entity:X", "target": "entity:Y", "reachable_before": true, "reachable_after": false},
+        {"source": "entity:X", "target": "entity:Z", "reachable_before": true, "reachable_after": false}
+      ]
+    },
+    "receipt_digest": "sha256:178bea0744d813b8ab150397de8b53163e49de9ccdf6e9e125956ce637c605b3"
+  },
+  "ablation_repair_x": {
+    "schema": "dogram.contribution-field-ablation/v0-experimental",
+    "authority": "none",
+    "workmark_id": "sha256:5ae02620badca78daa720284814f2303a6fde107c58c05ca1299152a19024e66",
+    "field_digest": "sha256:c620ca16f1f3cc363e70c3c84d663459f76a2b3009fc069cc5c7975c7610b46c",
+    "removed_event_id": "e-repair-x",
+    "removed_relation_kind": "REPAIRED",
+    "lost_root_entity_reachability": [],
+    "gained_root_entity_reachability": [],
+    "ablate_receipt": {
+      "removed_component": {
+        "kind": "node",
+        "node": "event:e-repair-x"
+      },
+      "graph_before_digest": "sha256:915cf88785201885405d90aba13c2d07f6cab7a09aedd8124290e27da42a81c1",
+      "graph_after_digest": "sha256:8456514983111c07d02a416f5862f777149d957144699ac15a2adc6d2a6d3062",
+      "lost_reachability": [
+        ["entity:B", "entity:X"],
+        ["entity:B", "entity:Y"],
+        ["entity:B", "entity:Z"],
+        ["entity:B", "event:e-carry-z"],
+        ["entity:B", "event:e-enable-y"],
+        ["entity:B", "event:e-repair-x"],
+        ["event:e-repair-x", "entity:X"],
+        ["event:e-repair-x", "entity:Y"],
+        ["event:e-repair-x", "entity:Z"],
+        ["event:e-repair-x", "event:e-carry-z"],
+        ["event:e-repair-x", "event:e-enable-y"]
+      ],
+      "gained_reachability": [],
+      "requested_targets": [
+        {"source": "entity:X", "target": "entity:A", "reachable_before": false, "reachable_after": false},
+        {"source": "entity:X", "target": "entity:B", "reachable_before": false, "reachable_after": false},
+        {"source": "entity:X", "target": "entity:C", "reachable_before": false, "reachable_after": false},
+        {"source": "entity:X", "target": "entity:Y", "reachable_before": true, "reachable_after": true},
+        {"source": "entity:X", "target": "entity:Z", "reachable_before": true, "reachable_after": true}
+      ]
+    },
+    "receipt_digest": "sha256:29ba0deb7cbcdfa092817a275fc1cbfa6c9cc1247c56e677a48ca9ef32d5b7e6"
+  },
+  "full_measure_handoff_fixture": {
+    "source": "Dogram",
+    "authority": "none",
+    "workmark_id": "sha256:5ae02620badca78daa720284814f2303a6fde107c58c05ca1299152a19024e66",
+    "measurement_receipt_digest": "sha256:81e29f390778ff783e625c5c92d1c87d370863059e23deea68ff2373e608c642",
+    "delta_receipt_digest": "sha256:6dca2f97fb26b9ff8d1407f1efbdc152dd1100329019e541ae90ddc6bc604705",
+    "allowed_use": [
+      "read-only story proposal input",
+      "read-only quest proposal input",
+      "read-only participation-opening input"
+    ],
+    "forbidden_promotion": [
+      "source fact by narration",
+      "economic value",
+      "human worth",
+      "sheet-changing authority"
+    ]
+  }
+}
