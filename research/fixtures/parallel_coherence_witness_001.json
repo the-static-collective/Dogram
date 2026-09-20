@@ -1,0 +1,21 @@
+{
+  "id": "PARALLEL-COHERENCE-WITNESS-001",
+  "2_cells": [
+    {"name": "alpha", "source": "aa", "target": "bb"},
+    {"name": "beta", "source": "aa", "target": "bb"}
+  ],
+  "3_cells": [
+    {"name": "Gamma", "source": "alpha", "target": "beta"},
+    {"name": "Delta", "source": "alpha", "target": "beta"}
+  ],
+  "delta": "Gamma != Delta despite identical 2-dimensional boundary",
+  "seal": "SAME WITNESS EQUIVALENCE != SAME COHERENCE WITNESS",
+  "non_claims": [
+    "2-cell != occurrence",
+    "3-cell != occurrence",
+    "coherence != evidence",
+    "parallel higher cells != historical alternatives",
+    "higher-dimensional relation != semantic truth",
+    "structural composition != causal composition"
+  ]
+}
