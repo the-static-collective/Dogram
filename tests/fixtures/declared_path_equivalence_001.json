@@ -1,0 +1,19 @@
+{
+  "specimen": "DECLARED-PATH-EQUIVALENCE-001",
+  "alphabet": ["a", "b"],
+  "max_path_length": 4,
+  "free_paths": ["aa", "bb"],
+  "free_paths_distinct": true,
+  "declared_relation": {"name": "alpha", "lhs": "aa", "rhs": "bb"},
+  "same_quotient_class": true,
+  "context_controls": [
+    ["aaa", "abb"],
+    ["baa", "bbb"],
+    ["aaaa", "aabb"],
+    ["aabb", "bbaa"],
+    ["bbaa", "bbbb"]
+  ],
+  "hostile_control": "with only aa~aa declared, aa and bb remain distinct",
+  "seal": "DECLARED PATH EQUIVALENCE != PATH IDENTITY.",
+  "promotion": "none"
+}
