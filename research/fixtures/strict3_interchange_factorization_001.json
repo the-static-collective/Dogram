@@ -1,0 +1,23 @@
+{
+  "specimen": "STRICT3-INTERCHANGE-FACTORIZATION-001",
+  "carrier": "Z2 x Z2",
+  "carrier_size": 4,
+  "lower_boundary": {"0_cells": 1, "1_cells": 1, "2_cells": 1},
+  "gamma": [1, 0],
+  "delta": [0, 1],
+  "left_factorization": ["Gamma", "Delta"],
+  "right_factorization": ["Delta", "Gamma"],
+  "factorizations_distinct": true,
+  "left_composite": [1, 1],
+  "right_composite": [1, 1],
+  "same_composite": true,
+  "quadruples_checked_for_interchange": 256,
+  "seal": "SAME COMPLETE LOWER BOUNDARY + SAME STRICT 3-CELL COMPOSITE != SAME SUPPLIED 3-CELL FACTORIZATION",
+  "nonclaims": [
+    "3-cell is occurrence",
+    "factorization order is historical chronology",
+    "interchange proves causal independence",
+    "composite equality is evidentiary equality",
+    "Dogram is globally a strict 3-category"
+  ]
+}
