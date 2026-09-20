@@ -80,6 +80,8 @@ def hunt_phantom_path(
         edges_by_class.setdefault(class_for[src], []).append(edge)
         edges_by_source.setdefault(src, []).append(edge)
 
+    if len(labels) > 16:
+        raise ValueError("at most 16 distinct action labels are supported")
     declared_labels = tuple(sorted(labels))
     # DOGWOLF-001: compare each action's complete one-step successor
     # quotient-class result table (the empty tuple means disabled).
