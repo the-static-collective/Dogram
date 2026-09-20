@@ -1,0 +1,14 @@
+{
+  "specimen": "PARALLEL-EQUIVALENCE-WITNESS-001",
+  "source": "aa",
+  "target": "bb",
+  "witnesses": [
+    {"name": "alpha", "rules": ["alpha"], "states": ["aa", "bb"]},
+    {"name": "beta", "rules": ["rho", "sigma"], "states": ["aa", "cc", "bb"]}
+  ],
+  "same_endpoints": true,
+  "same_induced_path_equivalence": true,
+  "witnesses_distinct": true,
+  "seal": "SAME PATH EQUIVALENCE != SAME EQUIVALENCE WITNESS.",
+  "promotion": "none"
+}
