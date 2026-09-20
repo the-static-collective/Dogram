@@ -1,0 +1,23 @@
+{
+  "specimen": "TYPE-STABILIZER-AUTHORITY-001",
+  "carrier": "C4",
+  "types": {
+    "0": "representative",
+    "1": "successor",
+    "2": "representative",
+    "3": "successor"
+  },
+  "untyped_automorphism_count": 8,
+  "type_preserving_count": 4,
+  "type_swapping_count": 4,
+  "admissible_without_swap_declaration": 4,
+  "admissible_with_swap_declaration": 8,
+  "seal": "SYMMETRY CAN EXHIBIT A ROLE SWAP; IT CANNOT LICENSE THE SWAP.",
+  "boundary": [
+    "AUTOMORPHISM != AUTHORITY",
+    "TYPE SWAP EXISTS != TYPE SWAP DECLARED",
+    "STRUCTURAL SYMMETRY != SEMANTIC INTERCHANGEABILITY",
+    "ADMISSIBLE RELABELING != OCCURRENCE",
+    "COLOR PRESERVATION != EVIDENCE OR TRUTH"
+  ]
+}
