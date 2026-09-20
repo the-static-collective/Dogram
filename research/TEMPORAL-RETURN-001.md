@@ -65,6 +65,6 @@ The returned receipt includes the full input digest and per-packet digest; it do
 
 ## Pressure and follow-up
 
-Frozen tests check source identity preservation; distinct events at the same address; missing packet; mismatched instant; mismatched Scripture ref; incompatible frames; different named sidereal conventions; evolving offset within one convention; and invalid angular indices. Run `pytest -q tests/test_temporal_return.py`.
+Frozen tests check source identity preservation; distinct events at the same address; missing packet; mismatched instant; mismatched Scripture ref; incompatible frames; different named sidereal conventions; evolving offset within one convention; and invalid angular indices. Run `python -m unittest discover -s tests -p 'test_temporal_return.py' -v`.
 
 Next, make one real CLOCKWORK-002 sample from a independently sourced local BSP ephemeris and verify it against external astronomy. Only then expose a manually invoked Upper Room computation lens and allow a source-backed, participant-controlled encounter-to-receipt exchange. Real local Hindu and Hebrew day boundaries require observer-specific sunrise/sunset modeling.
