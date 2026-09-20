@@ -49,7 +49,7 @@ def test_absent_witness_does_not_become_agreement():
 
 def test_separately_declared_sidereal_conventions_do_not_mix():
     sample = specimen()
-    sample["encounters"][1]["temporalWitness"]["ayanamsa"]["degrees"] = 25
+    sample["encounters"][1]["temporalWitness"]["ayanamsa"]["name"] = "different-convention"
     r = compare_temporal_return(sample)
     assert r["coordinate_comparison"]["hindu_nakshatra"]["status"] == "incomparable_sidereal_convention"
     assert r["coordinate_comparison"]["hindu_tithi"]["status"] == "same_coordinate"
@@ -103,3 +103,10 @@ def test_distinct_source_witnesses_same_scripture_address():
     assert result["same_source_ref"] is False
     assert result["source_anchors"][0]["sourceRef"] != result["source_anchors"][1]["sourceRef"]
     assert result["shared_scripture_ref"]["verse"] == 1
+
+
+def test_ayanamsa_offset_can_evolve_between_dates_within_same_convention():
+    sample = specimen()
+    sample["encounters"][1]["temporalWitness"]["ayanamsa"]["degrees"] = 24.1
+    result = compare_temporal_return(sample)
+    assert result["coordinate_comparison"]["hindu_nakshatra"]["status"] == "same_coordinate"
