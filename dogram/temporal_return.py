@@ -126,8 +126,8 @@ def compare_temporal_return(specimen: dict[str, Any]) -> dict[str, Any]:
         raise TemporalReturnError("DUPLICATE_OCCURRENCE", "two encounters require distinct IDs")
     if times[1] < times[0]:
         raise TemporalReturnError("REVERSED_TIME", "second encounter must not precede first")
-    if anchors[0] != anchors[1]:
-        raise TemporalReturnError("ANCHOR_MISMATCH", "this specimen requires the exact same Scripture anchor")
+    if anchors[0]["scriptureRef"] != anchors[1]["scriptureRef"]:
+        raise TemporalReturnError("ANCHOR_MISMATCH", "this specimen requires the same Scripture reference")
     comparison: dict[str, Any] = {}
     for label, path, lo, hi in AXES:
         first, second = (_extract(p, path, lo, hi) if p is not None else None for p in packets)
@@ -143,7 +143,9 @@ def compare_temporal_return(specimen: dict[str, Any]) -> dict[str, Any]:
     return {
         "schema": "dogram.temporal-return/receipt-v0", "operator": OPERATOR,
         "specimen_id": specimen["specimen_id"], "input_digest": sha256_json(specimen),
-        "status": "OK", "encounter_refs": ids, "anchor": anchors[0],
+        "status": "OK", "encounter_refs": ids, "source_anchors": anchors,
+        "shared_scripture_ref": anchors[0]["scriptureRef"],
+        "same_source_ref": anchors[0]["sourceRef"] == anchors[1]["sourceRef"],
         "elapsed_microseconds": (times[1] - times[0]) // timedelta(microseconds=1),
         "witness_digests": [sha256_json(p) if p is not None else None for p in packets],
         "coordinate_comparison": comparison,
