@@ -82,7 +82,7 @@ def _frame(packet: dict[str, Any]) -> str:
     return _required(provider.get("coordinate_frame"), "provider.coordinate_frame")
 
 
-def _sidereal(packet: dict[str, Any]) -> tuple[str, float]:
+def _sidereal(packet: dict[str, Any]) -> str:
     item = packet.get("ayanamsa")
     if not isinstance(item, dict):
         raise TemporalReturnError("INVALID_AYANAMSA", "missing sidereal convention")
@@ -90,7 +90,7 @@ def _sidereal(packet: dict[str, Any]) -> tuple[str, float]:
     deg = item.get("degrees")
     if isinstance(deg, bool) or not isinstance(deg, (int, float)) or not isfinite(deg) or not -360 <= deg <= 360:
         raise TemporalReturnError("INVALID_AYANAMSA", "finite ayanamsa degrees required")
-    return (name, float(deg))
+    return name
 
 
 def compare_temporal_return(specimen: dict[str, Any]) -> dict[str, Any]:
