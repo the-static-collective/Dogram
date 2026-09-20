@@ -94,3 +94,12 @@ def test_rejects_wrong_frame_and_backward_time():
     with pytest.raises(TemporalReturnError) as exc:
         compare_temporal_return(sample)
     assert exc.value.code == "REVERSED_TIME"
+
+
+def test_distinct_source_witnesses_same_scripture_address():
+    sample = specimen()
+    sample["encounters"][1]["anchor"]["sourceRef"] = "urn:fixture:second-selection"
+    result = compare_temporal_return(sample)
+    assert result["same_source_ref"] is False
+    assert result["source_anchors"][0]["sourceRef"] != result["source_anchors"][1]["sourceRef"]
+    assert result["shared_scripture_ref"]["verse"] == 1
