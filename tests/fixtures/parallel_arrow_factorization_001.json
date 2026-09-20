@@ -1,0 +1,18 @@
+{
+  "experiment": "PARALLEL-ARROW-FACTORIZATION-001",
+  "groupoid": "one-object groupoid B(V4)",
+  "object_sequence": ["X", "X", "X"],
+  "path_a": [[1, 0], [1, 0]],
+  "path_b": [[0, 1], [0, 1]],
+  "composite_a": [0, 0],
+  "composite_b": [0, 0],
+  "all_supplied_arrows_nonidentity": true,
+  "seal": "SAME OBJECTS + SAME COMPOSITE != SAME ARROW FACTORIZATION",
+  "non_claims": [
+    "arrow means occurrence",
+    "path means historical path",
+    "equal composite means equal provenance",
+    "algebraic equality means evidentiary equality",
+    "structural loop means causal loop"
+  ]
+}
