@@ -60,6 +60,11 @@ class PathLiftTests(unittest.TestCase):
             with self.subTest(budget=budget), self.assertRaises(ValueError):
                 hunt_phantom_path(STATES, QUOTIENT, EDGES, max_paths=budget)
 
+    def test_more_than_16_action_labels_rejected(self):
+        edges = tuple(("p", f"step_{n}", "r") for n in range(17))
+        with self.assertRaises(ValueError):
+            hunt_phantom_path(STATES, QUOTIENT, edges)
+
     def test_input_order_does_not_change_digest_or_path_witness(self):
         first = hunt_phantom_path(STATES, QUOTIENT, EDGES)
         second = hunt_phantom_path(STATES, QUOTIENT, tuple(reversed(EDGES)))
