@@ -1,0 +1,19 @@
+{
+  "specimen": "MARKOV-RESIDUAL-PROPAGATION-001",
+  "epsilon": "1/10",
+  "horizon": 10,
+  "reference_kernel": [["1","0"],["0","1"]],
+  "perturbed_kernel": [["9/10","1/10"],["0","1"]],
+  "dobrushin_reference": "1",
+  "one_step_tv": "1/10",
+  "ten_step_tv": "6513215599/10000000000",
+  "ten_step_linear_envelope": "1",
+  "seal": "SMALL ONE-STEP RESIDUAL != UNIFORMLY SMALL MULTI-STEP RESIDUAL WITHOUT A CONTRACTION HYPOTHESIS",
+  "refusals": [
+    "positive probability != occurrence",
+    "transition probability != evidentiary confidence",
+    "small residual != semantic equivalence",
+    "finite-horizon bound != causal guarantee",
+    "Dobrushin contraction != historical convergence"
+  ]
+}
