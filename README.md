@@ -47,6 +47,18 @@ python -m dogram.cli examples/mutated_mathals/trust-withdrawal.json
 python -m dogram.cli examples/mutated_mathals/same-surface-different-history.json
 ```
 
+## Game mechanics stdio bridge
+
+`python -m dogram.game_mechanics_stdio` exposes two narrow, deterministic, non-authoritative operations for local callers:
+
+- `budget_rounding` — delegates to the existing `BUDGET-ROUNDING-RESIDUAL-001` receipt;
+- `successor_delta` — receipts before/after lawful action sets as foreclosed, newly available, and retained successors.
+
+Input schema: `dogram/game-mechanics-stdio-request/v0.1`  
+Output schema: `dogram/game-mechanics-stdio-response/v0.1`
+
+The bridge is calculation-only. It does not choose actions, establish occurrence, infer obligation, or grade human worth.
+
 ## Destination architecture
 
 Phase A is the independent oracle floor for **Dogram Ω**, the approved metaoscillatory runtime. Later reviewed slices add an inert Mathal VM, reified execution, bounded META proposals, a phase gate, explicit branching, and bootstrap peeling. The direct Python operators remain independent conformance witnesses during that migration.
