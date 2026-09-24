@@ -16,4 +16,5 @@ def test_same_coarse_invariants_different_ambiguity_profiles():
 def test_receipt_retains_local_lists_not_only_histogram():
     a = receipt(CODE_A)
     b = receipt(CODE_B)
-    assert a["lists"]["0001"] != b["lists"]["0001"] or a["lists"]["1111"] != b["lists"]["1111"]
+    assert a["lists"]["0010"] == ("0000", "0011", "0110")
+    assert b["lists"]["0010"] == ("0000", "0011", "1010")
