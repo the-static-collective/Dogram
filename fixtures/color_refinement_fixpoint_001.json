@@ -1,0 +1,11 @@
+{
+  "graph_a": "C6",
+  "graph_b": "C3 disjoint union C3",
+  "degree_sequence_a": [2,2,2,2,2,2],
+  "degree_sequence_b": [2,2,2,2,2,2],
+  "stable_color_class_sizes_a": [6],
+  "stable_color_class_sizes_b": [6],
+  "component_count_a": 1,
+  "component_count_b": 2,
+  "authority": "none"
+}
