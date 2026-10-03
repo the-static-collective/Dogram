@@ -12,6 +12,7 @@ import base64
 import hashlib
 import io
 import json
+import math
 import wave
 from typing import Any
 
@@ -116,13 +117,7 @@ def _q15_rms(sum_squares: int, sample_count: int) -> int:
     # Integer sqrt keeps the measurement deterministic and avoids float
     # serialization differences. Samples are already signed 16-bit integers.
     mean_square = sum_squares // sample_count
-    rms = int(mean_square**0.5)
-    # Correct possible float sqrt rounding with integer checks.
-    while (rms + 1) * (rms + 1) <= mean_square:
-        rms += 1
-    while rms * rms > mean_square:
-        rms -= 1
-    return min(32767, rms)
+    return min(32767, math.isqrt(mean_square))
 
 
 def _profile(pcm: bytes, frame_count: int) -> dict[str, Any]:
